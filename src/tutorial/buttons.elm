@@ -1,4 +1,4 @@
-module Main exposing (Model, main)
+module Tutorial exposing (main)
 
 import Browser
 import Html exposing (Html, button, div, text)
@@ -42,7 +42,7 @@ update msg model =
             { message = "Decrement", count = model.count - 1, clicked = True }
 
         Reset ->
-            { message = "Reset", count = 0, clicked = True }
+            { message = "", count = 0, clicked = False }
 
 
 isIncrement : Msg -> Bool
@@ -77,13 +77,18 @@ messageFrom model =
         "Last move => " ++ model.message
 
 
+resetButton : Html Msg
+resetButton =
+    button [ onClick Reset ] [ text "Reset" ]
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
         , div [] [ text (messageFrom model) ]
         , if model.clicked then
-            button [ onClick Reset ] [ text "Reset" ]
+            resetButton
 
           else
             div [] []
