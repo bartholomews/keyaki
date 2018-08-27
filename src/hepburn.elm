@@ -10,6 +10,10 @@ kana str =
     translate (String.toList str) []
 
 
+
+-- https://en.wikipedia.org/wiki/Hepburn_romanization
+
+
 addKana : List Char -> List Char -> Char -> String
 addKana ls with symbol =
     translate
@@ -22,6 +26,14 @@ addKanas ls with symbols =
     translate
         ls
         (concat [ with, symbols ])
+
+
+
+-- separator should probably be customizable or function arg
+
+
+separator =
+    '\t'
 
 
 translate : List Char -> List Char -> String
@@ -304,19 +316,6 @@ translate current with =
             addKanas ls with [ 'ひ', 'ょ' ]
 
         --
-        'N' :: '\'' :: ls ->
-            addKana ls with 'ン'
-
-        'N' :: ls ->
-            addKana ls with 'ン'
-
-        'n' :: '\'' :: ls ->
-            addKana ls with 'ん'
-
-        'n' :: ls ->
-            addKana ls with 'ん'
-
-        --
         'M' :: 'A' :: ls ->
             addKana ls with 'マ'
 
@@ -457,6 +456,264 @@ translate current with =
 
         'w' :: 'o' :: ls ->
             addKana ls with 'を'
+
+        --
+        'N' :: '\'' :: ls ->
+            addKana ls with 'ン'
+
+        'N' :: ls ->
+            addKana ls with 'ン'
+
+        'n' :: '\'' :: ls ->
+            addKana ls with 'ん'
+
+        'n' :: ls ->
+            addKana ls with 'ん'
+
+        --
+        'G' :: 'A' :: ls ->
+            addKana ls with 'ガ'
+
+        'g' :: 'a' :: ls ->
+            addKana ls with 'が'
+
+        'G' :: 'I' :: ls ->
+            addKana ls with 'ギ'
+
+        'g' :: 'i' :: ls ->
+            addKana ls with 'ぎ'
+
+        'G' :: 'U' :: ls ->
+            addKana ls with 'グ'
+
+        'g' :: 'u' :: ls ->
+            addKana ls with 'ぐ'
+
+        'G' :: 'E' :: ls ->
+            addKana ls with 'ゲ'
+
+        'g' :: 'e' :: ls ->
+            addKana ls with 'げ'
+
+        'G' :: 'O' :: ls ->
+            addKana ls with 'ゴ'
+
+        'g' :: 'o' :: ls ->
+            addKana ls with 'ご'
+
+        'G' :: 'Y' :: 'A' :: ls ->
+            addKanas ls with [ 'ギ', 'ャ' ]
+
+        'g' :: 'y' :: 'a' :: ls ->
+            addKanas ls with [ 'ぎ', 'ゃ' ]
+
+        'G' :: 'Y' :: 'U' :: ls ->
+            addKanas ls with [ 'ギ', 'ュ' ]
+
+        'g' :: 'y' :: 'u' :: ls ->
+            addKanas ls with [ 'ぎ', 'ゅ' ]
+
+        'G' :: 'Y' :: 'O' :: ls ->
+            addKanas ls with [ 'ギ', 'ョ' ]
+
+        'g' :: 'y' :: 'o' :: ls ->
+            addKanas ls with [ 'ぎ', 'ょ' ]
+
+        --
+        'D' :: 'A' :: ls ->
+            addKana ls with 'ダ'
+
+        'd' :: 'a' :: ls ->
+            addKana ls with 'だ'
+
+        'J' :: 'I' :: '\'' :: ls ->
+            addKana ls with 'ヂ'
+
+        'j' :: 'i' :: '\'' :: ls ->
+            addKana ls with 'ぢ'
+
+        'Z' :: 'U' :: '\'' :: ls ->
+            addKana ls with 'ヅ'
+
+        'z' :: 'u' :: '\'' :: ls ->
+            addKana ls with 'づ'
+
+        'D' :: 'E' :: ls ->
+            addKana ls with 'デ'
+
+        'd' :: 'e' :: ls ->
+            addKana ls with 'で'
+
+        'D' :: 'O' :: ls ->
+            addKana ls with 'ド'
+
+        'd' :: 'o' :: ls ->
+            addKana ls with 'ど'
+
+        'J' :: 'A' :: '\'' :: ls ->
+            addKanas ls with [ 'ヂ', 'ャ' ]
+
+        'j' :: 'a' :: '\'' :: ls ->
+            addKanas ls with [ 'ぢ', 'ゃ' ]
+
+        'J' :: 'U' :: '\'' :: ls ->
+            addKanas ls with [ 'ヂ', 'ュ' ]
+
+        'j' :: 'u' :: '\'' :: ls ->
+            addKanas ls with [ 'ぢ', 'ゅ' ]
+
+        'J' :: 'O' :: '\'' :: ls ->
+            addKanas ls with [ 'ヂ', 'ョ' ]
+
+        'j' :: 'o' :: '\'' :: ls ->
+            addKanas ls with [ 'ぢ', 'ょ' ]
+
+        --
+        'Z' :: 'A' :: ls ->
+            addKana ls with 'ザ'
+
+        'z' :: 'a' :: ls ->
+            addKana ls with 'ざ'
+
+        'J' :: 'I' :: ls ->
+            addKana ls with 'ジ'
+
+        'j' :: 'i' :: ls ->
+            addKana ls with 'じ'
+
+        'Z' :: 'U' :: ls ->
+            addKana ls with 'ズ'
+
+        'z' :: 'u' :: ls ->
+            addKana ls with 'ず'
+
+        'Z' :: 'E' :: ls ->
+            addKana ls with 'ゼ'
+
+        'z' :: 'e' :: ls ->
+            addKana ls with 'ぜ'
+
+        'Z' :: 'O' :: ls ->
+            addKana ls with 'ゾ'
+
+        'z' :: 'o' :: ls ->
+            addKana ls with 'ぞ'
+
+        'J' :: 'A' :: ls ->
+            addKanas ls with [ 'ジ', 'ャ' ]
+
+        'j' :: 'a' :: ls ->
+            addKanas ls with [ 'じ', 'ゃ' ]
+
+        'J' :: 'U' :: ls ->
+            addKanas ls with [ 'ジ', 'ュ' ]
+
+        'j' :: 'u' :: ls ->
+            addKanas ls with [ 'じ', 'ゅ' ]
+
+        'J' :: 'O' :: ls ->
+            addKanas ls with [ 'ジ', 'ョ' ]
+
+        'j' :: 'o' :: ls ->
+            addKanas ls with [ 'じ', 'ょ' ]
+
+        --
+        'B' :: 'A' :: ls ->
+            addKana ls with 'バ'
+
+        'b' :: 'a' :: ls ->
+            addKana ls with 'ば'
+
+        'B' :: 'I' :: ls ->
+            addKana ls with 'ビ'
+
+        'b' :: 'i' :: ls ->
+            addKana ls with 'び'
+
+        'B' :: 'U' :: ls ->
+            addKana ls with 'ブ'
+
+        'b' :: 'u' :: ls ->
+            addKana ls with 'ぶ'
+
+        'B' :: 'E' :: ls ->
+            addKana ls with 'ベ'
+
+        'b' :: 'e' :: ls ->
+            addKana ls with 'べ'
+
+        'B' :: 'O' :: ls ->
+            addKana ls with 'ボ'
+
+        'b' :: 'o' :: ls ->
+            addKana ls with 'ぼ'
+
+        'B' :: 'Y' :: 'A' :: ls ->
+            addKanas ls with [ 'ビ', 'ャ' ]
+
+        'b' :: 'y' :: 'a' :: ls ->
+            addKanas ls with [ 'び', 'ゃ' ]
+
+        'B' :: 'Y' :: 'U' :: ls ->
+            addKanas ls with [ 'ビ', 'ュ' ]
+
+        'b' :: 'y' :: 'u' :: ls ->
+            addKanas ls with [ 'び', 'ゅ' ]
+
+        'B' :: 'Y' :: 'O' :: ls ->
+            addKanas ls with [ 'ビ', 'ョ' ]
+
+        'b' :: 'y' :: 'o' :: ls ->
+            addKanas ls with [ 'び', 'ょ' ]
+
+        --
+        'P' :: 'A' :: ls ->
+            addKana ls with 'パ'
+
+        'p' :: 'a' :: ls ->
+            addKana ls with 'ぱ'
+
+        'P' :: 'I' :: ls ->
+            addKana ls with 'ピ'
+
+        'p' :: 'i' :: ls ->
+            addKana ls with 'ぴ'
+
+        'P' :: 'U' :: ls ->
+            addKana ls with 'プ'
+
+        'p' :: 'u' :: ls ->
+            addKana ls with 'ぷ'
+
+        'P' :: 'E' :: ls ->
+            addKana ls with 'ペ'
+
+        'p' :: 'e' :: ls ->
+            addKana ls with 'ぺ'
+
+        'P' :: 'O' :: ls ->
+            addKana ls with 'ポ'
+
+        'p' :: 'o' :: ls ->
+            addKana ls with 'ぽ'
+
+        'P' :: 'Y' :: 'A' :: ls ->
+            addKanas ls with [ 'ピ', 'ャ' ]
+
+        'p' :: 'y' :: 'a' :: ls ->
+            addKanas ls with [ 'ぴ', 'ゃ' ]
+
+        'P' :: 'Y' :: 'U' :: ls ->
+            addKanas ls with [ 'ピ', 'ュ' ]
+
+        'p' :: 'y' :: 'u' :: ls ->
+            addKanas ls with [ 'ぴ', 'ゅ' ]
+
+        'P' :: 'Y' :: 'O' :: ls ->
+            addKanas ls with [ 'ピ', 'ョ' ]
+
+        'p' :: 'y' :: 'o' :: ls ->
+            addKanas ls with [ 'ぴ', 'ょ' ]
 
         --
         _ ->
