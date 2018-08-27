@@ -317,6 +317,148 @@ translate current with =
             addKana ls with 'ん'
 
         --
+        'M' :: 'A' :: ls ->
+            addKana ls with 'マ'
+
+        'm' :: 'a' :: ls ->
+            addKana ls with 'ま'
+
+        'M' :: 'I' :: ls ->
+            addKana ls with 'ミ'
+
+        'm' :: 'i' :: ls ->
+            addKana ls with 'み'
+
+        'M' :: 'U' :: ls ->
+            addKana ls with 'ム'
+
+        'm' :: 'u' :: ls ->
+            addKana ls with 'む'
+
+        'M' :: 'E' :: ls ->
+            addKana ls with 'メ'
+
+        'm' :: 'e' :: ls ->
+            addKana ls with 'め'
+
+        'M' :: 'O' :: ls ->
+            addKana ls with 'モ'
+
+        'm' :: 'o' :: ls ->
+            addKana ls with 'も'
+
+        'M' :: 'Y' :: 'A' :: ls ->
+            addKanas ls with [ 'ミ', 'ャ' ]
+
+        'm' :: 'y' :: 'a' :: ls ->
+            addKanas ls with [ 'み', 'ゃ' ]
+
+        'M' :: 'Y' :: 'U' :: ls ->
+            addKanas ls with [ 'ミ', 'ュ' ]
+
+        'm' :: 'y' :: 'u' :: ls ->
+            addKanas ls with [ 'み', 'ゅ' ]
+
+        'M' :: 'Y' :: 'O' :: ls ->
+            addKanas ls with [ 'ミ', 'ョ' ]
+
+        'm' :: 'y' :: 'o' :: ls ->
+            addKanas ls with [ 'み', 'ょ' ]
+
+        --
+        'Y' :: 'A' :: ls ->
+            addKana ls with 'ヤ'
+
+        'y' :: 'a' :: ls ->
+            addKana ls with 'や'
+
+        'Y' :: 'U' :: ls ->
+            addKana ls with 'ユ'
+
+        'y' :: 'u' :: ls ->
+            addKana ls with 'ゆ'
+
+        'Y' :: 'O' :: ls ->
+            addKana ls with 'ヨ'
+
+        'y' :: 'o' :: ls ->
+            addKana ls with 'よ'
+
+        --
+        'R' :: 'A' :: ls ->
+            addKana ls with 'ラ'
+
+        'r' :: 'a' :: ls ->
+            addKana ls with 'ら'
+
+        'R' :: 'I' :: ls ->
+            addKana ls with 'リ'
+
+        'r' :: 'i' :: ls ->
+            addKana ls with 'り'
+
+        'R' :: 'U' :: ls ->
+            addKana ls with 'ル'
+
+        'r' :: 'u' :: ls ->
+            addKana ls with 'る'
+
+        'R' :: 'E' :: ls ->
+            addKana ls with 'レ'
+
+        'r' :: 'e' :: ls ->
+            addKana ls with 'れ'
+
+        'R' :: 'O' :: ls ->
+            addKana ls with 'ロ'
+
+        'r' :: 'o' :: ls ->
+            addKana ls with 'ろ'
+
+        'R' :: 'Y' :: 'A' :: ls ->
+            addKanas ls with [ 'リ', 'ャ' ]
+
+        'r' :: 'y' :: 'a' :: ls ->
+            addKanas ls with [ 'り', 'ゃ' ]
+
+        'R' :: 'Y' :: 'U' :: ls ->
+            addKanas ls with [ 'リ', 'ュ' ]
+
+        'r' :: 'y' :: 'u' :: ls ->
+            addKanas ls with [ 'り', 'ゅ' ]
+
+        'R' :: 'Y' :: 'O' :: ls ->
+            addKanas ls with [ 'リ', 'ョ' ]
+
+        'r' :: 'y' :: 'o' :: ls ->
+            addKanas ls with [ 'り', 'ょ' ]
+
+        --
+        'W' :: 'A' :: ls ->
+            addKana ls with 'ワ'
+
+        'w' :: 'a' :: ls ->
+            addKana ls with 'わ'
+
+        'W' :: 'I' :: ls ->
+            addKana ls with 'ヰ'
+
+        'w' :: 'i' :: ls ->
+            addKana ls with 'ゐ'
+
+        'W' :: 'E' :: ls ->
+            addKana ls with 'ヱ'
+
+        'w' :: 'e' :: ls ->
+            addKana ls with 'ゑ'
+
+        'W' :: 'O' :: ls ->
+            addKana ls with 'ヲ'
+
+        'w' :: 'o' :: ls ->
+            addKana ls with 'を'
+
+        --
         _ ->
             String.fromList with
 
