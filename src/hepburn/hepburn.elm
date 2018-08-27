@@ -58,6 +58,69 @@ translate current with =
         'o' :: ls ->
             addKana ls with 'お'
 
+        --
+        'K' :: 'A' :: ls ->
+            addKana ls with 'カ'
+
+        'k' :: 'a' :: ls ->
+            addKana ls with 'か'
+
+        'K' :: 'I' :: ls ->
+            addKana ls with 'キ'
+
+        'k' :: 'i' :: ls ->
+            addKana ls with 'き'
+
+        'K' :: 'U' :: ls ->
+            addKana ls with 'ク'
+
+        'k' :: 'u' :: ls ->
+            addKana ls with 'く'
+
+        'K' :: 'E' :: ls ->
+            addKana ls with 'ケ'
+
+        'k' :: 'e' :: ls ->
+            addKana ls with 'け'
+
+        'K' :: 'O' :: ls ->
+            addKana ls with 'コ'
+
+        'k' :: 'o' :: ls ->
+            addKana ls with 'こ'
+
+        'K' :: 'Y' :: 'A' :: ls ->
+            addKanas ls with [ 'キ', 'ャ' ]
+
+        'k' :: 'y' :: 'a' :: ls ->
+            addKanas ls with [ 'き', 'ゃ' ]
+
+        'K' :: 'Y' :: 'U' :: ls ->
+            addKanas ls with [ 'キ', 'ュ' ]
+
+        'k' :: 'y' :: 'u' :: ls ->
+            addKanas ls with [ 'き', 'ゅ' ]
+
+        'K' :: 'Y' :: 'O' :: ls ->
+            addKanas ls with [ 'キ', 'ョ' ]
+
+        'k' :: 'y' :: 'o' :: ls ->
+            addKanas ls with [ 'き', 'ょ' ]
+
+        --
+        'N' :: ls ->
+            addKana ls with 'ン'
+
+        'n' :: 'i' :: ls ->
+            addKana ls with 'に'
+
+        'n' :: '\'' :: ls ->
+            addKana ls with 'ん'
+
+        'n' :: ls ->
+            addKana ls with 'ん'
+
+        --
         _ ->
             String.fromList with
 
