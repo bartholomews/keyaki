@@ -1,15 +1,42 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Browser
 import Hepburn exposing (kana)
 import Html exposing (Attribute, Html, div, input, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
-import Utils
 
+-- ---------------------------
+-- PORTS
+-- ---------------------------
+
+port toJs : String -> Cmd msg
+
+-- ---------------------------
+-- MAIN
+-- ---------------------------
+
+
+--main : Program Int Model Msg
+--main =
+--    Browser.document
+--        { init = init
+--        , update = update
+--        , view =
+--            \m ->
+--                { title = "Elm 0.19 starter"
+--                , body = [ view m ]
+--                }
+--        , subscriptions = \_ -> Sub.none
+--        }
 
 main =
-    Utils.sandbox init update view
+    Browser.sandbox
+        { init = init
+        ,update = update
+        , view = view
+
+        }
 
 
 type alias Model =
@@ -20,7 +47,6 @@ init : Model
 init =
     { content = "" }
 
-
 type Msg
     = Translate String
 
@@ -29,7 +55,11 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Translate newContent ->
-            { model | content = newContent }
+            {
+            model
+             |
+              content = newContent
+            }
 
 
 view : Model -> Html Msg
