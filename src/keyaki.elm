@@ -7,6 +7,13 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 
 -- ---------------------------
+-- FIXME
+-- ---------------------------
+
+-- TODO in elm-webpack-starter.git /navigation branch for a `Routing` example
+-- TODO Browser.document in nodefornerds.com/understanding-the-browser-document-elm-application-pt-1/
+
+-- ---------------------------
 -- PORTS
 -- ---------------------------
 

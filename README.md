@@ -4,12 +4,9 @@ Following the [elm guide](https://guide.elm-lang.org)
 
 Webpack 4, Hot Reloading & Babel 7 seed from [elm-webpack-starter](https://github.com/simonh1000/elm-webpack-starter)
 
-## Installation
+## Development
 
-```sh
-$ git clone git@github.com:simonh1000/elm-webpack-starter.git new-project
-$ cd new-project
-$ yarn
+```bash
 $ yarn dev
  ```
 
@@ -20,8 +17,8 @@ Open http://localhost:3000.
 
 Build production assets (js and css together) with:
 
-```sh
-yarn run prod
+```bash
+$ yarn run prod
 ```
 
 ## Static assets
@@ -34,8 +31,8 @@ Just add to `src/assets/` and the production build copies them to `/dist`
 
 `elm-test init` is run when you install your dependencies. After that all you need to do to run the tests is
 
-```
-yarn test
+```bash
+$ yarn test
 ```
 
 Take a look at the examples in `tests/`
