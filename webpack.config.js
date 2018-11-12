@@ -1,5 +1,4 @@
 const path = require("path");
-const webpack = require("webpack");
 const merge = require("webpack-merge");
 
 const CopyWebpackPlugin = require("copy-webpack-plugin");
@@ -9,16 +8,22 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 // to extract the css as a separate file
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-var MODE =
-    process.env.npm_lifecycle_event === "prod" ? "production" : "development";
-var filename = MODE == "production" ? "[name]-[hash].js" : "index.js";
+const env = {
+    dev: "development",
+    prod: "production"
+};
 
-var common = {
+const MODE =
+    process.env.npm_lifecycle_event === "prod" ? env.prod : env.dev;
+
+const filename = MODE === env.prod ? "[name]-[hash].js" : "index.js";
+
+const common = {
     mode: MODE,
     entry: "./src/index.js",
     output: {
         path: path.join(__dirname, "dist"),
-        publicPath: "/",
+        // publicPath: "/",
         // webpack -p automatically adds hash when building for production
         filename: filename
     },
@@ -77,22 +82,22 @@ var common = {
     }
 };
 
-if (MODE === "development") {
+if (MODE === env.dev) {
     console.log("Building for dev...");
     module.exports = merge(common, {
-        plugins: [
+        optimization: {
             // Suggested for hot-loading
-            new webpack.NamedModulesPlugin(),
+            namedModules: true,
             // Prevents compilation errors causing the hot loader to lose state
-            new webpack.NoEmitOnErrorsPlugin()
-        ],
+            noEmitOnErrors: true
+        },
         module: {
             rules: [
                 {
                     test: /\.elm$/,
                     exclude: [/elm-stuff/, /node_modules/],
                     use: [
-                        { loader: "elm-hot-webpack-loader" },
+                        {loader: "elm-hot-webpack-loader"},
                         {
                             loader: "elm-webpack-loader",
                             options: {
@@ -110,17 +115,17 @@ if (MODE === "development") {
             stats: "errors-only",
             contentBase: path.join(__dirname, "src/assets"),
             historyApiFallback: true,
-            // feel free to delete this section if you don't need anything like this
-            before(app) {
-                // on port 3000
-                app.get("/test", function(req, res) {
-                    res.json({ result: "OK" });
-                });
-            }
+            // TODO fix or delete this section if you don't need anything like this
+            // before(app) {
+            //     // on port 3000
+            //     app.get("/test", function(req, res) {
+            //         res.json({ result: "OK" });
+            //     });
+            // }
         }
     });
 }
-if (MODE === "production") {
+if (MODE === env.prod) {
     console.log("Building for Production...");
     module.exports = merge(common, {
         plugins: [
