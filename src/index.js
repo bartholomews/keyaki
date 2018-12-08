@@ -7,11 +7,10 @@ require("./styles.scss");
 // var app = Elm.Main.init({}); // Elm.Main.init({flags: 6});
 
 const {Elm} = require('./keyaki.elm');
-const app = Elm.Main.init({node: document.getElementById("elm")});
+// const app =
+    Elm['Main'].init({node: document.getElementById("elm")});
 
-// app.ports.toJs.subscribe(data => {
-//     console.log(data);
-// });
+// app.toJs.subscribe(data => console.log(data));
 
 // Use ES2015 syntax and let Babel compile it for you
 // var testFn = (inp) => {
