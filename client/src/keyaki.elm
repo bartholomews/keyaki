@@ -105,7 +105,7 @@ type alias Document msg =
 
 view : Model -> Document Msg
 view model =
-    { title = "Hello Goodbye"
+    { title = "ケヤキ"
     , body =
         [ div []
             [ input [ placeholder "Rōmaji to Kana", value model.content, onInput Translate ] []
