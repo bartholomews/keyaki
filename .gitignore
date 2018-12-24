@@ -1,9 +1,11 @@
+
+.DS_Store
+.idea
+
 # Logs
 logs
 *.log
 npm-debug.log*
-
-.idea
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
@@ -23,9 +25,21 @@ elm-stuff/
 # elm-repl generated files
 repl-temp-*
 
-.DS_Store
-
 ignore
 dist
 tests/VerifyExamples
 package-lock.json
+
+# Haskell
+dist*
+*.hi
+*.o
+.hsenv*
+.stack-work/
+.cabal-sandbox
+sqlite.db
+sqlite.db-shm
+sqlite.db-wal
+cabal.sandbox.config
+*.swp
+*.keter
