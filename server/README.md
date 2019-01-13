@@ -21,13 +21,14 @@ stack build
 - Execute app
 
 ``` shell
-stack exec haskell-elm-todo-app
+stack exec keyaki
 ```
 
-- OR use live reloading w/ [halive](https://github.com/lukexi/halive)
+- OR use live reloading w/ [ghcid](https://github.com/ndmitchell/ghcid)
+(see alse [this reddit thread](https://www.reddit.com/r/haskell/comments/7e24nx/code_reloading/))
 
 ``` shell
-halive src/Main.hs
+ghcid -c stack ghci -W -T main
 ```
 
 - run tests
