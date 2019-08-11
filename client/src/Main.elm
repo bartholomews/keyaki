@@ -1,14 +1,16 @@
-port module Main exposing (httpErrorToString, init, main, toJs, update, view)
+port module Main exposing (main, toJs, update)
+
+--(httpErrorToString, init, view)
 
 import App.State as App exposing (..)
 import App.Types as App exposing (Model, Msg)
 import App.View as App exposing (..)
 import Browser
-import Html exposing (..)
-import Http exposing (Error(..))
 
 
 
+--import Html exposing (..)
+--import Http exposing (Error(..))
 -- ---------------------------
 -- TODO in elm-webpack-starter.git /navigation branch for a `Routing` example
 -- TODO Browser.document in nodefornerds.com/understanding-the-browser-document-elm-application-pt-1/
@@ -34,14 +36,9 @@ port toJs : String -> Cmd msg
 --    , newTodo : Todo.Todo
 --    }
 -- Model
-
-
-init : Int -> ( Model, Cmd Msg )
-init flags =
-    ( App.initialModel, App.initialCommand )
-
-
-
+--init : Int -> ( Model, Cmd Msg )
+--init flags =
+--    ( App.initialModel, App.initialCommand )
 -- ---------------------------
 -- UPDATE
 -- ---------------------------
@@ -52,37 +49,30 @@ update =
     App.update
 
 
-httpErrorToString : Http.Error -> String
-httpErrorToString err =
-    case err of
-        BadUrl _ ->
-            "BadUrl"
 
-        Timeout ->
-            "Timeout"
-
-        NetworkError ->
-            "NetworkError"
-
-        BadStatus _ ->
-            "BadStatus"
-
-        BadPayload _ _ ->
-            "BadPayload"
-
-
-
+--httpErrorToString : Http.Error -> String
+--httpErrorToString err =
+--    case err of
+--        BadUrl _ ->
+--            "BadUrl"
+--
+--        Timeout ->
+--            "Timeout"
+--
+--        NetworkError ->
+--            "NetworkError"
+--
+--        BadStatus _ ->
+--            "BadStatus"
+--
+--        BadBody _ ->
+--            "BadPayload"
 -- ---------------------------
 -- VIEW
 -- ---------------------------
-
-
-view : Model -> Html Msg
-view =
-    App.root
-
-
-
+--view : Model -> Html Msg
+--view =
+--    App.root
 -- ---------------------------
 -- MAIN
 -- ---------------------------
@@ -104,7 +94,7 @@ view =
 main : Program Int Model Msg
 main =
     Browser.document
-        { init = \f -> ( App.initialModel, App.initialCommand )
+        { init = \_ -> ( App.initialModel, App.initialCommand )
         , view =
             \m ->
                 { title = "ケヤキ"

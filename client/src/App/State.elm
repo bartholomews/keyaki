@@ -3,11 +3,11 @@ module App.State exposing (initialCommand, initialModel, update, updateTodo, upd
 import App.Types exposing (..)
 import Return exposing (Return)
 import Todo.Api as Todo
-import Todo.State as Todo
-import Todo.Types as Todo
-import Todos.Api as Todos
-import Todos.State as Todos
-import Todos.Types as Todos
+import Todo.State as TodoState
+import Todo.Types as TodoTypes
+import Todos.Api as TodosApi
+import Todos.State as TodosState
+import Todos.Types as TodosTypes
 
 
 
@@ -16,9 +16,9 @@ import Todos.Types as Todos
 
 initialModel : Model
 initialModel =
-    { todos = Todos.initialTodos
-    , todosVisibility = Todos.initialVisibility
-    , newTodo = Todo.initialNewTodo
+    { todos = TodosState.initialTodos
+    , todosVisibility = TodosState.initialVisibility
+    , newTodo = TodoState.initialNewTodo
     }
 
 
@@ -28,7 +28,7 @@ initialModel =
 
 initialCommand : Cmd Msg
 initialCommand =
-    Cmd.map TodosMsg Todos.getTodos
+    Cmd.map TodosMsg TodosApi.getTodos
 
 
 
@@ -47,30 +47,31 @@ update msg model =
            )
 
 
-updateTodo : Todo.Msg -> Return Msg Model -> Return Msg Model
+updateTodo : TodoTypes.Msg -> Return Msg Model -> Return Msg Model
 updateTodo msg writer =
     let
         ( appModel, _ ) =
             writer
 
         ( todoModel, todoCmd ) =
-            Todo.update msg appModel.newTodo
+            TodoState.update msg appModel.newTodo
     in
     writer
-        |> (case Debug.log "t " msg of
-                Todo.Save ->
+        --|> (case Debug.log "t " msg of
+        |> (case msg of
+                TodoTypes.Save ->
                     Return.command (Cmd.map TodoMsg <| Todo.saveTodo todoModel)
 
-                Todo.Saved (Ok todoId) ->
+                TodoTypes.Saved (Ok todoId) ->
                     let
                         todo =
                             { todoModel | id = todoId }
 
                         todos =
-                            List.append appModel.todos [ Todos.createTodoItem todo ]
+                            List.append appModel.todos [ TodosState.createTodoItem todo ]
                     in
                     Return.map
-                        (\m -> { m | todos = todos, newTodo = Todo.emptyTodo })
+                        (\m -> { m | todos = todos, newTodo = TodoState.emptyTodo })
 
                 _ ->
                     Return.mapWith (\m -> { m | newTodo = todoModel }) <|
@@ -78,29 +79,30 @@ updateTodo msg writer =
            )
 
 
-updateTodos : Todos.Msg -> Return Msg Model -> Return Msg Model
+updateTodos : TodosTypes.Msg -> Return Msg Model -> Return Msg Model
 updateTodos msg writer =
     let
         ( appModel, _ ) =
             writer
 
         ( todosModel, todosCmd ) =
-            Todos.update msg appModel.todos
+            TodosState.update msg appModel.todos
     in
     writer
-        |> (case Debug.log "ts " msg of
-                Todos.TodosFetched (Ok todos) ->
+        --|> (case Debug.log "ts " msg of
+        |> (case msg of
+                TodosTypes.TodosFetched (Ok todos) ->
                     Return.map <|
-                        \m -> { m | todos = List.map Todos.createTodoItem todos }
+                        \m -> { m | todos = List.map TodosState.createTodoItem todos }
 
-                Todos.DeleteTodo todoItem ->
+                TodosTypes.DeleteTodo todoItem ->
                     Return.mapWith
-                        (\m -> { m | todos = Todos.deleteTodoItem todoItem todosModel })
+                        (\m -> { m | todos = TodosState.deleteTodoItem todoItem todosModel })
                         (Cmd.map TodoMsg <|
                             Todo.deleteTodo todoItem.todo
                         )
 
-                Todos.UpdateTodo todoItem ->
+                TodosTypes.UpdateTodo todoItem ->
                     Return.mapWith
                         (\m -> { m | todos = todosModel })
                         (Cmd.map TodoMsg <|
@@ -108,7 +110,7 @@ updateTodos msg writer =
                                 .todo todoItem
                         )
 
-                Todos.ToggleTodoDone todoItem ->
+                TodosTypes.ToggleTodoDone todoItem ->
                     let
                         todo =
                             todoItem.todo
@@ -117,12 +119,12 @@ updateTodos msg writer =
                             { todo | completed = not todo.completed }
                     in
                     Return.mapWith
-                        (\m -> { m | todos = Todos.updateTodo todo_ todosModel })
+                        (\m -> { m | todos = TodosState.updateTodo todo_ todosModel })
                         (Cmd.map TodoMsg <|
                             Todo.updateTodo todo_
                         )
 
-                Todos.SetVisibility visibility ->
+                TodosTypes.SetVisibility visibility ->
                     Return.map (\m -> { m | todosVisibility = visibility })
 
                 _ ->

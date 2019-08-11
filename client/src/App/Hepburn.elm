@@ -1,13 +1,19 @@
 module App.Hepburn exposing (kana)
 
-import Debug exposing (log)
+-- import Debug exposing (log)
+
 import List exposing (concat)
-import String exposing (cons, uncons)
+import String
+
+
+
+-- exposing (cons, uncons)
 
 
 kana : String -> String
 kana str =
-    translate (String.toList str) []
+    translate (String.toList str)
+        []
 
 
 

@@ -7,15 +7,12 @@ import Todo.Types as Todo
 import Todos.Types exposing (..)
 
 
-apiGetTodos : Http.Request (List Todo.Todo)
-apiGetTodos =
-    Http.get "http://localhost:8080/todos/" todosDecoder
-
-
 getTodos : Cmd Msg
 getTodos =
-    apiGetTodos
-        |> Http.send TodosFetched
+    Http.get
+        { url = "http://localhost:8080/todos/"
+        , expect = Http.expectJson TodosFetched todosDecoder
+        }
 
 
 
