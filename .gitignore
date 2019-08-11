@@ -1,2 +1,3 @@
-.idea/
-elm-stuff
+# project-level haskell project
+.idea
+.stack-work

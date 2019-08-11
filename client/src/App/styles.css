@@ -1,0 +1,12 @@
+
+.header {
+  background-image: url('../assets/images/haskell_elm_logo.png');
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.btn:focus {
+  box-shadow: none;
+}

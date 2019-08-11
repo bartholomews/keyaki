@@ -1,4 +1,4 @@
-module Hepburn exposing (kana)
+module App.Hepburn exposing (kana)
 
 import Debug exposing (log)
 import List exposing (concat)

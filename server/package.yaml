@@ -1,0 +1,107 @@
+# This YAML file describes your package. Stack will automatically generate a
+# Cabal file when you run `stack build`. See the hpack website for help with
+# this file: <https://github.com/sol/hpack>.
+name: keyaki
+version: '0.0.0'
+github: "githubuser/keyaki"
+license: MIT
+author: "Author name here"
+maintainer: "Author name here"
+# synopsis: A new Haskeleton package.
+# description: keyaki is a new Haskeleton package.
+# category: Other
+
+extra-source-files:
+- CHANGELOG.md
+- LICENSE.md
+- package.yaml
+- README.md
+- stack.yaml
+
+ghc-options: -Wall
+
+library:
+  dependencies:
+    - async
+    - base
+    - directory
+    - exceptions
+    - http-types
+    - monad-logger
+    - persistent
+    - persistent-template
+    - persistent-sqlite
+    - resourcet
+    - servant
+    - servant-server
+    - string-conversions
+    - text
+    - transformers
+    - wai
+    - wai-cors
+    - wai-extra
+    - warp
+  source-dirs: library
+
+executables:
+  keyaki:
+    source-dirs: executable
+    main: Main.hs
+    dependencies:
+    - base
+    - keyaki
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
+
+benchmarks:
+  keyaki-benchmarks:
+    source-dirs: benchmark
+    main: Main.hs
+    dependencies:
+    - base
+    - keyaki
+    - criterion
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
+
+tests:
+  keyaki-test-suite:
+    source-dirs: test-suite
+    main: Spec.hs
+    dependencies:
+      - base
+      - bytestring
+      - exceptions
+      - hspec
+      - hspec-discover
+      - hspec-wai
+      - hspec-wai-json
+      - http-client
+      - keyaki
+      - mockery
+      - monad-logger
+      - persistent
+      - persistent-template
+      - persistent-sqlite
+      - QuickCheck
+      - resourcet
+      - servant
+      - servant-client
+      - servant-server
+      - string-conversions
+      - tasty
+      - tasty-hspec
+      - text
+      - transformers
+      - wai
+      - wai-cors
+      - wai-extra
+      - warp
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
