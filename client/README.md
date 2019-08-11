@@ -1,6 +1,10 @@
 # ケヤキ 
 
+<<<<<<< HEAD
 ## JLPT SRS Elm client
+=======
+## Elm client
+>>>>>>> origin/master
 
 Following the [elm guide](https://guide.elm-lang.org)
 
