@@ -1,6 +1,8 @@
 module App.State exposing (initialCommand, initialModel, update, updateTodo, updateTodos)
 
 import App.Types exposing (..)
+import Browser
+import Browser.Navigation as Nav
 import Return exposing (Return)
 import Todo.Api as Todo
 import Todo.State as TodoState
@@ -8,15 +10,18 @@ import Todo.Types as TodoTypes
 import Todos.Api as TodosApi
 import Todos.State as TodosState
 import Todos.Types as TodosTypes
+import Url exposing (Url)
 
 
 
 -- Model
 
 
-initialModel : Model
-initialModel =
-    { todos = TodosState.initialTodos
+initialModel : Url -> Nav.Key -> Model
+initialModel url key =
+    { url = url
+    , navKey = key
+    , todos = TodosState.initialTodos
     , todosVisibility = TodosState.initialVisibility
     , newTodo = TodoState.initialNewTodo
     }
@@ -44,6 +49,20 @@ update msg model =
 
                 TodoMsg msg_ ->
                     updateTodo msg_
+
+                UrlChanged newUrl ->
+                    Return.map (\m -> { m | url = newUrl })
+
+                LinkClicked urlRequest ->
+                    case urlRequest of
+                        Browser.Internal newUrl ->
+                            Return.command (Nav.pushUrl model.navKey (Url.toString newUrl))
+
+                        Browser.External href ->
+                            Return.command (Nav.load href)
+
+                DoNothing ->
+                    Return.zero
            )
 
 
