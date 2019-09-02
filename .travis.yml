@@ -1,3 +1,4 @@
+# TODO try this: https://www.fosskers.ca/blog/deploying-haskell-en.html
 services:
   - docker
 

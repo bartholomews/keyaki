@@ -6,6 +6,7 @@ FROM fpco/stack-build:lts-13.20 as build-env
 WORKDIR /opt/foo
 
 # optionally cache the package index too
+RUN cd server
 RUN stack update
 COPY keyaki.cabal /opt/foo
 COPY stack.yaml /opt/foo
