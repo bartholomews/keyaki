@@ -1,6 +1,8 @@
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](LICENSE)
 
 # ケヤキ
+
+[![Build Status](https://travis-ci.org/bartholomews/keyaki.svg?branch=master)](https://travis-ci.org/bartholomews/keyaki)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](LICENSE)
  
 ## [Server](server/README.md)
 
