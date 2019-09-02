@@ -2,8 +2,8 @@
 # Cabal file when you run `stack build`. See the hpack website for help with
 # this file: <https://github.com/sol/hpack>.
 name: keyaki
-version: '0.0.0'
-github: "githubuser/keyaki"
+version: '0.0.1'
+github: "bartholomews/keyaki"
 license: MIT
 author: "Author name here"
 maintainer: "Author name here"
@@ -24,15 +24,19 @@ library:
   dependencies:
     - async
     - base
+    - bytestring
     - directory
     - exceptions
+    - http-client
     - http-types
     - monad-logger
     - persistent
     - persistent-template
     - persistent-sqlite
+    - resource-pool
     - resourcet
     - servant
+    - servant-client
     - servant-server
     - string-conversions
     - text
@@ -49,6 +53,7 @@ executables:
     main: Main.hs
     dependencies:
     - base
+    - directory
     - keyaki
     ghc-options:
     - -rtsopts

@@ -18,6 +18,7 @@ import           Database.Persist.Sql                  (ConnectionPool, Entity,
                                                         runSqlPersistMPool,
                                                         runSqlPool, (==.))
 
+
 import           Database.Persist.Sql.Types.Internal   (SqlBackend)
 import           Database.Persist.Sqlite               (createSqlitePool,
                                                         delete, insert, replace,

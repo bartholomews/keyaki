@@ -9,7 +9,7 @@ Seed from [haskell-elm-todo-app](https://github.com/sectore/haskell-elm-todo-app
 - Go to project folder
 
 ``` shell
-cd {project}/server/
+cd {project}
 ```
 
 - Build project:
@@ -58,6 +58,13 @@ http PUT localhost:8080/todo/1 description="any other description" completed:=tr
 # get all todos
 http localhost:8080/todos
 
+```
+
+### Docker workflow (WIP)
+
+```bash
+./scripts/release // build the image
+docker run -i -t -p 8080:8080 bartholomews/keyaki
 ```
 
 ### Helpful Haskell / Servant stuff
