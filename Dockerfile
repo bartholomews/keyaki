@@ -4,8 +4,8 @@
 FROM fpco/stack-build-small:lts-14.0 as build-env
 WORKDIR /opt/server
 RUN stack update
-COPY server/keyaki.cabal /opt/server
-COPY server/stack.yaml /opt/server
+COPY stack.yaml /opt
+COPY server/package.yaml /opt/server
 RUN stack install --only-dependencies
 COPY server /opt/server
 RUN stack install

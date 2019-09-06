@@ -5,18 +5,18 @@ name: keyaki
 version: '0.0.1'
 github: "bartholomews/keyaki"
 license: MIT
-author: "Author name here"
-maintainer: "Author name here"
-# synopsis: A new Haskeleton package.
-# description: keyaki is a new Haskeleton package.
-# category: Other
+author: "Federico Bartolomei"
+maintainer: "bartholomews"
+# synopsis: Japanese SRS [EARLY STAGE WIP].
+# description: keyaki is a Japanese SRS project.
+# category: SRS
 
 extra-source-files:
 - CHANGELOG.md
 - LICENSE.md
 - package.yaml
 - README.md
-- stack.yaml
+#- ../stack.yaml
 
 ghc-options: -Wall
 
