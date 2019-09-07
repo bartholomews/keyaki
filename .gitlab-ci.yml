@@ -79,7 +79,7 @@ deploy:
   image: docker:19.03.1
   stage: deploy
   before_script:
-    - apk add --update bash py-pip python-pip
+    - apk add --update bash py-pip
     - python -m pip install yaml
   script:
 #    - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
