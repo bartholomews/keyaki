@@ -32,9 +32,10 @@ before_script:
   - docker info
 
 stages:
-  - build
-  - test
-  - deploy
+  - build-frontend
+  - build-backend
+#  - test
+#  - deploy
 
 build-frontend:
 #  image: node:11.15.0
