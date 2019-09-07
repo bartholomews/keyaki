@@ -31,12 +31,6 @@ services:
 before_script:
   - docker info
 
-stages:
-  - build-frontend
-  - build-backend
-#  - test
-#  - deploy
-
 job 1:
 #  image: node:11.15.0
   stage: build
