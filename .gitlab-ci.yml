@@ -56,9 +56,11 @@ build-frontend:
     - ls
   artifacts:
     paths:
-      - dist
+      - client/dist
 
 build-backend:
   stage: build-backend
   script:
-    - docker build -t keyaki --target build-prod .
+    - ls
+    - ls client
+#    - docker build -t keyaki --target build-prod .
