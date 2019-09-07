@@ -32,33 +32,42 @@ before_script:
   - docker info
 
 stages:
- - build-frontend
- - build-backend
-#  - test
-#  - deploy
+  #  - test
+  - build-frontend
+  - build-backend
+  - deploy
 
 build-frontend:
   image: node:11.15.0
   stage: build-frontend
   before_script:
-    - cd client
-    - yarn install
-#    # Install yarn as outlined in (https://yarnpkg.com/lang/en/docs/install/#alternatives-stable)
-#    - curl -o- -L https://yarnpkg.com/install.sh | bash
-#    # Make available in the current terminal
-#    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_
+    - cd client && yarn install
   cache:
     paths:
       - client/node_modules/
       - client/.yarn
   script:
     - yarn run prod
-    - ls
   artifacts:
     paths:
       - client/dist
 
 build-backend:
+  image: fpco/stack-build-small:lts-14.0
   stage: build-backend
+  before_script:
+    - cd server
   script:
-    - docker build -t keyaki --target build-prod .
+    - stack update
+    - stack install --only-dependencies
+    - stack install
+    - cd .. && cp /root/.local/bin/keyaki .
+    - ls
+  artifacts:
+    paths:
+      - keyaki
+
+deploy:
+  stage: deploy
+  script:
+    - ls
