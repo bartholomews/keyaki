@@ -2,7 +2,7 @@
 # Cabal file when you run `stack build`. See the hpack website for help with
 # this file: <https://github.com/sol/hpack>.
 name: keyaki
-version: '0.0.1'
+version: '0.0.1-SNAPSHOT'
 github: "bartholomews/keyaki"
 license: MIT
 author: "Federico Bartolomei"

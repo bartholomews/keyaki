@@ -1,4 +1,4 @@
-image: docker:19.03.1
+image: docker:19.03.2
 
 variables:
   # When using dind service, we need to instruct docker, to talk with
@@ -33,45 +33,56 @@ before_script:
 
 stages:
   #  - test
-  - build
+#  - build
   - deploy
 
-build client:
-  image: node:11.15.0
-  stage: build
-  before_script:
-    - cd client && yarn install
-  cache:
-    paths:
-      - client/node_modules/
-      - client/.yarn
-  script:
-    - yarn run prod
-  artifacts:
-    paths:
-      - client/dist
+#cache: &global_cache
+#  key: ${CI_COMMIT_REF_SLUG}
+#  paths:
+#    - client/node_modules/
+#    - client/.yarn
+#    - server/.stack-work/
 
-build server:
-  image: fpco/stack-build-small:lts-14.0
-  stage: build
-  before_script:
-    - cd server
-  cache:
-    paths:
-      - server/.stack-work/
-  script:
-    - stack update
-    - stack install --only-dependencies
-    - stack install
-    - cp /root/.local/bin/keyaki ..
-  artifacts:
-    paths:
-      - keyaki
+#build client:
+#  image: node:11.15.0
+#  stage: build
+#  before_script:
+#    - cd client && yarn install
+#  cache:
+#    paths:
+#      - client/node_modules/
+#      - client/.yarn
+#  script:
+#    - yarn run prod
+#  artifacts:
+#    paths:
+#      - client/dist
+
+#build server:
+#  image: fpco/stack-build-small:lts-14.0
+#  stage: build
+#  before_script:
+#    - cd server
+#  cache:
+#    paths:
+#      - server/.stack-work/
+#  script:
+#    - stack update
+#    - stack install --only-dependencies
+#    - stack install
+#    - cp /root/.local/bin/keyaki ..
+#  artifacts:
+#    paths:
+#      - keyaki
 
 deploy:
-  image: docker:19.03.1
+  image: docker:19.03.2
   stage: deploy
+  before_script:
+    - RUN apk update && apk add bash python
+  services:
+    - bash
   script:
-    - ls
     - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
-    - ./scripts/deploy-docker-image.sh
+    - ADD scripts/deploy-docker-image.sh deploy.sh
+    - RUN ./deploy.sh
