@@ -7,6 +7,6 @@ IMAGE=${REPOSITORY}:${VERSION}
 
 docker tag ${IMAGE} ${REPOSITORY}:latest
 echo pushing ${IMAGE} to registry
-docker push ${IMAGE}
+#docker push ${IMAGE}
 echo pushing ${REPOSITORY}:latest to registry
 #docker push ${REPOSITORY}:latest

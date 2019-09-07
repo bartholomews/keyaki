@@ -63,13 +63,12 @@ build server:
     - stack update
     - stack install --only-dependencies
     - stack install
-    - cd .. && cp /root/.local/bin/keyaki .
   artifacts:
     paths:
-      - keyaki
+      - /root/.local/bin/keyaki
 
 deploy:
-  image: ubuntu:18.04
+  image: docker:19.03.1
   stage: deploy
   script:
     - ls
