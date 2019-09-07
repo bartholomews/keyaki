@@ -31,13 +31,13 @@ services:
 before_script:
   - docker info
 
-#stages:
-#  - build
-#  - test
-#  - deploy
+stages:
+  - build
+  - test
+  - deploy
 
-build:
-  image: docker:19.03.1
+build-frontend:
+#  image: node:11.15.0
   stage: build
   services:
     - node:11.15.0
@@ -55,9 +55,10 @@ build:
   script:
     - yarn run prod
     - ls
-    - docker build -t keyaki --target build-prod .
 
-#build-backend:
-#  stage: build
-#  script:
-#    - docker build -t keyaki --target build-prod .
+build-backend:
+  stage: build
+  dependencies:
+    - build-frontend
+  script:
+    - docker build -t keyaki --target build-prod .
