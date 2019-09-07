@@ -64,7 +64,7 @@ http localhost:8080/todos
 
 ```bash
 ./scripts/release // build the image
-docker run -i -t -p 8080:8080 bartholomews/keyaki
+docker run --name keyaki -it -p 8080:8080 bartholomews/keyaki
 ```
 
 ### Helpful Haskell / Servant stuff
