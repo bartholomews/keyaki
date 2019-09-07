@@ -27,6 +27,7 @@ variables:
 
 services:
   - docker:19.03.1-dind
+  - node:latest
 
 before_script:
   - docker info
@@ -39,8 +40,6 @@ before_script:
 build:
   image: node:11.15.0
   stage: build
-  services:
-    - node:latest
   before_script:
     - cd client
     - yarn install
