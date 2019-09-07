@@ -33,13 +33,12 @@ before_script:
 
 stages:
   #  - test
-  - build-frontend
-  - build-backend
+  - build
   - deploy
 
-build-frontend:
+build client:
   image: node:11.15.0
-  stage: build-frontend
+  stage: build
   before_script:
     - cd client && yarn install
   cache:
@@ -52,22 +51,27 @@ build-frontend:
     paths:
       - client/dist
 
-build-backend:
+build server:
   image: fpco/stack-build-small:lts-14.0
-  stage: build-backend
+  stage: build
   before_script:
     - cd server
+  cache:
+    paths:
+      - server/.stack-work/
   script:
     - stack update
     - stack install --only-dependencies
     - stack install
     - cd .. && cp /root/.local/bin/keyaki .
-    - ls
   artifacts:
     paths:
       - keyaki
 
 deploy:
+  image: ubuntu:18.04
   stage: deploy
   script:
     - ls
+    - docker build -t keyaki -f docker/prod/Dockerfile .
+    - ./scripts/deploy-docker-image.sh
