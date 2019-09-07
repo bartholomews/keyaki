@@ -61,6 +61,4 @@ build-frontend:
 build-backend:
   stage: build-backend
   script:
-    - ls
-    - ls client
-#    - docker build -t keyaki --target build-prod .
+    - docker build -t keyaki --target build-prod .
