@@ -80,7 +80,7 @@ deploy:
   stage: deploy
   before_script:
     - apk add --update bash py-pip
-    - python -m pip install yaml
+    - python -m pip install pyyaml
   script:
 #    - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
     - scripts/deploy-docker-image.sh deploy.sh
