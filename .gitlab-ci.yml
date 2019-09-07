@@ -38,10 +38,8 @@ stages:
 #  - deploy
 
 build-frontend:
-#  image: node:11.15.0
+  image: node:11.15.0
   stage: build-frontend
-  services:
-    - node:11.15.0
   before_script:
     - cd client
     - yarn install
@@ -56,6 +54,9 @@ build-frontend:
   script:
     - yarn run prod
     - ls
+  artifacts:
+    paths:
+      - dist
 
 build-backend:
   stage: build-backend
