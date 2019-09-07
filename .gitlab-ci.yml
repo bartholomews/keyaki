@@ -31,7 +31,33 @@ services:
 before_script:
   - docker info
 
+#stages:
+#  - build
+#  - test
+#  - deploy
+
 build:
+  image: node:11.15.0
   stage: build
+  services:
+    - node:latest
+  before_script:
+    - cd client
+    - yarn install
+#    # Install yarn as outlined in (https://yarnpkg.com/lang/en/docs/install/#alternatives-stable)
+#    - curl -o- -L https://yarnpkg.com/install.sh | bash
+#    # Make available in the current terminal
+#    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_
+  cache:
+    paths:
+      - client/node_modules/
+      - client/.yarn
   script:
+    - yarn run prod
+    - ls
     - docker build -t keyaki --target build-prod .
+
+#build-backend:
+#  stage: build
+#  script:
+#    - docker build -t keyaki --target build-prod .
