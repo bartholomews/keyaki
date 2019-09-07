@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-REPOSITORY=bartholomews/keyaki
-SEMVER=0
-VERSION=0.0.1
-IMAGE=${REPOSITORY}:${VERSION}
+VERSION=0.0.1-SNAPSHOT
+VERSIONED=bartholomews/keyaki:${VERSION}
+LATEST=bartholomews/keyaki:latest
 
-docker tag ${IMAGE} ${REPOSITORY}:latest
-echo pushing ${IMAGE} to registry
-#docker push ${IMAGE}
-echo pushing ${REPOSITORY}:latest to registry
-#docker push ${REPOSITORY}:latest
+docker tag bartholomews/keyaki ${VERSIONED}
+echo pushing ${VERSIONED} to registry
+docker push ${VERSIONED}
+docker tag bartholomews/keyaki ${LATEST}
+echo pushing ${LATEST} to registry
+docker push ${LATEST}
