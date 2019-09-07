@@ -37,7 +37,7 @@ stages:
 #  - test
 #  - deploy
 
-build-frontend:
+job 1:
 #  image: node:11.15.0
   stage: build
   services:
@@ -57,9 +57,9 @@ build-frontend:
     - yarn run prod
     - ls
 
-build-backend:
+job 2:
   stage: build
   dependencies:
-    - build-frontend
+    - job 1
   script:
     - docker build -t keyaki --target build-prod .
