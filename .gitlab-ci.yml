@@ -1,4 +1,4 @@
-image: docker:19.03.2
+image: docker:19.03.1
 
 variables:
   # When using dind service, we need to instruct docker, to talk with
@@ -76,7 +76,7 @@ stages:
 #      - keyaki
 
 deploy:
-  image: docker:19.03.2
+  image: docker:19.03.1
   stage: deploy
   before_script:
     - RUN apk update && apk add bash python
