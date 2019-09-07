@@ -82,6 +82,6 @@ deploy:
     - bash
   script:
     - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
-    - RUN apk update && apk add bash python
+#    - RUN apk update && apk add bash python
     - ADD scripts/deploy-docker-image.sh deploy.sh
     - RUN ./deploy.sh
