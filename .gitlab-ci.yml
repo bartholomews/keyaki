@@ -83,5 +83,4 @@ deploy:
     - python -m pip install pyyaml
   script:
 #    - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
-    - scripts/deploy-docker-image.sh deploy.sh
-    - ./deploy.sh
+    - ./scripts/deploy-docker-image.sh
