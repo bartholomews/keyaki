@@ -42,6 +42,7 @@ library:
     - text
     - transformers
     - wai
+    - wai-app-static
     - wai-cors
     - wai-extra
     - warp

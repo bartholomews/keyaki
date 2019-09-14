@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=$(./scripts/read-artifact-name.py)
+VERSION=$(./scripts/read-version-name.py)
 VERSIONED=bartholomews/keyaki:${VERSION}
 LATEST=bartholomews/keyaki:latest
 
