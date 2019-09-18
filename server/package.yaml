@@ -18,34 +18,82 @@ extra-source-files:
 - README.md
 #- ../stack.yaml
 
+default-extensions:
+- OverloadedStrings
+- QuasiQuotes
+- GeneralizedNewtypeDeriving
+- ConstraintKinds
+- FlexibleContexts
+- TemplateHaskell
+- FlexibleInstances
+- NoImplicitPrelude
+- ScopedTypeVariables
+
 ghc-options: -Wall
+
+# haskell-scotty
+dependencies:
+- classy-prelude
+- base
 
 library:
   dependencies:
-    - async
-    - base
-    - bytestring
-    - directory
-    - exceptions
-    - http-client
-    - http-types
-    - monad-logger
-    - persistent
-    - persistent-template
-    - persistent-sqlite
-    - resource-pool
-    - resourcet
-    - servant
-    - servant-client
-    - servant-server
-    - string-conversions
-    - text
-    - transformers
-    - wai
-    - wai-app-static
-    - wai-cors
-    - wai-extra
-    - warp
+  - async
+  - base
+  - bytestring
+  - directory
+  - exceptions
+#  - http-client (in haskell-scotty)
+#  - http-types (in haskell-scotty)
+  - monad-logger
+  - persistent
+  - persistent-template
+  - persistent-sqlite
+#  - resource-pool (in haskell-scotty)
+  - resourcet
+  - servant
+  - servant-client
+  - servant-server
+  - string-conversions
+  - text
+  - transformers
+#  - wai (in haskell-scotty)
+  - wai-app-static
+#  - wai-cors (in haskell-scotty)
+  - wai-extra
+#  - warp (in haskell-scotty)
+  # haskell-scotty
+  - scotty
+  - postgresql-simple
+  - postgresql-simple-migration
+  - data-has
+  - aeson
+  - time
+  - mtl
+  - regex-compat
+  - http-types
+  - resource-pool
+  - warp-tls
+  - warp
+  - digestive-functors
+  - digestive-functors-aeson
+  - lens
+  - wai
+  - jose-jwt
+  - cryptonite
+  - slug
+  - convertible
+  - wai-cors
+  - template-haskell
+  # client
+  - wreq
+  - http-client
+  ghc-options:
+  - -Wall
+  - -Werror
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  - -Wredundant-constraints
   source-dirs: library
 
 executables:
@@ -79,34 +127,34 @@ tests:
     source-dirs: test-suite
     main: Spec.hs
     dependencies:
-      - base
-      - bytestring
-      - exceptions
-      - hspec
-      - hspec-discover
-      - hspec-wai
-      - hspec-wai-json
-      - http-client
-      - keyaki
-      - mockery
-      - monad-logger
-      - persistent
-      - persistent-template
-      - persistent-sqlite
-      - QuickCheck
-      - resourcet
-      - servant
-      - servant-client
-      - servant-server
-      - string-conversions
-      - tasty
-      - tasty-hspec
-      - text
-      - transformers
-      - wai
-      - wai-cors
-      - wai-extra
-      - warp
+    - base
+    - bytestring
+    - exceptions
+    - hspec
+    - hspec-discover
+    - hspec-wai
+    - hspec-wai-json
+    - http-client
+    - keyaki
+    - mockery
+    - monad-logger
+    - persistent
+    - persistent-template
+    - persistent-sqlite
+    - QuickCheck
+    - resourcet
+    - servant
+    - servant-client
+    - servant-server
+    - string-conversions
+    - tasty
+    - tasty-hspec
+    - text
+    - transformers
+    - wai
+    - wai-cors
+    - wai-extra
+    - warp
     ghc-options:
     - -rtsopts
     - -threaded
