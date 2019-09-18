@@ -2,14 +2,14 @@
 
 ## Haskell service
 
-Seed from [haskell-elm-todo-app](https://github.com/sectore/haskell-elm-todo-app)
+Seed from [haskell-scotty-realworld-example-app](https://github.com/eckyputrady/haskell-scotty-realworld-example-app)
 
 ### Development
 
 - Go to project folder
 
 ``` shell
-cd {project}
+cd keyaki
 ```
 
 - Build project:
@@ -24,7 +24,12 @@ stack build
 stack exec keyaki
 ```
 
-- OR use live reloading w/ [ghcid](https://github.com/ndmitchell/ghcid)
+- Live reloading w/ `--file-watch`:
+```shell
+./server/scripts/dev.sh
+```
+
+- Live reloading w/ [ghcid](https://github.com/ndmitchell/ghcid)
 (see also [this reddit thread](https://www.reddit.com/r/haskell/comments/7e24nx/code_reloading/))
 
 ``` shell
@@ -58,13 +63,6 @@ http PUT localhost:8080/todo/1 description="any other description" completed:=tr
 # get all todos
 http localhost:8080/todos
 
-```
-
-### Docker workflow (WIP)
-
-```bash
-./scripts/release // build the image
-docker run --name keyaki -it -p 8080:8080 bartholomews/keyaki
 ```
 
 ### Helpful Haskell / Servant stuff

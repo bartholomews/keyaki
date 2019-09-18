@@ -30,7 +30,7 @@ saveTodo todo =
                 |> Http.stringBody "application/json"
     in
     Http.post
-        { url = "http://localhost:8080/todo/"
+        { url = "http://localhost:8080/api/todo/"
         , body = body
         , expect = Http.expectJson Saved Decode.int
         }
@@ -41,7 +41,7 @@ deleteTodo todo =
     Http.request
         { method = "DELETE"
         , headers = []
-        , url = "http://localhost:8080/todo/" ++ String.fromInt todo.id
+        , url = "http://localhost:8080/api/todo/" ++ String.fromInt todo.id
         , body = Http.emptyBody
         , expect = Http.expectString Deleted
         , timeout = Nothing
@@ -62,7 +62,7 @@ updateTodo todo =
     Http.request
         { method = "PUT"
         , headers = []
-        , url = "http://localhost:8080/todo/" ++ String.fromInt todo.id
+        , url = "http://localhost:8080/api/todo/" ++ String.fromInt todo.id
         , body = body
         , expect = Http.expectString Updated
         , timeout = Nothing

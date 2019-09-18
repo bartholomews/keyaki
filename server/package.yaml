@@ -38,31 +38,6 @@ dependencies:
 
 library:
   dependencies:
-  - async
-  - base
-  - bytestring
-  - directory
-  - exceptions
-#  - http-client (in haskell-scotty)
-#  - http-types (in haskell-scotty)
-  - monad-logger
-  - persistent
-  - persistent-template
-  - persistent-sqlite
-#  - resource-pool (in haskell-scotty)
-  - resourcet
-  - servant
-  - servant-client
-  - servant-server
-  - string-conversions
-  - text
-  - transformers
-#  - wai (in haskell-scotty)
-  - wai-app-static
-#  - wai-cors (in haskell-scotty)
-  - wai-extra
-#  - warp (in haskell-scotty)
-  # haskell-scotty
   - scotty
   - postgresql-simple
   - postgresql-simple-migration
@@ -85,7 +60,6 @@ library:
   - convertible
   - wai-cors
   - template-haskell
-  # client
   - wreq
   - http-client
   ghc-options:
@@ -124,38 +98,14 @@ benchmarks:
 
 tests:
   keyaki-test-suite:
-    source-dirs: test-suite
-    main: Spec.hs
-    dependencies:
-    - base
-    - bytestring
-    - exceptions
-    - hspec
-    - hspec-discover
-    - hspec-wai
-    - hspec-wai-json
-    - http-client
-    - keyaki
-    - mockery
-    - monad-logger
-    - persistent
-    - persistent-template
-    - persistent-sqlite
-    - QuickCheck
-    - resourcet
-    - servant
-    - servant-client
-    - servant-server
-    - string-conversions
-    - tasty
-    - tasty-hspec
-    - text
-    - transformers
-    - wai
-    - wai-cors
-    - wai-extra
-    - warp
+    main: Main.hs
+    source-dirs: test
     ghc-options:
-    - -rtsopts
     - -threaded
+    - -rtsopts
     - -with-rtsopts=-N
+    dependencies:
+    - keyaki
+    - hspec
+    - postgresql-simple
+    - string-random

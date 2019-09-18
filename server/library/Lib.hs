@@ -25,6 +25,10 @@ import qualified Feature.Comment.HTTP as CommentHTTP
 import qualified Feature.Comment.PG as CommentPG
 import qualified Feature.Comment.Service as CommentService
 
+import qualified Feature.Todo.HTTP as TodoHTTP
+import qualified Feature.Todo.PG as TodoPG
+import qualified Feature.Todo.Service as TodoService
+
 main :: IO ()
 main = do
   -- acquire resources
@@ -103,6 +107,12 @@ instance CommentHTTP.Service AppT where
   addComment = CommentService.addComment
   delComment = CommentService.delComment
   getComments = CommentService.getComments
+  
+instance TodoService.TodoRepo AppT where
+  addTodo = TodoPG.addTodo
+  
+instance TodoHTTP.Service AppT where
+  createTodo = TodoService.createTodo
 
 instance CommentService.CommentRepo AppT where
   addCommentToSlug = CommentPG.addCommentToSlug

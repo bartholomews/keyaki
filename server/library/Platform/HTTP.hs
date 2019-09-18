@@ -15,10 +15,11 @@ import qualified Feature.Auth.HTTP as Auth
 import qualified Feature.User.HTTP as User
 import qualified Feature.Comment.HTTP as Comment
 import qualified Feature.Article.HTTP as Article
+import qualified Feature.Todo.HTTP as Todo
 
 import System.Environment
 
-type App r m = (Article.Service m, Auth.Service m, Comment.Service m, User.Service m, MonadIO m)
+type App r m = (Article.Service m, Auth.Service m, Comment.Service m, User.Service m, Todo.Service m, MonadIO m)
 
 main :: (App r m) => (m Response -> IO Response) -> IO ()
 main runner = do
@@ -33,7 +34,7 @@ main runner = do
   where
     acquirePort = do
       port <- fromMaybe "" <$> lookupEnv "PORT"
-      return . fromMaybe 3000 $ readMay port
+      return . fromMaybe 8080 $ readMay port
     acquireTLSSetting = do
       env <- (>>= readMay) <$> lookupEnv "ENABLE_HTTPS"
       let enableHttps = fromMaybe False env -- TODO [FB] should default to True
@@ -61,6 +62,7 @@ routes = do
 
   -- feature routes
   User.routes
+  Todo.routes
   Article.routes
   Comment.routes
 
@@ -77,7 +79,7 @@ routes = do
 -- >    cap <- param "1"
 -- >    text $ mconcat ["Path: ", path, "\nCapture: ", cap]
 --
--- >>> curl http://localhost:3000/foo/bar
+-- >>> curl http://localhost:8080/foo/bar
 -- Path: /foo/bar
 -- Capture: oo/ba
 

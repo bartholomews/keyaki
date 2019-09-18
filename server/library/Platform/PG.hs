@@ -14,7 +14,9 @@ type PG r m = (MonadReader r m, Has Env r, MonadIO m)
 init :: IO Env
 init = do
   pool <- acquirePool
-  migrateDb pool
+  envUrl <- lookupEnv "MIGRATION_DIRECTORY"
+  let migrationDirectory = fromMaybe "server/postgresql" envUrl
+  migrateDb migrationDirectory pool
   return pool
 
 acquirePool :: IO (Pool Connection)
@@ -23,12 +25,12 @@ acquirePool = do
   let pgUrl = fromString $ fromMaybe "postgresql://0.0.0.0/keyaki" envUrl
   createPool (connectPostgreSQL pgUrl) close 1 10 10
 
-migrateDb :: Pool Connection -> IO ()
-migrateDb pool = withResource pool $ \conn ->
+migrateDb :: String -> Pool Connection -> IO ()
+migrateDb migrationDirectory pool = withResource pool $ \conn ->
   void $ withTransaction conn (runMigration (ctx conn))
   where
     ctx = MigrationContext cmd False
-    cmd = MigrationCommands [ MigrationInitialization, MigrationDirectory "server/postgresql" ]
+    cmd = MigrationCommands [ MigrationInitialization, MigrationDirectory migrationDirectory ]
 
 withConn :: PG r m => (Connection -> IO a) -> m a
 withConn action = do

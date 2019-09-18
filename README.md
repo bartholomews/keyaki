@@ -5,6 +5,16 @@
 [![Build Status](https://gitlab.com/bartholomews/keyaki/badges/master/pipeline.svg)](https://gitlab.com/bartholomews/keyaki/pipelines/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/bartholomews/keyaki)](https://hub.docker.com/r/bartholomews/keyaki)
  
+## Notice
+
+*This project is at its **very** early stage*
+
+## Run locally
+
+```bash
+./scripts/docker-compose-keyaki.sh
+``` 
+ 
 ## [Server](server/README.md)
 
 + [`Haskell`](https://www.haskell.org/)  
