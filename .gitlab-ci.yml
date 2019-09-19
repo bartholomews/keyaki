@@ -70,7 +70,9 @@ test server:
   image: fpco/stack-build-small:lts-14.0
   stage: test
   before_script:
-    - apt-get update && apt-get install libpq-dev -y #postgresql postgresql-client
+    - TZ=Europe/London
+    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    - apt-get update && apt-get install libpq-dev postgresql postgresql-contrib -y -q
     - cd server
   cache:
     paths:
