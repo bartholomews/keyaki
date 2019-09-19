@@ -3,6 +3,8 @@
 # https://github.com/commercialhaskell/stack/blob/master/etc/dockerfiles/stack-build/lts-13.20/Dockerfile
 FROM fpco/stack-build-small:lts-14.0 as build-env
 
+RUN apt-get update && apt-get install libpq-dev -y
+
 WORKDIR /opt/server
 COPY client/dist /opt/client
 RUN stack update

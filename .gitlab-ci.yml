@@ -36,6 +36,34 @@ stages:
   - build
   - deploy
 
+test client:
+  image: node:11.15.0
+  stage: test
+  before_script:
+    - cd client && yarn install
+  cache:
+    paths:
+      - client/node_modules/
+      - client/.yarn
+  script:
+    - yarn test
+
+#  before_install:
+# Download and unpack the stack executable
+#  - mkdir -p ~/.local/bin
+#  - export PATH=$HOME/.local/bin:$PATH
+#  - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+#  install:
+# Build dependencies
+#  - stack --install-ghc test --only-dependencies
+#  - stack install weeder hlint
+
+#  script:
+# Build the package, its tests, and its code coverage reposrt
+#  - stack build --test --coverage
+#  - hlint .
+#  - weeder .
+
 build client:
   image: node:11.15.0
   stage: build
@@ -55,12 +83,17 @@ build server:
   image: fpco/stack-build-small:lts-14.0
   stage: build
   before_script:
+    - apt-get update
+    - apt-get install -y postgresql postgresql-client libpq-dev
     - cd server
   cache:
     paths:
+      - $HOME/.stack
       - server/.stack-work/
   script:
     - stack update
+    - stack --install-ghc test --only-dependencies
+    - stack build --test --coverage
     - stack install --only-dependencies
     - stack install
     - cp /root/.local/bin/keyaki ..
