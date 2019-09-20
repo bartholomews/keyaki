@@ -68,7 +68,7 @@ build client:
 
 test server:
   image: docker:19.03.1
-  stage: tesst
+  stage: test
   before_script:
     - docker login --username $DOCKER_USER --password $DOCKER_PASSWORD
   script:
