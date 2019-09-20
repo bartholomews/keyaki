@@ -67,8 +67,20 @@ build client:
       - client/dist
 
 test server:
+#  image: docker:19.03.1
+#  stage: deploy
+#  before_script:
+#    - apk add --update bash py-pip
+#    - python -m pip install pyyaml
+#    - docker login --username $DOCKER_USER --password $DOCKER_PASSWORD
+#  script:
+#    - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
+#    - ./scripts/deploy-docker-image.sh
+
   image: fpco/stack-build-small:lts-14.0
   stage: test
+  services:
+    - postgres
   before_script:
     - TZ=Europe/London
     - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
