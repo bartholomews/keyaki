@@ -67,33 +67,12 @@ build client:
       - client/dist
 
 test server:
-#  image: docker:19.03.1
-#  stage: deploy
-#  before_script:
-#    - apk add --update bash py-pip
-#    - python -m pip install pyyaml
-#    - docker login --username $DOCKER_USER --password $DOCKER_PASSWORD
-#  script:
-#    - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
-#    - ./scripts/deploy-docker-image.sh
-
-  image: fpco/stack-build-small:lts-14.0
-  stage: test
-  services:
-    - postgres
+  image: docker:19.03.1
+  stage: tesst
   before_script:
-    - TZ=Europe/London
-    - ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-    - apt-get update && apt-get install libpq-dev postgresql postgresql-contrib -y -q
-    - cd server
-  cache:
-    paths:
-      - $HOME/.stack
-      - server/.stack-work/
+    - docker login --username $DOCKER_USER --password $DOCKER_PASSWORD
   script:
-    - stack update
-    - stack --install-ghc test --only-dependencies
-    - stack build --test --coverage
+    - docker-compose -f docker/docker.compose.yml -f docker/docker-compose.build.yml up
   artifacts:
     paths:
       - server/.stack-work
