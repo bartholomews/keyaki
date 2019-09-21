@@ -86,6 +86,9 @@ build client:
 build server:
   image: fpco/stack-build:lts-11.10
   stage: build
+  before_script:
+    - apt-get update
+    - apt-get install -y libpq-dev
   cache:
     paths:
       - $HOME/.stack
@@ -93,7 +96,7 @@ build server:
   script:
     - stack install --only-dependencies
     - stack install
-    - cp /root/.local/bin/keyaki .
+    - cp /root/.local/bin/keyaki ..
   artifacts:
     paths:
       - keyaki

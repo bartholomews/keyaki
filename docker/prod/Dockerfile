@@ -5,4 +5,5 @@ FROM ubuntu:18.04
 WORKDIR /opt/server
 COPY keyaki .
 COPY client/dist client/dist
+RUN apt-get install -y libpq-dev
 ENTRYPOINT ["./keyaki"]
