@@ -66,24 +66,29 @@ build client:
     paths:
       - client/dist
 
-test server:
-  image: docker:19.03.1
-  stage: test
-  before_script:
-    - docker login --username $DOCKER_USER --password $DOCKER_PASSWORD
-  script:
-    - docker-compose -f docker/docker.compose.yml -f docker/docker-compose.build.yml up
-  artifacts:
-    paths:
-      - server/.stack-work
+#stack install --test --coverage:
+#  image: bartholomews/stack-pg-build:lts-11.10
+#  stage: build
+##  before_script:
+##    - apt-get update
+##    - apt-get install -y libpq-dev
+##    - cd server
+#  cache:
+#    paths:
+#      - $HOME/.stack
+#      - server/.stack-work/
+#  script:
+#    - stack update
+#    - stack install --only-dependencies
+#    - stack install --test --coverage
+#    - cp /root/.local/bin/keyaki ..
+#  artifacts:
+#    paths:
+#      - keyaki
 
 build server:
-  image: fpco/stack-build-small:lts-14.0
+  image: fpco/stack-build:lts-11.10
   stage: build
-  before_script:
-    - apt-get update
-    - apt-get install -y libpq-dev
-    - cd server
   cache:
     paths:
       - $HOME/.stack
@@ -91,7 +96,7 @@ build server:
   script:
     - stack install --only-dependencies
     - stack install
-    - cp /root/.local/bin/keyaki ..
+    - cp /root/.local/bin/keyaki .
   artifacts:
     paths:
       - keyaki
