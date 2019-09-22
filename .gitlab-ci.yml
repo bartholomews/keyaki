@@ -96,7 +96,7 @@ build server:
   script:
     - stack install --only-dependencies
     - stack install
-    - cp /root/.local/bin/keyaki ..
+    - cp /root/.local/bin/keyaki .
   artifacts:
     paths:
       - keyaki
