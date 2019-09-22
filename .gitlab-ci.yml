@@ -28,15 +28,6 @@ variables:
 services:
   - docker:19.03.1-dind
 
-# TODO should probably cache client to elm jobs only, server to haskell jobs only
-cache:
-  key: "$CI_COMMIT_REF_SLUG"
-  paths:
-    - client/node_modules/
-    - client/.yarn
-    - server/.stack-work/
-    - .stack/
-
 stages:
   - test
   - build
@@ -45,6 +36,10 @@ stages:
 test client:
   image: node:11.15.0
   stage: test
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - client/node_modules/
   before_script:
     - cd client && yarn install
   script:
@@ -56,6 +51,10 @@ test client:
 build client:
   image: node:11.15.0
   stage: build
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - client/node_modules/
   before_script:
     - cd client
   script:
@@ -87,6 +86,11 @@ build client:
 build server:
   image: fpco/stack-build:lts-11.10
   stage: build
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - server/.stack-work/
+      - .stack/
   before_script:
     - apt-get update
     - apt-get install -y libpq-dev
