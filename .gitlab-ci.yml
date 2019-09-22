@@ -34,7 +34,7 @@ cache:
     - client/node_modules/
     - client/.yarn
     - server/.stack-work/
-    - $HOME/.stack
+    - .stack/
 
 stages:
   - test
@@ -90,8 +90,10 @@ build server:
     - apt-get update
     - apt-get install -y libpq-dev
   script:
+    - cp .stack /root/
     - stack install --only-dependencies
     - stack install
+    - cp /root/.stack .
     - cp /root/.local/bin/keyaki .
   artifacts:
     paths:
