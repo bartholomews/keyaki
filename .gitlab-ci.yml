@@ -28,6 +28,7 @@ variables:
 services:
   - docker:19.03.1-dind
 
+# TODO should probably cache client to elm jobs only, server to haskell jobs only
 cache:
   key: "$CI_COMMIT_REF_SLUG"
   paths:

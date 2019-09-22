@@ -4,8 +4,9 @@
 FROM ubuntu:16.04
 RUN apt-get update
 RUN apt-get install libpq-dev -y
-WORKDIR /opt/server
+WORKDIR /opt
 COPY keyaki .
-COPY server .
+COPY server/postgresql server
+COPY server/secrets server
 COPY client/dist client/dist
 #ENTRYPOINT ["./keyaki"]
