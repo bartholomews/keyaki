@@ -2,8 +2,9 @@
 # Image used has to be `ubuntu:18.04` as the executable has been built with `stack-build-small:lts-14.0`,
 # see https://github.com/commercialhaskell/stack/blob/master/etc/dockerfiles
 FROM ubuntu:18.04
+RUN apt-get update
+RUN apt-get install libpq-dev -y
 WORKDIR /opt/server
 COPY keyaki .
 COPY client/dist client/dist
-RUN apt-get install -y libpq-dev
 ENTRYPOINT ["./keyaki"]
