@@ -91,10 +91,10 @@ build server:
     - apt-get install -y libpq-dev
   script:
     - mkdir -p .stack
-    - cp .stack /root/
+    - cp -r .stack /root/
     - stack install --only-dependencies
     - stack install
-    - cp /root/.stack .
+    - cp -r /root/.stack .
     - cp /root/.local/bin/keyaki .
   artifacts:
     paths:
