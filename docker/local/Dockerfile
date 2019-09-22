@@ -20,12 +20,12 @@ RUN stack install
 #RUN stack --install-ghc test --only-dependencies
 #RUN stack build --test --coverage
 
-FROM ubuntu:16.04 as build-prod
+FROM ubuntu:18.04 as build-prod
 RUN apt-get update
 RUN apt-get install libpq-dev -y
-WORKDIR /opt/server
+WORKDIR /opt
 COPY --from=build-env /root/.local/bin/keyaki .
 COPY --from=build-env /opt/client client/dist
-COPY --from=build-env /opt/server/postgresql postgresql
-COPY --from=build-env /opt/server/secrets secrets
-#ENTRYPOINT ["./keyaki"]
+COPY --from=build-env /opt/server/postgresql server/postgresql
+COPY --from=build-env /opt/server/secrets server/secrets
+ENTRYPOINT ["./keyaki"]
