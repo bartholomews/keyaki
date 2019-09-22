@@ -60,6 +60,7 @@ test client:
     - cd client
   script:
     - echo "TODO -> yarn test" && ls
+  needs: ["build client"]
 
 #stack install --test --coverage:
 #  image: bartholomews/stack-pg-build:lts-11.10
@@ -81,7 +82,7 @@ test client:
 #    paths:
 #      - keyaki
 
-build server:
+build and test (TODO) server:
   image: fpco/stack-build:lts-11.10
   stage: build
   before_script:
@@ -91,7 +92,7 @@ build server:
     - mkdir -p .stack
     - cp -r .stack /root/
     - stack install --only-dependencies
-    - stack install
+    - stack install #--test --coverage
     - cp -r /root/.stack .
     - cp /root/.local/bin/keyaki .
   artifacts:
