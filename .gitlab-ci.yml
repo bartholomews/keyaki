@@ -29,8 +29,8 @@ services:
   - docker:19.03.1-dind
 
 stages:
-  - test
   - build
+  - test
   - deploy
 
 cache:
@@ -39,29 +39,27 @@ cache:
     - server/.stack-work/
     - .stack/
 
-test client:
-  image: node:11.15.0
-  stage: test
-  cache: {}
-  before_script:
-    - cd client && yarn install
-  script:
-    - echo "TODO -> yarn test" && ls
-  artifacts:
-    paths:
-      - client/node_modules
-
 build client:
   image: node:11.15.0
   stage: build
   cache: {}
   before_script:
-    - cd client
+    - cd client && yarn install
   script:
     - yarn run prod
   artifacts:
     paths:
       - client/dist
+      - client/node_modules
+
+test client:
+  image: node:11.15.0
+  stage: test
+  cache: {}
+  before_script:
+    - cd client
+  script:
+    - echo "TODO -> yarn test" && ls
 
 #stack install --test --coverage:
 #  image: bartholomews/stack-pg-build:lts-11.10
