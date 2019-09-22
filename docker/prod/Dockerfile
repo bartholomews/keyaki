@@ -9,4 +9,4 @@ COPY keyaki .
 COPY server/postgresql server
 COPY server/secrets server
 COPY client/dist client/dist
-#ENTRYPOINT ["./keyaki"]
+ENTRYPOINT ["./keyaki"]
