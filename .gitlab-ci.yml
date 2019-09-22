@@ -33,13 +33,16 @@ stages:
   - build
   - deploy
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - server/.stack-work/
+    - .stack/
+
 test client:
   image: node:11.15.0
   stage: test
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - client/node_modules/
+  cache: {}
   before_script:
     - cd client && yarn install
   script:
@@ -51,10 +54,7 @@ test client:
 build client:
   image: node:11.15.0
   stage: build
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - client/node_modules/
+  cache: {}
   before_script:
     - cd client
   script:
@@ -86,11 +86,6 @@ build client:
 build server:
   image: fpco/stack-build:lts-11.10
   stage: build
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - server/.stack-work/
-      - .stack/
   before_script:
     - apt-get update
     - apt-get install -y libpq-dev
@@ -126,6 +121,7 @@ build server:
 deploy:
   image: docker:19.03.1
   stage: deploy
+  cache: {}
   before_script:
     - apk add --update bash py-pip
     - python -m pip install pyyaml
