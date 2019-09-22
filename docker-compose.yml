@@ -1,0 +1,25 @@
+# https://docs.docker.com/compose/networking/
+version: '3'
+services:
+  db:
+    image: postgres
+    hostname: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=keyaki
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres:/docker-entrypoint-initdb.d
+  app:
+    image: bartholomews/keyaki
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/keyaki
+    depends_on:
+      - db
+volumes:
+  pgdata:
