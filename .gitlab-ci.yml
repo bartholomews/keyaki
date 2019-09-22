@@ -90,6 +90,7 @@ build server:
     - apt-get update
     - apt-get install -y libpq-dev
   script:
+    - mkdir -p .stack
     - cp .stack /root/
     - stack install --only-dependencies
     - stack install
