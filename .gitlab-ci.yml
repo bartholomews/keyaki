@@ -28,6 +28,14 @@ variables:
 services:
   - docker:19.03.1-dind
 
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - client/node_modules/
+    - client/.yarn
+    - server/.stack-work/
+    - $HOME/.stack
+
 stages:
   - test
   - build
@@ -38,10 +46,6 @@ test client:
   stage: test
   before_script:
     - cd client && yarn install
-  cache:
-    paths:
-      - client/node_modules/
-      - client/.yarn
   script:
     - echo "TODO -> yarn test" && ls
   artifacts:
@@ -53,10 +57,6 @@ build client:
   stage: build
   before_script:
     - cd client
-  cache:
-    paths:
-      - client/node_modules/
-      - client/.yarn
   script:
     - yarn run prod
   artifacts:
@@ -89,10 +89,6 @@ build server:
   before_script:
     - apt-get update
     - apt-get install -y libpq-dev
-  cache:
-    paths:
-      - $HOME/.stack
-      - server/.stack-work/
   script:
     - stack install --only-dependencies
     - stack install
@@ -100,6 +96,8 @@ build server:
   artifacts:
     paths:
       - keyaki
+      - server/postgresql
+      - server/secrets
 
 #  before_install:
 # Download and unpack the stack executable

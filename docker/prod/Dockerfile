@@ -6,5 +6,6 @@ RUN apt-get update
 RUN apt-get install libpq-dev -y
 WORKDIR /opt/server
 COPY keyaki .
+COPY server .
 COPY client/dist client/dist
 ENTRYPOINT ["./keyaki"]
