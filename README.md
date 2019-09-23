@@ -12,7 +12,7 @@
 ## Run locally
 
 ```bash
-./scripts/docker-compose-keyaki.sh
+docker-compose up
 ``` 
  
 ## [Server](server/README.md)
