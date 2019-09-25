@@ -11,6 +11,7 @@ import qualified Spec.User as User
 import qualified Spec.Article as Article
 import qualified Spec.Comment as Comment
 
+import Text.Read ( readMaybe )
 import Data.ByteString.Internal (packChars)
 
 main :: IO ()
@@ -24,8 +25,16 @@ withEnv = bracket startEnv cleanEnv . const
 
 startEnv :: IO ThreadId
 startEnv = do
-  env <- lookupEnv "DATABASE_URL"
-  let jdbcConn = fromMaybe "postgresql://127.0.0.1" env
+  dbUser <- lookupEnv "PG_USER"
+  dbPassword <- lookupEnv "PG_PASSWORD"
+  dbHost <- lookupEnv "PG_HOST"
+  dbPort <- lookupEnv "PG_PORT"
+  dbTable <- lookupEnv "PG_DATABASE"
+  let user = fromMaybe "postgres" dbUser
+  let password = case dbPassword of {Nothing -> ""; Just secret  -> ":" ++ secret ++ "@"}
+  let host = fromMaybe "127.0.0.1" dbHost ++ ":" ++ fromMaybe "5432" dbPort
+  let table = fromMaybe "keyaki" dbTable
+  let jdbcConn = "postgresql://" ++ user ++ password ++ host ++ "/" ++ table
   execPGQuery jdbcConn ["TRUNCATE articles, comments, favorites, followings, users CASCADE;"]
   setEnv "ENABLE_HTTPS" "False"
   setEnv "JWT_EXPIRATION_SECS" "8" -- FIXME: doesn't seem to work
