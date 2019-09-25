@@ -11,6 +11,8 @@ import qualified Spec.User as User
 import qualified Spec.Article as Article
 import qualified Spec.Comment as Comment
 
+import Data.ByteString.Internal (packChars)
+
 main :: IO ()
 main = withEnv . hspec $ do
   User.spec
@@ -22,10 +24,11 @@ withEnv = bracket startEnv cleanEnv . const
 
 startEnv :: IO ThreadId
 startEnv = do
-  execPGQuery ["drop database if exists realworld_test", "create database realworld_test"]
-  setEnv "DATABASE_URL" "postgresql://127.0.0.1/realworld_test"
+  env <- lookupEnv "DATABASE_URL"
+  let jdbcConn = fromMaybe "postgresql://127.0.0.1" env
+  execPGQuery jdbcConn ["TRUNCATE articles, comments, favorites, followings, users CASCADE;"]
   setEnv "ENABLE_HTTPS" "False"
-  setEnv "JWT_EXPIRATION_SECS" "8"
+  setEnv "JWT_EXPIRATION_SECS" "8" -- FIXME: doesn't seem to work
   setEnv "MIGRATION_DIRECTORY" "./postgresql"
   setEnv "JWK_PATH" "./secrets/jwk.sig"
   tId <- forkIO Lib.main
@@ -42,10 +45,10 @@ cleanEnv tId = do
   killThread tId
   putStrLn $ "Sever killed (" <> tshow tId <> ")"
 
-execPGQuery :: [Query] -> IO ()
-execPGQuery qrys =
+execPGQuery :: String -> [Query] -> IO ()
+execPGQuery jdbcUrl qrys =
   bracket acquire release execQuery
   where
-    acquire = connectPostgreSQL "postgresql://127.0.0.1"
+    acquire = connectPostgreSQL (packChars jdbcUrl)
     release = close
     execQuery conn = forM_ qrys (void . execute_ conn)

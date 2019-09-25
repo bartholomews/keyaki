@@ -105,6 +105,7 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - bytestring
     - keyaki
     - hspec
     - postgresql-simple
