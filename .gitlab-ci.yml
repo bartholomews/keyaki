@@ -48,9 +48,7 @@ build and test (TODO) server:
   script:
     - mkdir -p .stack
     - cp -r .stack /root/
-    - stack install --only-dependencies
     - stack install
-    - stack exec keyaki & stack test --coverage
     - cp -r /root/.stack .
     - cp /root/.local/bin/keyaki .
   artifacts:
@@ -58,6 +56,16 @@ build and test (TODO) server:
       - keyaki
       - server/postgresql
       - server/secrets
+
+test server:
+  image: fpco/stack-build:lts-11.10
+  stage: test
+  before_script:
+    - apt-get update
+    - apt-get install -y libpq-dev
+  script:
+    - stack test --coverage
+  needs: ["build server"]
 
 build client:
   image: node:11.15.0
