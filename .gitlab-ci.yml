@@ -49,7 +49,8 @@ build and test (TODO) server:
     - mkdir -p .stack
     - cp -r .stack /root/
     - stack install --only-dependencies
-    - stack install #--test --coverage
+    - stack install
+    - stack exec keyaki & stack test --coverage
     - cp -r /root/.stack .
     - cp /root/.local/bin/keyaki .
   artifacts:
@@ -128,4 +129,4 @@ deploy:
     - docker login --username $DOCKER_USER --password $DOCKER_PASSWORD
   script:
     - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
-    - ./scripts/deploy-docker-image.sh
+    - ./scripts/docker-deploy.sh
