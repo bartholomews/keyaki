@@ -39,7 +39,7 @@ cache:
     - server/.stack-work/
     - .stack/
 
-build and test (TODO) server:
+build server:
   image: fpco/stack-build:lts-11.10
   stage: build
   before_script:
@@ -90,37 +90,9 @@ test client:
     - echo "TODO -> yarn test" && ls
   needs: ["build client"]
 
-#stack install --test --coverage:
-#  image: bartholomews/stack-pg-build:lts-11.10
-#  stage: build
-##  before_script:
-##    - apt-get update
-##    - apt-get install -y libpq-dev
-##    - cd server
-#  cache:
-#    paths:
-#      - $HOME/.stack
-#      - server/.stack-work/
-#  script:
-#    - stack update
-#    - stack install --only-dependencies
-#    - stack install --test --coverage
-#    - cp /root/.local/bin/keyaki ..
-#  artifacts:
-#    paths:
-#      - keyaki
-
-
-#  before_install:
-# Download and unpack the stack executable
-#  - mkdir -p ~/.local/bin
-#  - export PATH=$HOME/.local/bin:$PATH
-#  - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
-#  install:
 # Build dependencies
 #  - stack --install-ghc test --only-dependencies
 #  - stack install weeder hlint
-
 #  script:
 # Build the package, its tests, and its code coverage reposrt
 #  - stack build --test --coverage
