@@ -62,8 +62,8 @@ test server:
   stage: test
   before_script:
     - apt-get update
-    - apt-get install -y libpq-dev
   script:
+    - ./server/scripts/killRun.sh
     - stack test --coverage
   needs: ["build server"]
 
