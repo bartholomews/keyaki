@@ -44,10 +44,9 @@ build server:
   stage: build
   before_script:
     - apt-get update
-    - apt-get install -y libpq-dev
-  script:
     - mkdir -p .stack
     - cp -r .stack /root/
+  script:
     - stack install
     - cp -r /root/.stack .
     - cp /root/.local/bin/keyaki .
@@ -62,6 +61,8 @@ test server:
   stage: test
   before_script:
     - apt-get update
+    - mkdir -p .stack
+    - cp -r .stack /root/
   script:
     - ./server/scripts/killRun.sh
     - stack test --coverage
