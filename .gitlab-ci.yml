@@ -61,9 +61,10 @@ test server:
   stage: test
   before_script:
     - apt-get update
+  script:
     - mkdir -p .stack
     - cp -r .stack /root/
-  script:
+    - stack install
     - ./server/scripts/killRun.sh
     - stack test --coverage
   needs: ["build server"]
