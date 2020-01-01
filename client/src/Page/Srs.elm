@@ -2,7 +2,7 @@ module Page.Srs exposing (..)
 
 import App.Types exposing (Msg)
 import Html exposing (..)
-import Maybe exposing (map, withDefault)
+import Maybe as M exposing (withDefault)
 import String exposing (concat)
 
 
@@ -11,8 +11,8 @@ content maybeLevel =
     let
         jlptLevel =
             maybeLevel
-                |> map String.fromInt
-                |> map (\level -> concat [ "\nJLPT LEVEL: ", level ])
+                |> M.map String.fromInt
+                |> M.map (\level -> concat [ "\nJLPT LEVEL: ", level ])
                 |> withDefault ""
     in
     div []
