@@ -1,5 +1,7 @@
-exec: ../perservant
-host: your.host.name.com
+# https://hackage.haskell.org/package/kete
+# https://stackoverflow.com/questions/37265378/deploying-yesod-project-using-keter-at-localhost
+exec: ../keyaki
+host: localhost # keyaki.bartholomews.io
 
 plugins:
     postgres: true

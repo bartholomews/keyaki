@@ -6,7 +6,7 @@ RUN apt-get update
 RUN apt-get install libpq-dev -y
 WORKDIR /opt
 COPY keyaki .
-COPY server/postgresql server/postgresql
-COPY server/secrets server/secrets
+#COPY server/postgresql server/postgresql
+#COPY server/secrets server/secrets
 COPY client/dist client/dist
 ENTRYPOINT ["./keyaki"]

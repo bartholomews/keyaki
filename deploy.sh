@@ -1,12 +1,12 @@
 #! /bin/bash
 
 set -e
-echo "Building Perservant..."
+echo "Building keyaki..."
 stack build
-strip `stack exec -- which perservant`
+strip `stack exec -- which keyaki`
 echo "Creating bundle..."
-cp `stack exec -- which perservant` perservant
-tar -czvf perservant.keter perservant config ql-ui/assets
-rm perservant
-# scp ./perservant.keter user@host:/opt/keter/incoming/perservant.keter
-rm perservant.keter
+cp `stack exec -- which keyaki` keyaki
+tar -czvf keyaki.keter keyaki config ql-ui/assets
+rm keyaki
+# scp ./keyaki.keter user@host:/opt/keter/incoming/keyaki.keter
+rm keyaki.keter

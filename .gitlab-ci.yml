@@ -36,25 +36,25 @@ stages:
 cache:
   key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
   paths:
-    - server/.stack-work/
-    - .stack/
+    - .stack-work/
+    - .stack-cache/
 
 build server:
   image: fpco/stack-build:lts-11.10
   stage: build
   before_script:
     - apt-get update
-    - mkdir -p .stack
-    - cp -r .stack /root/
+    - mkdir -p .stack-cache
+    - cp -r .stack-cache /root/
   script:
     - stack install
-    - cp -r /root/.stack .
+    - cp -r /root/.stack-cache .
     - cp /root/.local/bin/keyaki .
   artifacts:
     paths:
       - keyaki
-      - server/postgresql
-      - server/secrets
+#      - server/postgresql
+#      - server/secrets
 
 test server:
   image: fpco/stack-build:lts-11.10
@@ -62,10 +62,10 @@ test server:
   before_script:
     - apt-get update
   script:
-    - mkdir -p .stack
-    - cp -r .stack /root/
+    - mkdir -p .stack-cache
+    - cp -r .stack-cache /root/
     - stack install
-    - ./server/scripts/killRun.sh
+    - ./scripts/killRun.sh
     - stack test --coverage
   needs: ["build server"]
 
