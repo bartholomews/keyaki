@@ -16,7 +16,7 @@ variables:
   # Kubernetes executor connects services to the job container
   # DOCKER_HOST: tcp://localhost:2376/
   #
-  # When using dind, it's wise to use the overlayfs driver for
+  # When using dind, it's wise to use the overlays driver for
   # improved performance.
   DOCKER_DRIVER: overlay2
   # Specify to Docker where to create the certificates, Docker will
