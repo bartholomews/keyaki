@@ -98,17 +98,8 @@ katipLogger env app req respond = runKatipT env $ do
     logMsg "web" InfoS "todo: received some request"
     liftIO $ app req respond
 
--- | This function creates a 'ConnectionPool' for the given environment.
--- For 'Development' and 'Test' environments, we use a stock and highly
--- insecure connection string. The 'Production' environment acquires the
--- information from environment variables that are set by the keter
--- deployment application.
-makePool :: Environment -> LogEnv -> IO ConnectionPool
-makePool Test env =
-    runKatipT env (createPostgresqlPool (connStr "-test") (envPool Test))
-makePool Development env =
-    runKatipT env $ createPostgresqlPool (connStr "") (envPool Development)
-makePool Production env = do
+envConnPool :: Environment -> LogEnv -> IO ConnectionPool
+envConnPool env logEnv = do
     -- This function makes heavy use of the 'MaybeT' monad transformer, which
     -- might be confusing if you're not familiar with it. It allows us to
     -- combine the effects from 'IO' and the effect of 'Maybe' into a single
@@ -123,15 +114,15 @@ makePool Production env = do
                    , "password="
                    , "dbname="
                    ]
-            envs = [ "PGHOST"
-                   , "PGPORT"
-                   , "PGUSER"
-                   , "PGPASS"
-                   , "PGDATABASE"
+            envs = [ "PG_HOST"
+                   , "PG_PORT"
+                   , "PG_USER"
+                   , "PG_PASSWORD"
+                   , "PG_DATABASE"
                    ]
         envVars <- traverse (MaybeT . lookupEnv) envs
-        let prodStr = BS.intercalate " " . zipWith (<>) keys $ BS.pack <$> envVars
-        lift $ runKatipT env $ createPostgresqlPool prodStr (envPool Production)
+        let envConnStr = BS.intercalate " " . zipWith (<>) keys $ BS.pack <$> envVars
+        lift $ runKatipT logEnv $ createPostgresqlPool envConnStr (envPool env)
     case pool of
         -- If we don't have a correct database configuration, we can't
         -- handle that in the program, so we throw an IO exception. This is
@@ -139,6 +130,19 @@ makePool Production env = do
         -- 'Either'.
          Nothing -> throwIO (userError "Database Configuration not present in environment.")
          Just a -> return a
+
+-- | This function creates a 'ConnectionPool' for the given environment.
+-- For 'Development' and 'Test' environments, we use a stock and highly
+-- insecure connection string. The 'Production' environment acquires the
+-- information from environment variables that are set by the keter
+-- deployment application.
+makePool :: Environment -> LogEnv -> IO ConnectionPool
+makePool Test env =
+    runKatipT env (createPostgresqlPool (connStr "-test") (envPool Test))
+makePool Development env =
+    runKatipT env $ createPostgresqlPool (connStr "") (envPool Development)
+makePool Production env =
+    envConnPool Production env
 
 -- | The number of pools to use for a given environment.
 envPool :: Environment -> Int
