@@ -5,10 +5,9 @@
 cabal-dev
 .cabal-sandbox/
 cabal.sandbox.config
-# sqlite (TOOD migrate to postgres)
-sqlite*
 # IntelliJ
-server.iml
+.idea
+*.iml
 #
 dist
 *.o
