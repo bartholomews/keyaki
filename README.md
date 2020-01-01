@@ -1,9 +1,9 @@
 # ケヤキ
 
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](LICENSE)
 [![Build Status](https://gitlab.com/bartholomews/keyaki/badges/master/pipeline.svg)](https://gitlab.com/bartholomews/keyaki/pipelines/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/bartholomews/keyaki)](https://hub.docker.com/r/bartholomews/keyaki)
- 
+[![License: MIT](https://img.shields.io/badge/License-MIT-brown.svg)](https://opensource.org/licenses/MIT)
+
 ## Notice
 
 *This project is at its **very** early stage*
