@@ -75,5 +75,5 @@ waiMetrics = do
 -- | Generates JavaScript to query the User API.
 generateJavaScript :: IO ()
 generateJavaScript =
-    writeJSForAPI (Proxy :: Proxy UserAPI) vanillaJS "./assets/api.js"
+    writeJSForAPI (Proxy :: Proxy UserAPI) vanillaJS "./client/dist/api.js"
 
