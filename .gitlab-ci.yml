@@ -108,7 +108,7 @@ deploy:
   before_script:
     - apk add --update bash py-pip
     - python -m pip install pyyaml
-    - docker login --username $DOCKER_USER --password $DOCKER_PASSWORD
+    - docker login --username $DOCKER_USER --password-stdin $DOCKER_PASSWORD
   script:
     - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
     - ./scripts/docker-deploy.sh
