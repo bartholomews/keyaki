@@ -59,7 +59,7 @@ build/test server:
 
 build/test client:
   image: node:11.15.0
-  stage: build
+  stage: build/test
   cache: {}
   before_script:
     - cd client && yarn install
