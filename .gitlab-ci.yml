@@ -87,7 +87,8 @@ deploy:
   before_script:
     - apk add --update bash py-pip
     - python -m pip install pyyaml
-    - docker login --username $DOCKER_USER --password $DOCKER_PASSWORD
+    # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#authenticating-to-the-container-registry
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
     - ./scripts/docker-deploy.sh
