@@ -1,10 +1,14 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import yaml
+with open("keyaki.cabal", 'r') as stream:
+    key = "version"
+    while True:
+        line = stream.readline()
+        if not line:
+            stream.close()
+            raise Exception(f'Key not found: {key}')
 
-with open("server/package.yaml", 'r') as stream:
-    try:
-        data = yaml.safe_load(stream)
-        print(data['version'])
-    except yaml.YAMLError as exc:
-        raise ValueError(exc)
+        arr = line.split(':', 1)
+        if arr[0] == key:
+            print(arr[1].lstrip())
+            break
