@@ -29,8 +29,8 @@ services:
   - docker:19.03.1-dind
 
 stages:
-  - build/test
-  - deploy
+  - Build && Test
+  - Deploy
 
 cache:
   key: "$CI_COMMIT_REF_SLUG"
@@ -38,18 +38,17 @@ cache:
     - .stack-work/
     - .stack/
 
-build/test server:
+server:
   image: fpco/stack-build:lts-11.10
-  stage: build/test
+  stage: Build && Test
   before_script:
     - apt-get update
-    - mkdir -p .stack
-    - cp -r .stack /root/
+    - mkdir -p .stack # Handle cache miss
+    - cp -r .stack /root/ # Copy cached .stack to /root/
   script:
     - stack install
-    - cp -r /root/.stack .
+    - cp -r /root/.stack . # Update local .stack
     - cp /root/.local/bin/keyaki .
-    - ./scripts/killRun.sh
     - stack test --coverage
   artifacts:
     paths:
@@ -57,9 +56,9 @@ build/test server:
 #      - server/postgresql
 #      - server/secrets
 
-build/test client:
+client:
   image: node:11.15.0
-  stage: build/test
+  stage: Build && Test
   cache: {}
   before_script:
     - cd client && yarn install
@@ -82,7 +81,7 @@ build/test client:
 
 deploy:
   image: docker:19.03.1
-  stage: deploy
+  stage: Deploy
   cache: {}
   before_script:
     - apk add --update bash py-pip
