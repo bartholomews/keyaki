@@ -29,7 +29,7 @@ services:
   - docker:19.03.1-dind
 
 stages:
-  - Build && Test
+  - Build / Test
   - Deploy
 
 cache:
@@ -40,7 +40,7 @@ cache:
 
 server:
   image: fpco/stack-build:lts-11.10
-  stage: Build && Test
+  stage: Build / Test
   before_script:
     - apt-get update
     - mkdir -p .stack # Handle cache miss
@@ -58,7 +58,7 @@ server:
 
 client:
   image: node:11.15.0
-  stage: Build && Test
+  stage: Build / Test
   cache: {}
   before_script:
     - cd client && yarn install
