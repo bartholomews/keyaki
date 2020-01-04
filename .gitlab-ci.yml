@@ -29,8 +29,7 @@ services:
   - docker:19.03.1-dind
 
 stages:
-  - build
-  - test
+  - build/test
   - deploy
 
 cache:
@@ -39,9 +38,9 @@ cache:
     - .stack-work/
     - .stack/
 
-build server:
+build/test server:
   image: fpco/stack-build:lts-11.10
-  stage: build
+  stage: build/test
   before_script:
     - apt-get update
     - mkdir -p .stack
@@ -50,26 +49,15 @@ build server:
     - stack install
     - cp -r /root/.stack .
     - cp /root/.local/bin/keyaki .
+    - ./scripts/killRun.sh
+    - stack test --coverage
   artifacts:
     paths:
       - keyaki
 #      - server/postgresql
 #      - server/secrets
 
-test server:
-  image: fpco/stack-build:lts-11.10
-  stage: test
-  before_script:
-    - apt-get update
-  script:
-    - mkdir -p .stack
-    - cp -r .stack /root/
-    - stack install
-    - ./scripts/killRun.sh
-    - stack test --coverage
-  needs: ["build server"]
-
-build client:
+build/test client:
   image: node:11.15.0
   stage: build
   cache: {}
@@ -77,20 +65,11 @@ build client:
     - cd client && yarn install
   script:
     - yarn run prod
+    - echo "TODO -> yarn test" && ls
   artifacts:
     paths:
       - client/dist
       - client/node_modules
-
-test client:
-  image: node:11.15.0
-  stage: test
-  cache: {}
-  before_script:
-    - cd client
-  script:
-    - echo "TODO -> yarn test" && ls
-  needs: ["build client"]
 
 # Build dependencies
 #  - stack --install-ghc test --only-dependencies
@@ -108,7 +87,7 @@ deploy:
   before_script:
     - apk add --update bash py-pip
     - python -m pip install pyyaml
-    - docker login --username $DOCKER_USER --password-stdin $DOCKER_PASSWORD
+    - docker login --username $DOCKER_USER --password $DOCKER_PASSWORD
   script:
     - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
     - ./scripts/docker-deploy.sh
