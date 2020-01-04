@@ -86,7 +86,11 @@ deploy:
   before_script:
     - apk add --update bash python3
     # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#authenticating-to-the-container-registry
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # https://stackoverflow.com/a/50684269
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
   script:
+    - echo $CI_REGISTRY_USER
+    - echo $CI_REGISTRY_PASSWORD
+    - echo $CI_REGISTRY
     - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
     - ./scripts/docker-deploy.sh
