@@ -29,7 +29,7 @@ services:
   - docker:19.03.1-dind
 
 stages:
-#  - Build / Test
+  #  - Build / Test
   - Deploy
 
 cache:
@@ -94,7 +94,7 @@ deploy:
     - ls
     - ls /
     - ls /usr/bin
-    - cd ${PASS} && make install
+    - cd ${PASS} && make install && cd ..
     - mv docker-credential-pass /usr/bin
     - chmod 100 /usr/bin/docker-credential-pass
   script:
