@@ -4,9 +4,12 @@ set -euxo pipefail
 
 DOCKER_CONFIG=${HOME}/.docker/config.json
 
-echo "${GPG_PUB}" > bartholomews.gpg.pub
+#echo "${GPG_PUB}" > bartholomews.gpg.pub
 echo "${GPG_PEM}" > bartholomews.gpg.pem
 ls
+cat ${GPG_PUB}
+touch bartholomews.gpg.pub
+echo "${GPG_PUB}" > bartholomews.gpg.pub
 cat bartholomews.gpg.pub
 
 mkdir ${HOME}/.docker && cd ${HOME}/.docker
