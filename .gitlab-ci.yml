@@ -29,7 +29,7 @@ services:
   - docker:19.03.1-dind
 
 stages:
-  - Build / Test
+#  - Build / Test
   - Deploy
 
 cache:
@@ -38,37 +38,37 @@ cache:
     - .stack-work/
     - .stack/
 
-server:
-  image: fpco/stack-build:lts-11.10
-  stage: Build / Test
-  before_script:
-    - apt-get update
-    - mkdir -p .stack # Handle cache miss
-    - cp -r .stack /root/ # Copy cached .stack to /root/
-  script:
-    - stack install
-    - cp -r /root/.stack . # Update local .stack
-    - cp /root/.local/bin/keyaki .
-    - stack test --coverage
-  artifacts:
-    paths:
-      - keyaki
-#      - server/postgresql
-#      - server/secrets
+#server:
+#  image: fpco/stack-build:lts-11.10
+#  stage: Build / Test
+#  before_script:
+#    - apt-get update
+#    - mkdir -p .stack # Handle cache miss
+#    - cp -r .stack /root/ # Copy cached .stack to /root/
+#  script:
+#    - stack install
+#    - cp -r /root/.stack . # Update local .stack
+#    - cp /root/.local/bin/keyaki .
+#    - stack test --coverage
+#  artifacts:
+#    paths:
+#      - keyaki
+##      - server/postgresql
+##      - server/secrets
 
-client:
-  image: node:11.15.0
-  stage: Build / Test
-  cache: {}
-  before_script:
-    - cd client && yarn install
-  script:
-    - yarn run prod
-    - echo "TODO -> yarn test" && ls
-  artifacts:
-    paths:
-      - client/dist
-      - client/node_modules
+#client:
+#  image: node:11.15.0
+#  stage: Build / Test
+#  cache: {}
+#  before_script:
+#    - cd client && yarn install
+#  script:
+#    - yarn run prod
+#    - echo "TODO -> yarn test" && ls
+#  artifacts:
+#    paths:
+#      - client/dist
+#      - client/node_modules
 
 # Build dependencies
 #  - stack --install-ghc test --only-dependencies
