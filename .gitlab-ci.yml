@@ -84,7 +84,7 @@ deploy:
   stage: Deploy
   cache: {}
   before_script:
-    - apk add --update bash python3 libarchive-tools make duplicity
+    - apk add --update bash python3 libarchive-tools make duplicity ca-certificates
     - export DOCKER_PASS=docker-credential-pass-v0.6.3-amd64.tar.gz
     - export PASS=password-store-1.7.3
     - wget https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/${DOCKER_PASS}
