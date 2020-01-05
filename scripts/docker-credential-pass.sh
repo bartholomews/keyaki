@@ -4,23 +4,15 @@ set -euxo pipefail
 
 DOCKER_CONFIG=${HOME}/.docker/config.json
 
-#echo "${GPG_PUB}" > bartholomews.gpg.pub
-echo "${GPG_PEM}" > bartholomews.gpg.pem
-ls
-cat ${GPG_PUB}
-touch bartholomews.gpg.pub
-echo "${GPG_PUB}" > bartholomews.gpg.pub
-cat bartholomews.gpg.pub
-
 mkdir ${HOME}/.docker && cd ${HOME}/.docker
 touch config.json
 echo "{ \"credsStore\": \"pass\" }" > config.json
 
-gpg --import bartholomews.gpg.pub
+gpg --import "${GPG_PUB}"
 
 # https://unix.stackexchange.com/questions/184947/how-to-import-secret-gpg-key-copied-from-one-machine-to-another
 touch ~/.gnupg/gpg.conf && echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-gpg --no-tty --passphrase "${GPG_PASSPHRASE}" --import bartholomews.gpg.pem
+gpg --no-tty --passphrase "${GPG_PASSPHRASE}" --import "${GPG_PEM}"
 
 pass init ${GPG_ID}
 docker-credential-pass list
