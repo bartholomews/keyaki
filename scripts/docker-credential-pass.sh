@@ -8,6 +8,7 @@ mkdir ${HOME}/.docker && cd ${HOME}/.docker
 touch config.json
 echo "{ \"credsStore\": \"pass\" }" > config.json
 
+cat ${GPG_PUB}
 gpg --import "${GPG_PUB}"
 
 ls
