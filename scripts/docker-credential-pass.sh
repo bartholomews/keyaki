@@ -14,8 +14,6 @@ mkdir ${HOME}/.docker && touch ${HOME}/.docker/config.json
 echo "{ \"credsStore\": \"pass\" }" > ${HOME}/.docker/config.json
 
 pass init ${GPG_ID}
-
 echo "trusted-key ${GPG_ID:(-16)}" > ~/.gnupg/gpg.conf
-pass generate docker-credential-helpers/docker-pass-initialized-check
 
 echo "${DOCKER_PASSWORD}" | docker login -u ${DOCKER_USER} --password-stdin
