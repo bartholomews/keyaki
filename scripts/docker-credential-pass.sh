@@ -4,9 +4,8 @@ set -euxo pipefail
 
 DOCKER_CONFIG=${HOME}/.docker/config.json
 
-mkdir ${HOME}/.docker && cd ${HOME}/.docker
-touch config.jso
-echo "{ \"credsStore\": \"pass\" }" > config.json
+mkdir ${HOME}/.docker && touch ${HOME}/.docker/config.jso
+echo "{ \"credsStore\": \"pass\" }" > ${HOME}/.docker/config.json
 
 cat docker/GPG_PUB
 gpg --import docker/GPG_PUB
