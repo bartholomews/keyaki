@@ -84,15 +84,7 @@ deploy:
   stage: Deploy
   cache: {}
   before_script:
-    - apk add --update bash python3 libarchive-tools make duplicity ca-certificates
-    - export DOCKER_PASS=docker-credential-pass-v0.6.3-amd64.tar.gz
-    - export PASS=password-store-1.7.3
-    - wget https://github.com/docker/docker-credential-helpers/releases/download/v0.6.3/${DOCKER_PASS}
-    - tar -xf ${DOCKER_PASS}
-    - wget https://git.zx2c4.com/password-store/snapshot/${PASS}.tar.xz && bsdtar xfJ ${PASS}.tar.xz
-    - cd ${PASS} && make install && cd ..
-    - mv docker-credential-pass /usr/bin && chmod 100 /usr/bin/docker-credential-pass
-    - ./scripts/docker-credential-pass.sh
+    - apk add --update bash python3
     - echo "${DOCKER_PASSWORD}" | docker login -u ${DOCKER_USER} --password-stdin
   script:
     - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
