@@ -86,6 +86,7 @@ deploy:
   before_script:
     - apk add --update bash python3
     - echo "${DOCKER_PASSWORD}" | docker login -u ${DOCKER_USER} --password-stdin
+    - cat /root/.docker/config.json
   script:
     - docker build -t bartholomews/keyaki -f docker/prod/Dockerfile .
     - ./scripts/docker-deploy.sh
