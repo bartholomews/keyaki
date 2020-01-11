@@ -50,3 +50,7 @@ appApi = Proxy
 app :: Config -> Application
 app cfg =
     serve appApi (appToServer cfg :<|> files)
+
+-- TODO: 
+--  https://github.com/haskell-servant/servant/issues/1195
+--  https://www.reddit.com/r/haskellquestions/comments/cbr4mg/serving_static_files_with_haskellservant/
