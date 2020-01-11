@@ -79,6 +79,7 @@ library
       , transformers
       , unordered-containers
       , wai
+      , wai-app-static
       , wai-extra
       , wai-middleware-metrics
       , warp

@@ -1,16 +1,21 @@
 {-# LANGUAGE DataKinds     #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Api (app) where
+module Api
+  ( app
+  ) where
 
-import           Control.Monad.Reader (runReaderT)
-import           Servant              ((:<|>) ((:<|>)),
-                                       Proxy (Proxy), Raw, Server,
-                                       serve, serveDirectoryFileServer)
+import           Control.Monad.Reader            (runReaderT)
+import           Servant                         ((:<|>) ((:<|>)),
+                                                  Proxy (Proxy), Raw, Server,
+                                                  serve, serveDirectoryWith)
 import           Servant.Server
 
-import           Api.User             (UserAPI, userServer, userApi)
-import           Config               (AppT (..), Config (..))
+import           Api.User                        (UserAPI, userApi, userServer)
+import           Config                          (AppT (..), Config (..))
+import           Data.Text                       (pack)
+import           WaiAppStatic.Storage.Filesystem (defaultFileServerSettings)
+import           WaiAppStatic.Types
 
 -- | This is the function we export to run our 'UserAPI'. Given
 -- a 'Config', we return a WAI 'Application' which any WAI compliant server
@@ -29,12 +34,25 @@ appToServer cfg = hoistServer userApi (convertApp cfg) userServer
 convertApp :: Config -> AppT IO a -> Handler a
 convertApp cfg appt = Handler $ runReaderT (runApp appt) cfg
 
+--  https://github.com/haskell-servant/servant/issues/1195
+--  https://www.reddit.com/r/haskellquestions/comments/cbr4mg/serving_static_files_with_haskellservant/
+staticSettings :: FilePath -> StaticSettings
+staticSettings root = ds {ssLookupFile = lookup}
+  where
+    ds = defaultFileServerSettings root
+    lookup p = do
+      f <- ssLookupFile ds p
+      case f of
+        LRFile f   -> return $ LRFile f
+        LRFolder f -> return $ LRFolder f
+        LRNotFound -> ssLookupFile ds [unsafeToPiece (pack "index.html")]
+
 -- | Since we also want to provide a minimal front end, we need to give
 -- Servant a way to serve a directory with HTML and JavaScript. This
 -- function creates a WAI application that just serves the files out of the
--- given directory.
-files :: Server Raw
-files = serveDirectoryFileServer "client/dist"
+-- given directory, with fallback serving `index.html`
+static :: Server Raw
+static = serveDirectoryWith (staticSettings "client/dist")
 
 -- | Just like a normal API type, we can use the ':<|>' combinator to unify
 -- two different APIs and applications. This is a powerful tool for code
@@ -48,9 +66,4 @@ appApi = Proxy
 -- | Finally, this function takes a configuration and runs our 'UserAPI'
 -- alongside the 'Raw' endpoint that serves all of our files.
 app :: Config -> Application
-app cfg =
-    serve appApi (appToServer cfg :<|> files)
-
--- TODO: 
---  https://github.com/haskell-servant/servant/issues/1195
---  https://www.reddit.com/r/haskellquestions/comments/cbr4mg/serving_static_files_with_haskellservant/
+app cfg = serve appApi (appToServer cfg :<|> static)
