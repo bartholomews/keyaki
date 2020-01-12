@@ -15,6 +15,12 @@ import           Api.Todo                        (TodoAPI, todoApi, todoServer)
 import           Api.User                        (UserAPI, userApi, userServer)
 import           Config                          (AppT (..), Config (..))
 import           Data.Text                       (pack)
+import           Network.HTTP.Types.Method
+import           Network.Wai.Middleware.Cors     (CorsResourcePolicy, cors,
+                                                  corsMethods,
+                                                  simpleCorsResourcePolicy)
+
+import           Network.Wai                     (Middleware)
 import           WaiAppStatic.Storage.Filesystem (defaultFileServerSettings)
 import           WaiAppStatic.Types
 
@@ -23,7 +29,6 @@ import           WaiAppStatic.Types
 -- can run.
 --userApp :: Config -> Application
 --userApp cfg = serve userApi (appToServer cfg)
-
 -- | This functions tells Servant how to run the 'App' monad with our
 -- 'server' function.
 appToUserServer :: Config -> Server UserAPI
@@ -70,7 +75,15 @@ appApi = Proxy
 -- | Finally, this function takes a configuration and runs our 'UserAPI'
 -- alongside the 'Raw' endpoint that serves all of our files.
 app :: Config -> Application
-app cfg = serve appApi (appToUserServer cfg :<|> appToTodoServer cfg :<|> static)
--- TODO cors / OPTIONS handling
+app cfg = simpleCors (serve appApi (appToUserServer cfg :<|> appToTodoServer cfg :<|> static))
+
 --  https://github.com/haskell-servant/servant/issues/278
 --  https://github.com/haskell-servant/servant/issues/154
+--  http://rundis.github.io/blog/2016/haskel_elm_spa_part2.html
+simpleCors :: Middleware
+simpleCors =
+  cors $
+  const
+    (Just
+       simpleCorsResourcePolicy
+         {corsMethods = [methodGet, methodHead, methodPost, methodDelete, methodPut, methodOptions]})

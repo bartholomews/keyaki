@@ -64,6 +64,7 @@ library
       , ekg-core
       , fast-logger
       , foreign-store
+      , http-types
       , katip >= 0.5.0.2 && < 0.6
       , microlens
       , monad-control
