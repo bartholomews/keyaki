@@ -50,6 +50,8 @@ library
       , Init
       , Models
       , Api
+      , Api.Common
+      , Api.Todo
       , Api.User
       , Logger
       , DevelMain
@@ -80,6 +82,7 @@ library
       , unordered-containers
       , wai
       , wai-app-static
+      , wai-cors
       , wai-extra
       , wai-middleware-metrics
       , warp

@@ -21,10 +21,16 @@ import           Database.Persist.TH  (mkMigrate, mkPersist, persistLowerCase,
 import           Config               (Config, configPool)
 import           Data.Text            (Text)
 
-share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
+share
+  [mkPersist sqlSettings, mkMigrate "migrateAll"]
+  [persistLowerCase|
 User json
     name Text
     email Text
+    deriving Show Eq
+Todo json
+    completed Bool
+    description Text
     deriving Show Eq
 |]
 
@@ -33,5 +39,5 @@ doMigrations = runMigration migrateAll
 
 runDb :: (MonadReader Config m, MonadIO m) => SqlPersistT IO b -> m b
 runDb query = do
-    pool <- asks configPool
-    liftIO $ runSqlPool query pool
+  pool <- asks configPool
+  liftIO $ runSqlPool query pool

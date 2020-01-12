@@ -10,7 +10,7 @@ import Todos.Types exposing (..)
 getTodos : Cmd Msg
 getTodos =
     Http.get
-        { url = "http://localhost:8080/api/todos/"
+        { url = "http://localhost:8081/api/todos/"
         , expect = Http.expectJson TodosFetched todosDecoder
         }
 
