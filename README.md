@@ -4,9 +4,8 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/bartholomews/keyaki)](https://hub.docker.com/r/bartholomews/keyaki)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brown.svg)](https://opensource.org/licenses/MIT)
 
-## Notice
 
-*This project is at its **very** early stage*
+🔧 **This project is still early stage and very much WIP / experimental** 🔧  
 
 ## Haskell service
 
@@ -19,10 +18,45 @@ Seed from [servant-persistent](https://github.com/parsonsmatt/servant-persistent
 ## Run locally
 
 ```bash
+# Create a custom network if you want to use the app and db in docker without docker-compose
+# (https://blog.linuxserver.io/2017/10/17/using-docker-networks-for-better-inter-container-communication/)
+docker network create keyaki-network
+```
+
+#### Start the db
+
+```bash
+docker run -p 5432:5432 \
+    -e POSTGRES_USER=test \
+    -e POSTGRES_PASSWORD=test \
+    -e POSTGRES_DB=keyaki \
+    --network=keyaki-network \
+    --name=keyaki-postgres \
+    postgres
+```
+
+*from within the project, you can start the db locally with:*
+
+```bash
 docker-compose up
 ``` 
 
-### Development
+#### Run the app via docker
+
+```bash
+docker pull bartholomews/keyaki
+docker run -it -p 8081:8081 \
+    -e PG_USER='test' \
+    -e PG_PASSWORD='test' \
+    -e PG_HOST='keyaki-postgres' \
+    --network=keyaki-network \
+    --name=keyaki \
+    bartholomews/keyaki
+```
+
+If you want to change the port you need to add the `PORT` env var as well.
+
+#### Development
 
 - Go to project folder
 
@@ -59,6 +93,10 @@ ghcid -c stack ghci -W -T main
 ``` shell
 stack build --test
 ```
+
+#### Build a docker image locally
+
+`docker`
 
 #### DB queries
 
