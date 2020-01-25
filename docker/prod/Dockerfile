@@ -9,4 +9,7 @@ COPY keyaki .
 #COPY server/postgresql server/postgresql
 #COPY server/secrets server/secrets
 COPY client/dist client/dist
+ENV ENV=Production
+ENV PG_DATABASE=keyaki
+ENV PG_PORT=5432
 ENTRYPOINT ["./keyaki"]

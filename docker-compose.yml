@@ -9,14 +9,14 @@ services:
     environment:
       - POSTGRES_USER=test
       - POSTGRES_PASSWORD=test
-      - POSTGRES_DB=perservant
+      - POSTGRES_DB=keyaki
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./docker/postgres:/docker-entrypoint-initdb.d
 #  app:
 #    image: bartholomews/keyaki
 #    ports:
-#      - 8080:8080
+#      - 8081:8081
 #    environment:
 #      - DATABASE_URL=postgresql://postgres:postgres@db:5432/keyaki
 #    depends_on:
