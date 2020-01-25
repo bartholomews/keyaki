@@ -20,4 +20,6 @@ content maybeLevel =
             [ text (concat [ "SRS", " [TODO]" ]) ]
         , h3 []
             [ text jlptLevel ]
+        , h4 []
+            [ text "Instead of `All`/`Done`, do `Romanji`/`Kana`" ]
         ]

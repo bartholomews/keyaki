@@ -10,6 +10,7 @@ import Url.Parser.Query as Query
 -- /srs?jltp=5
 -- /test/
 -- /todo/1
+-- TODO: Add default redirect either to custom 404 page or `/home`
 
 
 type Route

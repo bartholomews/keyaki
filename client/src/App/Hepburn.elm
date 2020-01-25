@@ -36,10 +36,9 @@ addKanas ls with symbols =
 
 
 -- separator should probably be customizable or function arg
-
-
-separator =
-    '\t'
+-- TODO: tsu / zu postfix and doubles
+--separator =
+--    '\t'
 
 
 translate : List Char -> List Char -> String
@@ -857,7 +856,7 @@ translate current with =
 
 
 -- c :: xs ->
---     if addUnresolvedRomanji then
+--     if addUnresolvedRomanji then -- TODO should disable `Add Kana` and show an error banner
 --         translate []
 --             addUnresolvedRomanji
 --             (concat
