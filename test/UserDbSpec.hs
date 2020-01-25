@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds                  #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TypeOperators              #-}
 
 module UserDbSpec where
@@ -40,12 +39,11 @@ setupTeardown runTestsWith = do
   cleanDb pool
   where
     migrateDb :: ConnectionPool -> IO ()
-    migrateDb pool = runSqlPool doMigrations pool
+    migrateDb = runSqlPool doMigrations
     cleanDb :: ConnectionPool -> IO ()
     cleanDb = deleteAllUsers
     deleteAllUsers :: ConnectionPool -> IO ()
-    deleteAllUsers pool = do
-      flip runSqlPool pool $ do deleteWhere ([] :: [Filter User])
+    deleteAllUsers pool = flip runSqlPool pool $ deleteWhere ([] :: [Filter User])
 
 --    pool <- makePool Test env
 -- for more detail, see `src/Config.hs`, but this assumes you have...
@@ -53,13 +51,13 @@ setupTeardown runTestsWith = do
 --   2. a `keyaki-test` DB
 spec :: Spec
 spec =
-  around setupTeardown $ do
-    describe "User" $ do
-      it "singleUser fetches User by name" $ \config -> do
-        let user = User (T.pack "username") (T.pack "email")
-        dbUser <-
-          runAppToIO config $ do
-            runDb $ insert user
-            Entity _ user <- singleUser (T.pack "username")
-            return user
-        dbUser `shouldBe` user
+  around setupTeardown $
+  describe "User" $
+  it "singleUser fetches User by name" $ \config -> do
+    let user = User (T.pack "username") (T.pack "email")
+    dbUser <-
+      runAppToIO config $ do
+        runDb $ insert user
+        Entity _ user <- singleUser (T.pack "username")
+        return user
+    dbUser `shouldBe` user
