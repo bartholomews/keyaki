@@ -1,5 +1,5 @@
 name:                keyaki
-version:             0.0
+version:             0.0.1-SNAPSHOT
 synopsis:            JLPT SRS
 description:         SRS Project seeded from servant-persistent
 license:             MIT
