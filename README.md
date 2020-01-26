@@ -15,6 +15,10 @@ Seed from [servant-persistent](https://github.com/parsonsmatt/servant-persistent
 + [`Servant`](http://haskell-servant.github.io/)  
 + [`Persistent`](https://hackage.haskell.org/package/persistent)
 
+## Elm client
+
+Look at the [client package](https://github.com/bartholomews/keyaki/tree/master/client)
+
 ## Run locally
 
 ```bash
@@ -96,7 +100,7 @@ stack build --test
 
 #### Build a docker image locally
 
-`docker`
+`docker build -f docker/local/Dockerfile -t bartholomews/keyaki .`
 
 #### DB queries
 

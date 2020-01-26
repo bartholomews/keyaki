@@ -7,9 +7,7 @@ ENV TZ=Europe/London
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /opt
-COPY client/dist /opt/client
-COPY server /opt/server
-COPY stack.yaml /opt
+COPY . /opt
 
 RUN stack update
 RUN stack install --only-dependencies
@@ -17,15 +15,10 @@ RUN stack install --only-dependencies
 # RUN stack install --test --coverage
 RUN stack install
 
-#RUN stack --install-ghc test --only-dependencies
-#RUN stack build --test --coverage
-
 FROM ubuntu:18.04 as build-prod
 RUN apt-get update
 RUN apt-get install libpq-dev -y
 WORKDIR /opt
 COPY --from=build-env /root/.local/bin/keyaki .
-COPY --from=build-env /opt/client client/dist
-COPY --from=build-env /opt/server/postgresql server/postgresql
-COPY --from=build-env /opt/server/secrets server/secrets
+COPY --from=build-env /opt/client/dist client/dist
 ENTRYPOINT ["./keyaki"]
