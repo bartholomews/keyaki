@@ -1,12 +1,18 @@
 
-.header {
-  background-image: url('../assets/images/haskell_elm_logo.png');
+.header-content {
+    background-color: aquamarine;
+}
+
+.main-content {
+    padding:15px;
+    border:black 5px solid;
+    margin:20px;
 }
 
 button:disabled {
-  cursor: not-allowed;
+    cursor: not-allowed;
 }
 
 .btn:focus {
-  box-shadow: none;
+    box-shadow: none;
 }

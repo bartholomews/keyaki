@@ -2,6 +2,7 @@ module App.View exposing (kanaForm, resultView, root, rootOld, visibilityMenu)
 
 import App.Route exposing (Route(..), route)
 import App.Types exposing (Model, Msg(..))
+import Common.Html exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -13,16 +14,13 @@ import Todos.View as TodosView
 import Url.Parser exposing (parse)
 
 
-createLink : String -> Html Msg
-createLink endpoint =
-    a [ href ("/" ++ endpoint) ] [ text endpoint ]
-
-
 navigation : Html Msg
 navigation =
-    ul []
-        [ li [] [ createLink "home" ]
-        , li [] [ createLink "srs?jlpt=2" ]
+    nav []
+        [ ul []
+            [ li [] [ anchorLink "home" Nothing ]
+            , li [] [ anchorLink "srs?jlpt=1" (Just "srs") ]
+            ]
         ]
 
 
@@ -41,13 +39,13 @@ matchedRoute model path =
         NotFound ->
             NotFound.content
 
-        Todo int ->
+        Todo _ ->
             NotFound.content
 
 
 content : Model -> Html Msg
 content model =
-    main_ []
+    main_ [ class "main-content" ]
         [ case parse route model.url of
             Just path ->
                 matchedRoute model path
@@ -64,8 +62,10 @@ content model =
 root : Model -> Html Msg
 root model =
     div []
-        [ header [] [ text "Header" ]
-        , navigation
+        [ div [ class "header-content" ]
+            [ header [] [ text "Header" ]
+            , navigation
+            ]
         , content model
         ]
 
