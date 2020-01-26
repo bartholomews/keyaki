@@ -28,7 +28,7 @@ User json
     name Text
     email Text
     deriving Show Eq
-Todo json
+Kana json
     completed Bool
     description Text
     deriving Show Eq

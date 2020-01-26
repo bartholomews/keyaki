@@ -1,15 +1,15 @@
-module App.State exposing (initialCommand, initialModel, update, updateTodo, updateTodos)
+module App.State exposing (initialCommand, initialModel, update, updateKana, updateKanas)
 
 import App.Types exposing (..)
 import Browser
 import Browser.Navigation as Nav
+import Kana.Api as Kana
+import Kana.State as KanaState
+import Kana.Types as KanaTypes
+import Kanas.Api as KanasApi
+import Kanas.State as KanasState
+import Kanas.Types as KanasTypes
 import Return exposing (Return)
-import Todo.Api as Todo
-import Todo.State as TodoState
-import Todo.Types as TodoTypes
-import Todos.Api as TodosApi
-import Todos.State as TodosState
-import Todos.Types as TodosTypes
 import Url exposing (Url)
 
 
@@ -21,9 +21,9 @@ initialModel : Url -> Nav.Key -> Model
 initialModel url key =
     { url = url
     , navKey = key
-    , todos = TodosState.initialTodos
-    , todosVisibility = TodosState.initialVisibility
-    , newTodo = TodoState.initialNewTodo
+    , kanas = KanasState.initialKanas
+    , kanasVisibility = KanasState.initialVisibility
+    , newKana = KanaState.initialNewKana
     }
 
 
@@ -33,7 +33,7 @@ initialModel url key =
 
 initialCommand : Cmd Msg
 initialCommand =
-    Cmd.map TodosMsg TodosApi.getTodos
+    Cmd.map KanasMsg KanasApi.getKanas
 
 
 
@@ -44,11 +44,11 @@ update : Msg -> Model -> Return Msg Model
 update msg model =
     Return.singleton model
         |> (case msg of
-                TodosMsg msg_ ->
-                    updateTodos msg_
+                KanasMsg msg_ ->
+                    updateKanas msg_
 
-                TodoMsg msg_ ->
-                    updateTodo msg_
+                KanaMsg msg_ ->
+                    updateKana msg_
 
                 UrlChanged newUrl ->
                     Return.map (\m -> { m | url = newUrl })
@@ -66,88 +66,88 @@ update msg model =
            )
 
 
-updateTodo : TodoTypes.Msg -> Return Msg Model -> Return Msg Model
-updateTodo msg writer =
+updateKana : KanaTypes.Msg -> Return Msg Model -> Return Msg Model
+updateKana msg writer =
     let
         ( appModel, _ ) =
             writer
 
-        ( todoModel, todoCmd ) =
-            TodoState.update msg appModel.newTodo
+        ( kanaModel, kanaCmd ) =
+            KanaState.update msg appModel.newKana
     in
     writer
         --|> (case Debug.log "t " msg of
         |> (case msg of
-                TodoTypes.Save ->
-                    Return.command (Cmd.map TodoMsg <| Todo.saveTodo todoModel)
+                KanaTypes.Save ->
+                    Return.command (Cmd.map KanaMsg <| Kana.saveKana kanaModel)
 
-                TodoTypes.Saved (Ok todoId) ->
+                KanaTypes.Saved (Ok kanaId) ->
                     let
-                        todo =
-                            { todoModel | id = todoId }
+                        kana =
+                            { kanaModel | id = kanaId }
 
-                        todos =
-                            List.append appModel.todos [ TodosState.createTodoItem todo ]
+                        kanas =
+                            List.append appModel.kanas [ KanasState.createKanaItem kana ]
                     in
                     Return.map
-                        (\m -> { m | todos = todos, newTodo = TodoState.emptyTodo })
+                        (\m -> { m | kanas = kanas, newKana = KanaState.emptyKana })
 
                 _ ->
-                    Return.mapWith (\m -> { m | newTodo = todoModel }) <|
-                        Cmd.map TodoMsg todoCmd
+                    Return.mapWith (\m -> { m | newKana = kanaModel }) <|
+                        Cmd.map KanaMsg kanaCmd
            )
 
 
-updateTodos : TodosTypes.Msg -> Return Msg Model -> Return Msg Model
-updateTodos msg writer =
+updateKanas : KanasTypes.Msg -> Return Msg Model -> Return Msg Model
+updateKanas msg writer =
     let
         ( appModel, _ ) =
             writer
 
-        ( todosModel, todosCmd ) =
-            TodosState.update msg appModel.todos
+        ( kanasModel, kanasCmd ) =
+            KanasState.update msg appModel.kanas
     in
     writer
         --|> (case Debug.log "ts " msg of
         |> (case msg of
-                TodosTypes.TodosFetched (Ok todos) ->
+                KanasTypes.KanasFetched (Ok kanas) ->
                     Return.map <|
-                        \m -> { m | todos = List.map TodosState.createTodoItem todos }
+                        \m -> { m | kanas = List.map KanasState.createKanaItem kanas }
 
-                TodosTypes.DeleteTodo todoItem ->
+                KanasTypes.DeleteKana kanaItem ->
                     Return.mapWith
-                        (\m -> { m | todos = TodosState.deleteTodoItem todoItem todosModel })
-                        (Cmd.map TodoMsg <|
-                            Todo.deleteTodo todoItem.todo
+                        (\m -> { m | kanas = KanasState.deleteKanaItem kanaItem kanasModel })
+                        (Cmd.map KanaMsg <|
+                            Kana.deleteKana kanaItem.kana
                         )
 
-                TodosTypes.UpdateTodo todoItem ->
+                KanasTypes.UpdateKana kanaItem ->
                     Return.mapWith
-                        (\m -> { m | todos = todosModel })
-                        (Cmd.map TodoMsg <|
-                            Todo.updateTodo <|
-                                .todo todoItem
+                        (\m -> { m | kanas = kanasModel })
+                        (Cmd.map KanaMsg <|
+                            Kana.updateKana <|
+                                .kana kanaItem
                         )
 
-                TodosTypes.ToggleTodoDone todoItem ->
+                KanasTypes.ToggleKanaDone kanaItem ->
                     let
-                        todo =
-                            todoItem.todo
+                        kana =
+                            kanaItem.kana
 
-                        todo_ =
-                            { todo | completed = not todo.completed }
+                        kana_ =
+                            { kana | completed = not kana.completed }
                     in
                     Return.mapWith
-                        (\m -> { m | todos = TodosState.updateTodo todo_ todosModel })
-                        (Cmd.map TodoMsg <|
-                            Todo.updateTodo todo_
+                        (\m -> { m | kanas = KanasState.updateKana kana_ kanasModel })
+                        (Cmd.map KanaMsg <|
+                            Kana.updateKana kana_
                         )
 
-                TodosTypes.SetVisibility visibility ->
-                    Return.map (\m -> { m | todosVisibility = visibility })
+                KanasTypes.SetVisibility visibility ->
+                    Return.map (\m -> { m | kanasVisibility = visibility })
 
                 _ ->
                     Return.mapWith
-                        (\m -> { m | todos = todosModel })
-                        (Cmd.map TodosMsg todosCmd)
+                        (\m -> { m | kanas = kanasModel })
+                        (Cmd.map KanasMsg kanasCmd)
            )

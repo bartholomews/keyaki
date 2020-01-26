@@ -1,47 +1,47 @@
-module Todo.Api exposing
-    ( deleteTodo
-    , saveTodo
-    , updateTodo
+module Kana.Api exposing
+    ( deleteKana
+    , saveKana
+    , updateKana
     )
 
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
-import Todo.Types exposing (..)
+import Kana.Types exposing (..)
 
 
-todoEncoded : Todo -> Encode.Value
-todoEncoded todo =
+kanaEncoded : Kana -> Encode.Value
+kanaEncoded kana =
     let
         list =
-            [ ( "completed", Encode.bool todo.completed )
-            , ( "description", Encode.string todo.description )
+            [ ( "completed", Encode.bool kana.completed )
+            , ( "description", Encode.string kana.description )
             ]
     in
     list |> Encode.object
 
 
-saveTodo : Todo -> Cmd Msg
-saveTodo todo =
+saveKana : Kana -> Cmd Msg
+saveKana kana =
     let
         body =
-            todoEncoded todo
+            kanaEncoded kana
                 |> Encode.encode 0
                 |> Http.stringBody "application/json"
     in
     Http.post
-        { url = "http://localhost:8081/api/todo/"
+        { url = "http://localhost:8081/api/kana/"
         , body = body
         , expect = Http.expectJson Saved Decode.int
         }
 
 
-deleteTodo : Todo -> Cmd Msg
-deleteTodo todo =
+deleteKana : Kana -> Cmd Msg
+deleteKana kana =
     Http.request
         { method = "DELETE"
         , headers = []
-        , url = "http://localhost:8081/api/todo/" ++ String.fromInt todo.id
+        , url = "http://localhost:8081/api/kana/" ++ String.fromInt kana.id
         , body = Http.emptyBody
         , expect = Http.expectString Deleted
         , timeout = Nothing
@@ -51,18 +51,18 @@ deleteTodo todo =
         }
 
 
-updateTodo : Todo -> Cmd Msg
-updateTodo todo =
+updateKana : Kana -> Cmd Msg
+updateKana kana =
     let
         body =
-            todoEncoded todo
+            kanaEncoded kana
                 |> Encode.encode 0
                 |> Http.stringBody "application/json"
     in
     Http.request
         { method = "PUT"
         , headers = []
-        , url = "http://localhost:8081/api/todo/" ++ String.fromInt todo.id
+        , url = "http://localhost:8081/api/kana/" ++ String.fromInt kana.id
         , body = body
         , expect = Http.expectString Updated
         , timeout = Nothing

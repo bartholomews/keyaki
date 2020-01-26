@@ -1,42 +1,42 @@
-module Todos.View exposing (itemView, listView)
+module Kanas.View exposing (itemView, listView)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Todos.Types exposing (..)
+import Kanas.Types exposing (..)
 
 
-listView : Todos -> Visibility -> Html Msg
-listView todos visibility =
+listView : Kanas -> Visibility -> Html Msg
+listView kanas visibility =
     let
-        isVisible todoItem =
+        isVisible kanaItem =
             case visibility of
                 Done ->
-                    todoItem.todo.completed
+                    kanaItem.kana.completed
 
                 Active ->
-                    not todoItem.todo.completed
+                    not kanaItem.kana.completed
 
                 _ ->
                     True
 
-        hasTodos =
-            List.length todos > 0
+        hasKanas =
+            List.length kanas > 0
     in
-    if hasTodos then
+    if hasKanas then
         ul [ class "list-reset m0" ]
-            (List.map itemView <| List.filter isVisible todos)
+            (List.map itemView <| List.filter isVisible kanas)
 
     else
         p [ class "center h1 gray regular px2 pt2 " ]
             [ text "¯\\_(ツ)_/¯" ]
 
 
-itemView : TodoItem -> Html Msg
+itemView : KanaItem -> Html Msg
 itemView item =
     let
-        todo =
-            item.todo
+        kana =
+            item.kana
 
         editable =
             item.editable
@@ -46,20 +46,20 @@ itemView item =
             [ button
                 [ class <|
                     "h6 regular italic btn m0 p0 pl1 pr1 white rounded"
-                        ++ (if todo.completed then
+                        ++ (if kana.completed then
                                 " bg-green "
 
                             else
                                 " bg-gray"
                            )
-                , onClick <| ToggleTodoDone item
+                , onClick <| ToggleKanaDone item
                 ]
                 [ text <|
-                    if todo.completed then
+                    if kana.completed then
                         "Done "
 
                     else
-                        "Todo"
+                        "Kana"
                 ]
             ]
         , div
@@ -76,7 +76,7 @@ itemView item =
                            )
                 , type_ "text"
                 , disabled <| not editable
-                , value todo.description
+                , value kana.description
                 , onInput (UpdateDescription item)
                 ]
                 []
@@ -86,14 +86,14 @@ itemView item =
                 [ button
                     [ class <|
                         "h4 regular btn btn-outline ml2 gray"
-                    , onClick <| CancelEditTodo item
+                    , onClick <| CancelEditKana item
                     ]
                     [ text "Cancel"
                     ]
                 , button
                     [ class
                         "ml2 h4 regular btn btn-outline green"
-                    , onClick <| UpdateTodo item
+                    , onClick <| UpdateKana item
                     ]
                     [ text "Update"
                     ]
@@ -103,14 +103,14 @@ itemView item =
             div []
                 [ button
                     [ class "ml2 h4 regular btn btn-outline fuchsia"
-                    , onClick <| DeleteTodo item
+                    , onClick <| DeleteKana item
                     ]
                     [ text "Delete"
                     ]
                 , button
                     [ class <|
                         "h4 regular btn btn-outline ml2 navy"
-                    , onClick <| EditTodo item
+                    , onClick <| EditKana item
                     ]
                     [ text "Edit"
                     ]

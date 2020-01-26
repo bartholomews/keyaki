@@ -60,6 +60,3 @@ matchedRoute model path =
         -- TODO: https://github.com/rtfeldman/elm-spa-example/blob/ad14ff6f8e50789ba59d8d2b17929f0737fc8373/src/Main.elm#L71
         Srs maybeLevel ->
             Srs.content maybeLevel
-
-        Todo _ ->
-            Home.content model

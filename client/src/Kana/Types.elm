@@ -1,9 +1,9 @@
-module Todo.Types exposing (Msg(..), Todo)
+module Kana.Types exposing (Kana, Msg(..))
 
 import Http
 
 
-type alias Todo =
+type alias Kana =
     { id : Int
     , completed : Bool
     , description : String

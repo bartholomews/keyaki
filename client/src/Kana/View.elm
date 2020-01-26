@@ -1,20 +1,20 @@
-module Todo.View exposing (newTodo, onKeyDown)
+module Kana.View exposing (newKana, onKeyDown)
 
 import App.Hepburn exposing (kana)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (keyCode, on, onClick, onInput)
 import Json.Decode as Decode
+import Kana.Types exposing (Kana, Msg(..))
 import String
-import Todo.Types exposing (Msg(..), Todo)
 
 
-newTodo : Todo -> Html Msg
-newTodo nTodo =
+newKana : Kana -> Html Msg
+newKana nKana =
     let
-        hasEmptyDescription : Todo -> Bool
-        hasEmptyDescription todo =
-            String.isEmpty <| .description todo
+        hasEmptyDescription : Kana -> Bool
+        hasEmptyDescription kana =
+            String.isEmpty <| .description kana
     in
     div [ class "clearfix mt3 mb3" ]
         [ h1 [ class "2 regular caps silver" ]
@@ -22,7 +22,7 @@ newTodo nTodo =
         , input
             [ class "col-10 field h2 p2 mt2 mb2 border-none navy"
             , type_ "text"
-            , value nTodo.description
+            , value nKana.description
             , placeholder "Rōmaji to Kana"
             , onInput Update
             , autofocus True
@@ -30,26 +30,26 @@ newTodo nTodo =
             ]
             []
         , h1 [ class "2 regular caps silver" ]
-            [ text (kana nTodo.description) ]
+            [ text (kana nKana.description) ]
         , div [ class "" ]
             [ button
                 [ class "h3 px4 py2 btn btn-outline lime"
                 , onClick Save
-                , disabled <| hasEmptyDescription nTodo
+                , disabled <| hasEmptyDescription nKana
                 ]
                 [ text "Add Kana" ]
             ]
         , button
             [ class <|
                 "btn  h5 regular silver underline"
-                    ++ (if hasEmptyDescription nTodo then
+                    ++ (if hasEmptyDescription nKana then
                             " muted"
 
                         else
                             ""
                        )
             , onClick Cancel
-            , disabled <| hasEmptyDescription nTodo
+            , disabled <| hasEmptyDescription nKana
             ]
             [ text "Or skip" ]
         ]

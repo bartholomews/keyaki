@@ -11,13 +11,12 @@ import           Servant                         ((:<|>) ((:<|>)),
                                                   serve, serveDirectoryWith)
 import           Servant.Server
 
-import           Api.Todo                        (TodoAPI, todoApi, todoServer)
+import           Api.Kana                        (KanaAPI, kanaApi, kanaServer)
 import           Api.User                        (UserAPI, userApi, userServer)
 import           Config                          (AppT (..), Config (..))
 import           Data.Text                       (pack)
 import           Network.HTTP.Types.Method
-import           Network.Wai.Middleware.Cors     (CorsResourcePolicy, cors,
-                                                  corsMethods,
+import           Network.Wai.Middleware.Cors     (cors, corsMethods,
                                                   simpleCorsResourcePolicy)
 
 import           Network.Wai                     (Middleware)
@@ -34,8 +33,8 @@ import           WaiAppStatic.Types
 appToUserServer :: Config -> Server UserAPI
 appToUserServer cfg = hoistServer userApi (convertApp cfg) userServer
 
-appToTodoServer :: Config -> Server TodoAPI
-appToTodoServer cfg = hoistServer todoApi (convertApp cfg) todoServer
+appToKanaServer :: Config -> Server KanaAPI
+appToKanaServer cfg = hoistServer kanaApi (convertApp cfg) kanaServer
 
 -- | This function converts our @'AppT' m@ monad into the @ExceptT ServantErr
 -- m@ monad that Servant's 'enter' function needs in order to run the
@@ -67,7 +66,7 @@ static = serveDirectoryWith (staticSettings "client/dist")
 -- two different APIs and applications. This is a powerful tool for code
 -- reuse and abstraction! We need to put the 'Raw' endpoint last, since it
 -- always succeeds.
-type AppAPI = UserAPI :<|> TodoAPI :<|> Raw
+type AppAPI = UserAPI :<|> KanaAPI :<|> Raw
 
 appApi :: Proxy AppAPI
 appApi = Proxy
@@ -75,7 +74,7 @@ appApi = Proxy
 -- | Finally, this function takes a configuration and runs our 'UserAPI'
 -- alongside the 'Raw' endpoint that serves all of our files.
 app :: Config -> Application
-app cfg = simpleCors (serve appApi (appToUserServer cfg :<|> appToTodoServer cfg :<|> static))
+app cfg = simpleCors (serve appApi (appToUserServer cfg :<|> appToKanaServer cfg :<|> static))
 
 --  https://github.com/haskell-servant/servant/issues/278
 --  https://github.com/haskell-servant/servant/issues/154
