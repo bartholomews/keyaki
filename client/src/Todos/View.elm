@@ -29,7 +29,7 @@ listView todos visibility =
 
     else
         p [ class "center h1 gray regular px2 pt2 " ]
-            [ text "Eeeeeh, nothing to do ... ?" ]
+            [ text "¯\\_(ツ)_/¯" ]
 
 
 itemView : TodoItem -> Html Msg

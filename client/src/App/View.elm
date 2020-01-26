@@ -18,7 +18,7 @@ root : Model -> Html Msg
 root model =
     div []
         [ div [ class "header-content" ]
-            [ header []
+            [ header [ class "btn btn-primary" ]
                 [ img [ src "/dist/images/favicon.ico", alt "ケヤキ" ] []
                 , navigation (parse route model.url)
                 ]
