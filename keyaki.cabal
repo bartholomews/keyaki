@@ -51,7 +51,7 @@ library
       , Models
       , Api
       , Api.Common
-      , Api.Kana
+      , Api.Entry
       , Api.User
       , Logger
       , DevelMain

@@ -108,20 +108,20 @@ by using [httpie](https://github.com/jkbrzt/httpie):
 
 ``` shell
 
-# add a todo
-http POST localhost:8080/todo/ completed:=false description="my todo"
+# add an entry
+http POST localhost:8080/entry completed:=false romanji="katakana"
 
-# get a todo
-http localhost:8080/todo/1
+# get an entry
+http localhost:8080/entry/1
 
-# delete a todo
-http DELETE localhost:8080/todo/1
+# delete an entry
+http DELETE localhost:8080/entry/1
 
-# update a todo
-http PUT localhost:8080/todo/1 description="any other description" completed:=true
+# update an entry
+http PUT localhost:8080/entry/1 romanji="keyaki" completed:=true
 
-# get all todos
-http localhost:8080/todos
+# get all entries
+http localhost:8080/entries
 
 ```
 

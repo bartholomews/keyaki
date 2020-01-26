@@ -1,20 +1,20 @@
-module Kana.View exposing (newKana, onKeyDown)
+module Entry.View exposing (newEntry, onKeyDown)
 
 import App.Hepburn exposing (kana)
+import Entry.Types exposing (Entry, Msg(..))
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (keyCode, on, onClick, onInput)
 import Json.Decode as Decode
-import Kana.Types exposing (Kana, Msg(..))
 import String
 
 
-newKana : Kana -> Html Msg
-newKana nKana =
+newEntry : Entry -> Html Msg
+newEntry nEntry =
     let
-        hasEmptyDescription : Kana -> Bool
-        hasEmptyDescription kana =
-            String.isEmpty <| .description kana
+        hasEmptyRomanji : Entry -> Bool
+        hasEmptyRomanji entry =
+            String.isEmpty <| .romanji entry
     in
     div [ class "clearfix mt3 mb3" ]
         [ h1 [ class "2 regular caps silver" ]
@@ -22,7 +22,7 @@ newKana nKana =
         , input
             [ class "col-10 field h2 p2 mt2 mb2 border-none navy"
             , type_ "text"
-            , value nKana.description
+            , value nEntry.romanji
             , placeholder "Rōmaji to Kana"
             , onInput Update
             , autofocus True
@@ -30,26 +30,26 @@ newKana nKana =
             ]
             []
         , h1 [ class "2 regular caps silver" ]
-            [ text (kana nKana.description) ]
+            [ text (kana nEntry.romanji) ]
         , div [ class "" ]
             [ button
                 [ class "h3 px4 py2 btn btn-outline lime"
                 , onClick Save
-                , disabled <| hasEmptyDescription nKana
+                , disabled <| hasEmptyRomanji nEntry
                 ]
                 [ text "Add Kana" ]
             ]
         , button
             [ class <|
                 "btn  h5 regular silver underline"
-                    ++ (if hasEmptyDescription nKana then
+                    ++ (if hasEmptyRomanji nEntry then
                             " muted"
 
                         else
                             ""
                        )
             , onClick Cancel
-            , disabled <| hasEmptyDescription nKana
+            , disabled <| hasEmptyRomanji nEntry
             ]
             [ text "Or skip" ]
         ]

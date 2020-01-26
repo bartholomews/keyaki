@@ -1,42 +1,42 @@
-module Kanas.View exposing (itemView, listView)
+module Entries.View exposing (itemView, listView)
 
+import Entries.Types exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Kanas.Types exposing (..)
 
 
-listView : Kanas -> Visibility -> Html Msg
-listView kanas visibility =
+listView : Entries -> Visibility -> Html Msg
+listView entries visibility =
     let
-        isVisible kanaItem =
+        isVisible entryItem =
             case visibility of
                 Done ->
-                    kanaItem.kana.completed
+                    not entryItem.entry.active
 
                 Active ->
-                    not kanaItem.kana.completed
+                    entryItem.entry.active
 
                 _ ->
                     True
 
-        hasKanas =
-            List.length kanas > 0
+        hasEntries =
+            List.length entries > 0
     in
-    if hasKanas then
+    if hasEntries then
         ul [ class "list-reset m0" ]
-            (List.map itemView <| List.filter isVisible kanas)
+            (List.map itemView <| List.filter isVisible entries)
 
     else
         p [ class "center h1 gray regular px2 pt2 " ]
             [ text "¯\\_(ツ)_/¯" ]
 
 
-itemView : KanaItem -> Html Msg
+itemView : EntryItem -> Html Msg
 itemView item =
     let
-        kana =
-            item.kana
+        entry =
+            item.entry
 
         editable =
             item.editable
@@ -46,20 +46,20 @@ itemView item =
             [ button
                 [ class <|
                     "h6 regular italic btn m0 p0 pl1 pr1 white rounded"
-                        ++ (if kana.completed then
+                        ++ (if entry.active then
                                 " bg-green "
 
                             else
                                 " bg-gray"
                            )
-                , onClick <| ToggleKanaDone item
+                , onClick <| ToggleEntryDone item
                 ]
                 [ text <|
-                    if kana.completed then
-                        "Done "
+                    if entry.active then
+                        "Active"
 
                     else
-                        "Kana"
+                        "Done"
                 ]
             ]
         , div
@@ -76,8 +76,8 @@ itemView item =
                            )
                 , type_ "text"
                 , disabled <| not editable
-                , value kana.description
-                , onInput (UpdateDescription item)
+                , value entry.romanji
+                , onInput (UpdateRomanji item)
                 ]
                 []
             ]
@@ -86,14 +86,14 @@ itemView item =
                 [ button
                     [ class <|
                         "h4 regular btn btn-outline ml2 gray"
-                    , onClick <| CancelEditKana item
+                    , onClick <| CancelEditEntry item
                     ]
                     [ text "Cancel"
                     ]
                 , button
                     [ class
                         "ml2 h4 regular btn btn-outline green"
-                    , onClick <| UpdateKana item
+                    , onClick <| UpdateEntry item
                     ]
                     [ text "Update"
                     ]
@@ -103,14 +103,14 @@ itemView item =
             div []
                 [ button
                     [ class "ml2 h4 regular btn btn-outline fuchsia"
-                    , onClick <| DeleteKana item
+                    , onClick <| DeleteEntry item
                     ]
                     [ text "Delete"
                     ]
                 , button
                     [ class <|
                         "h4 regular btn btn-outline ml2 navy"
-                    , onClick <| EditKana item
+                    , onClick <| EditEntry item
                     ]
                     [ text "Edit"
                     ]

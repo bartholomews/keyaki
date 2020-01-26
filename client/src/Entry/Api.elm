@@ -1,47 +1,47 @@
-module Kana.Api exposing
-    ( deleteKana
-    , saveKana
-    , updateKana
+module Entry.Api exposing
+    ( deleteEntry
+    , saveEntry
+    , updateEntry
     )
 
+import Entry.Types exposing (..)
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
-import Kana.Types exposing (..)
 
 
-kanaEncoded : Kana -> Encode.Value
-kanaEncoded kana =
+entryEncoded : Entry -> Encode.Value
+entryEncoded entry =
     let
         list =
-            [ ( "completed", Encode.bool kana.completed )
-            , ( "description", Encode.string kana.description )
+            [ ( "active", Encode.bool entry.active )
+            , ( "romanji", Encode.string entry.romanji )
             ]
     in
     list |> Encode.object
 
 
-saveKana : Kana -> Cmd Msg
-saveKana kana =
+saveEntry : Entry -> Cmd Msg
+saveEntry entry =
     let
         body =
-            kanaEncoded kana
+            entryEncoded entry
                 |> Encode.encode 0
                 |> Http.stringBody "application/json"
     in
     Http.post
-        { url = "http://localhost:8081/api/kana/"
+        { url = "http://localhost:8081/api/entry/"
         , body = body
         , expect = Http.expectJson Saved Decode.int
         }
 
 
-deleteKana : Kana -> Cmd Msg
-deleteKana kana =
+deleteEntry : Entry -> Cmd Msg
+deleteEntry entry =
     Http.request
         { method = "DELETE"
         , headers = []
-        , url = "http://localhost:8081/api/kana/" ++ String.fromInt kana.id
+        , url = "http://localhost:8081/api/entry/" ++ String.fromInt entry.id
         , body = Http.emptyBody
         , expect = Http.expectString Deleted
         , timeout = Nothing
@@ -51,18 +51,18 @@ deleteKana kana =
         }
 
 
-updateKana : Kana -> Cmd Msg
-updateKana kana =
+updateEntry : Entry -> Cmd Msg
+updateEntry entry =
     let
         body =
-            kanaEncoded kana
+            entryEncoded entry
                 |> Encode.encode 0
                 |> Http.stringBody "application/json"
     in
     Http.request
         { method = "PUT"
         , headers = []
-        , url = "http://localhost:8081/api/kana/" ++ String.fromInt kana.id
+        , url = "http://localhost:8081/api/entry/" ++ String.fromInt entry.id
         , body = body
         , expect = Http.expectString Updated
         , timeout = Nothing

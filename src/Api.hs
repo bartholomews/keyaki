@@ -11,7 +11,7 @@ import           Servant                         ((:<|>) ((:<|>)),
                                                   serve, serveDirectoryWith)
 import           Servant.Server
 
-import           Api.Kana                        (KanaAPI, kanaApi, kanaServer)
+import           Api.Entry                        (EntryAPI, entryApi, entryServer)
 import           Api.User                        (UserAPI, userApi, userServer)
 import           Config                          (AppT (..), Config (..))
 import           Data.Text                       (pack)
@@ -33,8 +33,8 @@ import           WaiAppStatic.Types
 appToUserServer :: Config -> Server UserAPI
 appToUserServer cfg = hoistServer userApi (convertApp cfg) userServer
 
-appToKanaServer :: Config -> Server KanaAPI
-appToKanaServer cfg = hoistServer kanaApi (convertApp cfg) kanaServer
+appToEntryServer :: Config -> Server EntryAPI
+appToEntryServer cfg = hoistServer entryApi (convertApp cfg) entryServer
 
 -- | This function converts our @'AppT' m@ monad into the @ExceptT ServantErr
 -- m@ monad that Servant's 'enter' function needs in order to run the
@@ -53,6 +53,7 @@ staticSettings root = ds {ssLookupFile = lookup}
       case f of
         LRFile f   -> return $ LRFile f
         LRFolder f -> return $ LRFolder f
+        -- TODO: Should redirect to `index.html` only if not within the /api path, otherwise should give 404
         LRNotFound -> ssLookupFile ds [unsafeToPiece (pack "index.html")]
 
 -- | Since we also want to provide a minimal front end, we need to give
@@ -66,7 +67,7 @@ static = serveDirectoryWith (staticSettings "client/dist")
 -- two different APIs and applications. This is a powerful tool for code
 -- reuse and abstraction! We need to put the 'Raw' endpoint last, since it
 -- always succeeds.
-type AppAPI = UserAPI :<|> KanaAPI :<|> Raw
+type AppAPI = UserAPI :<|> EntryAPI :<|> Raw
 
 appApi :: Proxy AppAPI
 appApi = Proxy
@@ -74,7 +75,7 @@ appApi = Proxy
 -- | Finally, this function takes a configuration and runs our 'UserAPI'
 -- alongside the 'Raw' endpoint that serves all of our files.
 app :: Config -> Application
-app cfg = simpleCors (serve appApi (appToUserServer cfg :<|> appToKanaServer cfg :<|> static))
+app cfg = simpleCors (serve appApi (appToUserServer cfg :<|> appToEntryServer cfg :<|> static))
 
 --  https://github.com/haskell-servant/servant/issues/278
 --  https://github.com/haskell-servant/servant/issues/154

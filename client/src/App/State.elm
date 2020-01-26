@@ -1,14 +1,14 @@
-module App.State exposing (initialCommand, initialModel, update, updateKana, updateKanas)
+module App.State exposing (initialCommand, initialModel, update, updateEntries, updateEntry)
 
 import App.Types exposing (..)
 import Browser
 import Browser.Navigation as Nav
-import Kana.Api as Kana
-import Kana.State as KanaState
-import Kana.Types as KanaTypes
-import Kanas.Api as KanasApi
-import Kanas.State as KanasState
-import Kanas.Types as KanasTypes
+import Entries.Api as EntriesApi
+import Entries.State as EntriesState
+import Entries.Types as EntriesTypes
+import Entry.Api as Entry
+import Entry.State as EntryState
+import Entry.Types as EntryTypes
 import Return exposing (Return)
 import Url exposing (Url)
 
@@ -21,9 +21,9 @@ initialModel : Url -> Nav.Key -> Model
 initialModel url key =
     { url = url
     , navKey = key
-    , kanas = KanasState.initialKanas
-    , kanasVisibility = KanasState.initialVisibility
-    , newKana = KanaState.initialNewKana
+    , entries = EntriesState.initialEntries
+    , entriesVisibility = EntriesState.initialVisibility
+    , newEntry = EntryState.initialNewEntry
     }
 
 
@@ -33,7 +33,7 @@ initialModel url key =
 
 initialCommand : Cmd Msg
 initialCommand =
-    Cmd.map KanasMsg KanasApi.getKanas
+    Cmd.map EntriesMsg EntriesApi.getEntries
 
 
 
@@ -44,11 +44,11 @@ update : Msg -> Model -> Return Msg Model
 update msg model =
     Return.singleton model
         |> (case msg of
-                KanasMsg msg_ ->
-                    updateKanas msg_
+                EntriesMsg msg_ ->
+                    updateEntries msg_
 
-                KanaMsg msg_ ->
-                    updateKana msg_
+                EntryMsg msg_ ->
+                    updateEntry msg_
 
                 UrlChanged newUrl ->
                     Return.map (\m -> { m | url = newUrl })
@@ -66,88 +66,88 @@ update msg model =
            )
 
 
-updateKana : KanaTypes.Msg -> Return Msg Model -> Return Msg Model
-updateKana msg writer =
+updateEntry : EntryTypes.Msg -> Return Msg Model -> Return Msg Model
+updateEntry msg writer =
     let
         ( appModel, _ ) =
             writer
 
-        ( kanaModel, kanaCmd ) =
-            KanaState.update msg appModel.newKana
+        ( entryModel, entryCmd ) =
+            EntryState.update msg appModel.newEntry
     in
     writer
         --|> (case Debug.log "t " msg of
         |> (case msg of
-                KanaTypes.Save ->
-                    Return.command (Cmd.map KanaMsg <| Kana.saveKana kanaModel)
+                EntryTypes.Save ->
+                    Return.command (Cmd.map EntryMsg <| Entry.saveEntry entryModel)
 
-                KanaTypes.Saved (Ok kanaId) ->
+                EntryTypes.Saved (Ok entryId) ->
                     let
-                        kana =
-                            { kanaModel | id = kanaId }
+                        entry =
+                            { entryModel | id = entryId }
 
-                        kanas =
-                            List.append appModel.kanas [ KanasState.createKanaItem kana ]
+                        entries =
+                            List.append appModel.entries [ EntriesState.createEntryItem entry ]
                     in
                     Return.map
-                        (\m -> { m | kanas = kanas, newKana = KanaState.emptyKana })
+                        (\m -> { m | entries = entries, newEntry = EntryState.emptyEntry })
 
                 _ ->
-                    Return.mapWith (\m -> { m | newKana = kanaModel }) <|
-                        Cmd.map KanaMsg kanaCmd
+                    Return.mapWith (\m -> { m | newEntry = entryModel }) <|
+                        Cmd.map EntryMsg entryCmd
            )
 
 
-updateKanas : KanasTypes.Msg -> Return Msg Model -> Return Msg Model
-updateKanas msg writer =
+updateEntries : EntriesTypes.Msg -> Return Msg Model -> Return Msg Model
+updateEntries msg writer =
     let
         ( appModel, _ ) =
             writer
 
-        ( kanasModel, kanasCmd ) =
-            KanasState.update msg appModel.kanas
+        ( entriesModel, entriesCmd ) =
+            EntriesState.update msg appModel.entries
     in
     writer
         --|> (case Debug.log "ts " msg of
         |> (case msg of
-                KanasTypes.KanasFetched (Ok kanas) ->
+                EntriesTypes.EntriesFetched (Ok entries) ->
                     Return.map <|
-                        \m -> { m | kanas = List.map KanasState.createKanaItem kanas }
+                        \m -> { m | entries = List.map EntriesState.createEntryItem entries }
 
-                KanasTypes.DeleteKana kanaItem ->
+                EntriesTypes.DeleteEntry entryItem ->
                     Return.mapWith
-                        (\m -> { m | kanas = KanasState.deleteKanaItem kanaItem kanasModel })
-                        (Cmd.map KanaMsg <|
-                            Kana.deleteKana kanaItem.kana
+                        (\m -> { m | entries = EntriesState.deleteEntryItem entryItem entriesModel })
+                        (Cmd.map EntryMsg <|
+                            Entry.deleteEntry entryItem.entry
                         )
 
-                KanasTypes.UpdateKana kanaItem ->
+                EntriesTypes.UpdateEntry entryItem ->
                     Return.mapWith
-                        (\m -> { m | kanas = kanasModel })
-                        (Cmd.map KanaMsg <|
-                            Kana.updateKana <|
-                                .kana kanaItem
+                        (\m -> { m | entries = entriesModel })
+                        (Cmd.map EntryMsg <|
+                            Entry.updateEntry <|
+                                .entry entryItem
                         )
 
-                KanasTypes.ToggleKanaDone kanaItem ->
+                EntriesTypes.ToggleEntryDone entryItem ->
                     let
-                        kana =
-                            kanaItem.kana
+                        entry =
+                            entryItem.entry
 
-                        kana_ =
-                            { kana | completed = not kana.completed }
+                        entry_ =
+                            { entry | active = not entry.active }
                     in
                     Return.mapWith
-                        (\m -> { m | kanas = KanasState.updateKana kana_ kanasModel })
-                        (Cmd.map KanaMsg <|
-                            Kana.updateKana kana_
+                        (\m -> { m | entries = EntriesState.updateEntry entry_ entriesModel })
+                        (Cmd.map EntryMsg <|
+                            Entry.updateEntry entry_
                         )
 
-                KanasTypes.SetVisibility visibility ->
-                    Return.map (\m -> { m | kanasVisibility = visibility })
+                EntriesTypes.SetVisibility visibility ->
+                    Return.map (\m -> { m | entriesVisibility = visibility })
 
                 _ ->
                     Return.mapWith
-                        (\m -> { m | kanas = kanasModel })
-                        (Cmd.map KanasMsg kanasCmd)
+                        (\m -> { m | entries = entriesModel })
+                        (Cmd.map EntriesMsg entriesCmd)
            )

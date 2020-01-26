@@ -1,12 +1,12 @@
-module Kana.Types exposing (Kana, Msg(..))
+module Entry.Types exposing (Entry, Msg(..))
 
 import Http
 
 
-type alias Kana =
+type alias Entry =
     { id : Int
-    , completed : Bool
-    , description : String
+    , active : Bool
+    , romanji : String
     }
 
 

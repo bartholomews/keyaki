@@ -2,25 +2,25 @@ module App.Types exposing (LinkName(..), Model, Msg(..), RouteLink)
 
 import Browser
 import Browser.Navigation as Nav
-import Kana.Types as Kana
-import Kanas.Types as Kanas
+import Entries.Types as Entries
+import Entry.Types as Entry
 import Url exposing (Url)
 
 
 type alias Model =
     { url : Url
     , navKey : Nav.Key
-    , kanas : Kanas.Kanas
-    , kanasVisibility : Kanas.Visibility
-    , newKana : Kana.Kana
+    , entries : Entries.Entries
+    , entriesVisibility : Entries.Visibility
+    , newEntry : Entry.Entry
     }
 
 
 type Msg
     = UrlChanged Url
     | LinkClicked Browser.UrlRequest
-    | KanasMsg Kanas.Msg
-    | KanaMsg Kana.Msg
+    | EntriesMsg Entries.Msg
+    | EntryMsg Entry.Msg
     | DoNothing
 
 
