@@ -1,22 +1,25 @@
 module Common.Html exposing (anchorLink)
 
-import App.Route exposing (Route, linkName)
-import App.Types exposing (Msg)
+import App.Route as Route exposing (Route, stringifyLinkName)
+import App.Types exposing (Msg, RouteLink)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-addSelectedClassIf : Bool -> String
-addSelectedClassIf isSelected =
-    case isSelected of
-        True ->
-            "selected"
+anchorLink : Maybe Route -> RouteLink -> Html Msg
+anchorLink maybeRoute routeLink =
+    let
+        isSelected =
+            Route.matches maybeRoute routeLink
+    in
+    a
+        [ class
+            (if isSelected then
+                "selected"
 
-        False ->
-            ""
-
-
-anchorLink : Maybe Route -> String -> Html Msg
-anchorLink currentRoute endpoint =
-    a [ class (addSelectedClassIf (endpoint == linkName currentRoute)), href ("/" ++ String.toLower endpoint) ]
-        [ text endpoint ]
+             else
+                ""
+            )
+        , href ("/" ++ String.toLower routeLink.urlPath)
+        ]
+        [ text (stringifyLinkName routeLink.linkName) ]

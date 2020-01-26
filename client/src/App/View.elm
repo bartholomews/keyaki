@@ -1,7 +1,7 @@
 module App.View exposing (root)
 
-import App.Route exposing (Route(..), linkName, route)
-import App.Types exposing (Model, Msg(..))
+import App.Route exposing (Route(..), route)
+import App.Types exposing (LinkName(..), Model, Msg(..), RouteLink)
 import Common.Html exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -31,8 +31,8 @@ navigation : Maybe Route -> Html Msg
 navigation currentRoute =
     nav []
         [ ul []
-            [ li [] [ anchorLink currentRoute (linkName (Just Home)) ]
-            , li [] [ anchorLink currentRoute (linkName (Just (SRS Nothing))) ]
+            [ li [] [ anchorLink currentRoute { urlPath = "home", linkName = HOME } ]
+            , li [] [ anchorLink currentRoute { urlPath = "srs?jlpt=1", linkName = SRS } ]
             ]
         ]
 
@@ -58,7 +58,7 @@ matchedRoute model path =
         -- TODO: maybeLevel should trigger different `update` api GET call,
         -- TODO: so this has to be refactored with routing as per:
         -- TODO: https://github.com/rtfeldman/elm-spa-example/blob/ad14ff6f8e50789ba59d8d2b17929f0737fc8373/src/Main.elm#L71
-        SRS maybeLevel ->
+        Srs maybeLevel ->
             Srs.content maybeLevel
 
         Todo _ ->

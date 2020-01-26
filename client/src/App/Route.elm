@@ -1,5 +1,6 @@
 module App.Route exposing (..)
 
+import App.Types exposing (LinkName(..), RouteLink)
 import Url.Parser exposing ((</>), (<?>), Parser, int, map, oneOf, s)
 import Url.Parser.Query as Query
 
@@ -15,7 +16,7 @@ import Url.Parser.Query as Query
 
 type Route
     = Home
-    | SRS (Maybe Int)
+    | Srs (Maybe Int)
     | Todo Int
 
 
@@ -23,25 +24,38 @@ route : Parser (Route -> a) a
 route =
     oneOf
         [ map Home (s "home")
-        , map SRS (s "srs" <?> Query.int "jlpt") -- see Query #custom for a custom 1-5
+        , map Srs (s "srs" <?> Query.int "jlpt") -- see Query #custom for a custom 1-5
         , map Todo (s "todo" </> int)
         ]
 
 
-linkName : Maybe Route -> String
-linkName maybeRoute =
+matches : Maybe Route -> RouteLink -> Bool
+matches maybeRoute routeLink =
     case maybeRoute of
         Just Home ->
-            "HOME"
+            routeLink.linkName == HOME
 
-        Just (SRS _) ->
-            "SRS"
+        Just (Srs _) ->
+            routeLink.linkName == SRS
 
         Just (Todo _) ->
-            "todo"
+            routeLink.linkName == TODO
 
         Nothing ->
-            ""
+            False
+
+
+stringifyLinkName : LinkName -> String
+stringifyLinkName linkName =
+    case linkName of
+        HOME ->
+            "HOME"
+
+        SRS ->
+            "SRS"
+
+        TODO ->
+            "TODO"
 
 
 

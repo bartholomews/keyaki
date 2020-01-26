@@ -1,4 +1,4 @@
-module App.Types exposing (Model, Msg(..))
+module App.Types exposing (LinkName(..), Model, Msg(..), RouteLink)
 
 import Browser
 import Browser.Navigation as Nav
@@ -22,3 +22,15 @@ type Msg
     | TodosMsg Todos.Msg
     | TodoMsg Todo.Msg
     | DoNothing
+
+
+type LinkName
+    = HOME
+    | SRS
+    | TODO
+
+
+type alias RouteLink =
+    { urlPath : String
+    , linkName : LinkName
+    }
