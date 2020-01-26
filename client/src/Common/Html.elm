@@ -1,12 +1,12 @@
 module Common.Html exposing (anchorLink)
 
 import App.Route as Route exposing (Route, stringifyLinkName)
-import App.Types exposing (Msg, RouteLink)
+import App.Types exposing (HeaderLink, Msg)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-anchorLink : Maybe Route -> RouteLink -> Html Msg
+anchorLink : Maybe Route -> HeaderLink -> Html Msg
 anchorLink maybeRoute routeLink =
     let
         isSelected =
@@ -22,4 +22,4 @@ anchorLink maybeRoute routeLink =
             )
         , href ("/" ++ String.toLower routeLink.urlPath)
         ]
-        [ text (stringifyLinkName routeLink.linkName) ]
+        [ text (stringifyLinkName routeLink.name) ]

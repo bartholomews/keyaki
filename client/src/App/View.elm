@@ -1,7 +1,7 @@
 module App.View exposing (root)
 
 import App.Route exposing (Route(..), route)
-import App.Types exposing (LinkName(..), Model, Msg(..), RouteLink)
+import App.Types exposing (HeaderLink, HeaderLinkName(..), Model, Msg(..))
 import Common.Html exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -31,8 +31,8 @@ navigation : Maybe Route -> Html Msg
 navigation currentRoute =
     nav []
         [ ul []
-            [ li [] [ anchorLink currentRoute { urlPath = "home", linkName = HOME } ]
-            , li [] [ anchorLink currentRoute { urlPath = "srs?jlpt=1", linkName = SRS } ]
+            [ li [] [ anchorLink currentRoute { urlPath = "home", name = HOME } ]
+            , li [] [ anchorLink currentRoute { urlPath = "srs?jlpt=1", name = SRS } ]
             ]
         ]
 

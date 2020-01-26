@@ -1,7 +1,7 @@
 module Entry.View exposing (newEntry, onKeyDown)
 
-import App.Hepburn exposing (kana)
 import Entry.Types exposing (Entry, Msg(..))
+import Hepburn.Translate exposing (romanjiToKana)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (keyCode, on, onClick, onInput)
@@ -30,7 +30,7 @@ newEntry nEntry =
             ]
             []
         , h1 [ class "2 regular caps silver" ]
-            [ text (kana nEntry.romanji) ]
+            [ text (romanjiToKana nEntry.romanji) ]
         , div [ class "" ]
             [ button
                 [ class "h3 px4 py2 btn btn-outline lime"
@@ -51,7 +51,7 @@ newEntry nEntry =
             , onClick Cancel
             , disabled <| hasEmptyRomanji nEntry
             ]
-            [ text "Or skip" ]
+            [ text "Clear" ]
         ]
 
 

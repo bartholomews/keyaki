@@ -1,6 +1,6 @@
 module App.Route exposing (..)
 
-import App.Types exposing (LinkName(..), RouteLink)
+import App.Types exposing (HeaderLink, HeaderLinkName(..))
 import Url.Parser exposing ((</>), (<?>), Parser, map, oneOf, s)
 import Url.Parser.Query as Query
 
@@ -25,20 +25,20 @@ route =
         ]
 
 
-matches : Maybe Route -> RouteLink -> Bool
+matches : Maybe Route -> HeaderLink -> Bool
 matches maybeRoute routeLink =
     case maybeRoute of
         Just Home ->
-            routeLink.linkName == HOME
+            routeLink.name == HOME
 
         Just (Srs _) ->
-            routeLink.linkName == SRS
+            routeLink.name == SRS
 
         Nothing ->
             False
 
 
-stringifyLinkName : LinkName -> String
+stringifyLinkName : HeaderLinkName -> String
 stringifyLinkName linkName =
     case linkName of
         HOME ->

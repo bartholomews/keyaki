@@ -1,4 +1,4 @@
-module App.Hepburn exposing (kana)
+module Hepburn.Translate exposing (romanjiToKana)
 
 -- import Debug exposing (log)
 
@@ -10,8 +10,8 @@ import String
 -- exposing (cons, uncons)
 
 
-kana : String -> String
-kana str =
+romanjiToKana : String -> String
+romanjiToKana str =
     translate (String.toList str)
         []
 

@@ -1,4 +1,4 @@
-module App.Types exposing (LinkName(..), Model, Msg(..), RouteLink)
+module App.Types exposing (HeaderLink, HeaderLinkName(..), Model, Msg(..))
 
 import Browser
 import Browser.Navigation as Nav
@@ -24,12 +24,12 @@ type Msg
     | DoNothing
 
 
-type LinkName
+type HeaderLinkName
     = HOME
     | SRS
 
 
-type alias RouteLink =
+type alias HeaderLink =
     { urlPath : String
-    , linkName : LinkName
+    , name : HeaderLinkName
     }
