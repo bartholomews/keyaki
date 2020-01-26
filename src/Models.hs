@@ -30,7 +30,8 @@ User json
     deriving Show Eq
 Entry json
     active Bool
-    romanji Text
+    kana Text
+    romaji Text
     deriving Show Eq
 |]
 

@@ -6,7 +6,7 @@ import Http
 
 type alias EntryItem =
     { entry : Entry.Entry
-    , romanji : String
+    , romaji : String
     , editable : Bool
     }
 
@@ -29,7 +29,7 @@ type Msg
     = ToggleEntryDone EntryItem
     | EditEntry EntryItem
     | CancelEditEntry EntryItem
-    | UpdateRomanji EntryItem String
+    | UpdateRomaji EntryItem String
     | UpdateEntry EntryItem
     | DeleteEntry EntryItem
     | EntriesFetched (Result Http.Error (List Entry.Entry))

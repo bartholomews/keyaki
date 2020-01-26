@@ -35,7 +35,7 @@ update msg entries =
                         entryItem_ =
                             { entryItem
                                 | editable = True
-                                , romanji = entry.romanji
+                                , romaji = entry.kana
                             }
                     in
                     Return.map <| updateEntryItem entryItem_
@@ -48,8 +48,8 @@ update msg entries =
                         entryItem_ =
                             { entryItem
                                 | editable = False
-                                , romanji = ""
-                                , entry = { entry_ | romanji = .romanji entryItem }
+                                , romaji = ""
+                                , entry = { entry_ | kana = .romaji entryItem }
                             }
                     in
                     Return.map <| updateEntryItem entryItem_
@@ -59,19 +59,19 @@ update msg entries =
                         entryItem_ =
                             { entryItem
                                 | editable = False
-                                , romanji = ""
+                                , romaji = ""
                             }
                     in
                     Return.map <| updateEntryItem entryItem_
 
-                UpdateRomanji entryItem romanji ->
+                UpdateRomaji entryItem romaji ->
                     let
                         entry_ =
                             .entry entryItem
 
                         entryItem_ =
                             { entryItem
-                                | entry = { entry_ | romanji = romanji }
+                                | entry = { entry_ | kana = romaji }
                             }
                     in
                     Return.map <| updateEntryItem entryItem_

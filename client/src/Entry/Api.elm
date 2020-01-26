@@ -4,10 +4,22 @@ module Entry.Api exposing
     , updateEntry
     )
 
+import Common.Encoding exposing (encodeMaybe)
 import Entry.Types exposing (..)
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
+
+
+entryRequestEncoded : EntryRequest -> Encode.Value
+entryRequestEncoded entryRequest =
+    let
+        list =
+            [ ( "romaji", Encode.string entryRequest.romaji ), ( "kana", encodeMaybe entryRequest.kana Encode.string ) ]
+
+        -- FIXME: add `meaning: String`
+    in
+    list |> Encode.object
 
 
 entryEncoded : Entry -> Encode.Value
@@ -15,18 +27,19 @@ entryEncoded entry =
     let
         list =
             [ ( "active", Encode.bool entry.active )
-            , ( "romanji", Encode.string entry.romanji )
+            , ( "romaji", Encode.string entry.kana )
             ]
     in
     list |> Encode.object
 
 
-saveEntry : Entry -> Cmd Msg
-saveEntry entry =
+saveEntry : EntryRequest -> Cmd Msg
+saveEntry entryRequest =
     let
         body =
-            entryEncoded entry
+            entryRequestEncoded entryRequest
                 |> Encode.encode 0
+                -- FIXME ???
                 |> Http.stringBody "application/json"
     in
     Http.post

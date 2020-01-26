@@ -1,6 +1,4 @@
-module Hepburn.Translate exposing (romanjiToKana)
-
--- import Debug exposing (log)
+module Hepburn.Translate exposing (romajiToKana)
 
 import List exposing (concat)
 import String
@@ -10,9 +8,9 @@ import String
 -- exposing (cons, uncons)
 
 
-romanjiToKana : String -> String
-romanjiToKana str =
-    translate (String.toList str)
+romajiToKana : String -> Maybe String
+romajiToKana romaji =
+    translate (String.toList romaji)
         []
 
 
@@ -20,18 +18,18 @@ romanjiToKana str =
 -- https://en.wikipedia.org/wiki/Hepburn_romanization
 
 
-addKana : List Char -> List Char -> Char -> String
-addKana ls with symbol =
+addKana : List Char -> List Char -> Char -> Maybe String
+addKana rest acc current =
     translate
-        ls
-        (concat [ with, symbol :: [] ])
+        rest
+        (concat [ acc, current :: [] ])
 
 
-addKanas : List Char -> List Char -> List Char -> String
-addKanas ls with symbols =
+addKanas : List Char -> List Char -> List Char -> Maybe String
+addKanas rest acc current =
     translate
-        ls
-        (concat [ with, symbols ])
+        rest
+        (concat [ acc, current ])
 
 
 
@@ -41,830 +39,817 @@ addKanas ls with symbols =
 --    '\t'
 
 
-translate : List Char -> List Char -> String
-translate current with =
+translate : List Char -> List Char -> Maybe String
+translate current acc =
     case current of
         --[ A ]---------------------------------------------------------------------------------------------------------
-        'A' :: ls ->
-            addKana ls with 'ア'
+        'A' :: rest ->
+            addKana rest acc 'ア'
 
-        'a' :: ls ->
-            addKana ls with 'あ'
+        'a' :: rest ->
+            addKana rest acc 'あ'
 
-        'I' :: ls ->
-            addKana ls with 'イ'
+        'I' :: rest ->
+            addKana rest acc 'イ'
 
-        'i' :: ls ->
-            addKana ls with 'い'
+        'i' :: rest ->
+            addKana rest acc 'い'
 
-        'U' :: ls ->
-            addKana ls with 'ウ'
+        'U' :: rest ->
+            addKana rest acc 'ウ'
 
-        'u' :: ls ->
-            addKana ls with 'う'
+        'u' :: rest ->
+            addKana rest acc 'う'
 
-        'E' :: ls ->
-            addKana ls with 'エ'
+        'E' :: rest ->
+            addKana rest acc 'エ'
 
-        'e' :: ls ->
-            addKana ls with 'え'
+        'e' :: rest ->
+            addKana rest acc 'え'
 
-        'O' :: ls ->
-            addKana ls with 'オ'
+        'O' :: rest ->
+            addKana rest acc 'オ'
 
-        'o' :: ls ->
-            addKana ls with 'お'
+        'o' :: rest ->
+            addKana rest acc 'お'
 
         --[ KA ]--------------------------------------------------------------------------------------------------------
-        'K' :: 'A' :: ls ->
-            addKana ls with 'カ'
+        'K' :: 'A' :: rest ->
+            addKana rest acc 'カ'
 
-        'k' :: 'a' :: ls ->
-            addKana ls with 'か'
+        'k' :: 'a' :: rest ->
+            addKana rest acc 'か'
 
-        'K' :: 'I' :: ls ->
-            addKana ls with 'キ'
+        'K' :: 'I' :: rest ->
+            addKana rest acc 'キ'
 
-        'k' :: 'i' :: ls ->
-            addKana ls with 'き'
+        'k' :: 'i' :: rest ->
+            addKana rest acc 'き'
 
-        'K' :: 'U' :: ls ->
-            addKana ls with 'ク'
+        'K' :: 'U' :: rest ->
+            addKana rest acc 'ク'
 
-        'k' :: 'u' :: ls ->
-            addKana ls with 'く'
+        'k' :: 'u' :: rest ->
+            addKana rest acc 'く'
 
-        'K' :: 'E' :: ls ->
-            addKana ls with 'ケ'
+        'K' :: 'E' :: rest ->
+            addKana rest acc 'ケ'
 
-        'k' :: 'e' :: ls ->
-            addKana ls with 'け'
+        'k' :: 'e' :: rest ->
+            addKana rest acc 'け'
 
-        'K' :: 'O' :: ls ->
-            addKana ls with 'コ'
+        'K' :: 'O' :: rest ->
+            addKana rest acc 'コ'
 
-        'k' :: 'o' :: ls ->
-            addKana ls with 'こ'
+        'k' :: 'o' :: rest ->
+            addKana rest acc 'こ'
 
-        'K' :: 'Y' :: 'A' :: ls ->
-            addKanas ls with [ 'キ', 'ャ' ]
+        'K' :: 'Y' :: 'A' :: rest ->
+            addKanas rest acc [ 'キ', 'ャ' ]
 
-        'k' :: 'y' :: 'a' :: ls ->
-            addKanas ls with [ 'き', 'ゃ' ]
+        'k' :: 'y' :: 'a' :: rest ->
+            addKanas rest acc [ 'き', 'ゃ' ]
 
-        'K' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'キ', 'ュ' ]
+        'K' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'キ', 'ュ' ]
 
-        'k' :: 'y' :: 'u' :: ls ->
-            addKanas ls with [ 'き', 'ゅ' ]
+        'k' :: 'y' :: 'u' :: rest ->
+            addKanas rest acc [ 'き', 'ゅ' ]
 
-        'K' :: 'Y' :: 'O' :: ls ->
-            addKanas ls with [ 'キ', 'ョ' ]
+        'K' :: 'Y' :: 'O' :: rest ->
+            addKanas rest acc [ 'キ', 'ョ' ]
 
-        'k' :: 'y' :: 'o' :: ls ->
-            addKanas ls with [ 'き', 'ょ' ]
+        'k' :: 'y' :: 'o' :: rest ->
+            addKanas rest acc [ 'き', 'ょ' ]
 
         --[ SA ]--------------------------------------------------------------------------------------------------------
-        'S' :: 'A' :: ls ->
-            addKana ls with 'サ'
+        'S' :: 'A' :: rest ->
+            addKana rest acc 'サ'
 
-        's' :: 'a' :: ls ->
-            addKana ls with 'さ'
+        's' :: 'a' :: rest ->
+            addKana rest acc 'さ'
 
-        'S' :: 'H' :: 'I' :: ls ->
-            addKana ls with 'シ'
+        'S' :: 'H' :: 'I' :: rest ->
+            addKana rest acc 'シ'
 
-        's' :: 'h' :: 'i' :: ls ->
-            addKana ls with 'し'
+        's' :: 'h' :: 'i' :: rest ->
+            addKana rest acc 'し'
 
-        'S' :: 'U' :: ls ->
-            addKana ls with 'ス'
+        'S' :: 'U' :: rest ->
+            addKana rest acc 'ス'
 
-        's' :: 'u' :: ls ->
-            addKana ls with 'す'
+        's' :: 'u' :: rest ->
+            addKana rest acc 'す'
 
-        'S' :: 'E' :: ls ->
-            addKana ls with 'セ'
+        'S' :: 'E' :: rest ->
+            addKana rest acc 'セ'
 
-        's' :: 'e' :: ls ->
-            addKana ls with 'せ'
+        's' :: 'e' :: rest ->
+            addKana rest acc 'せ'
 
-        'S' :: 'O' :: ls ->
-            addKana ls with 'ソ'
+        'S' :: 'O' :: rest ->
+            addKana rest acc 'ソ'
 
-        's' :: 'o' :: ls ->
-            addKana ls with 'そ'
+        's' :: 'o' :: rest ->
+            addKana rest acc 'そ'
 
-        'S' :: 'H' :: 'A' :: ls ->
-            addKanas ls with [ 'シ', 'ャ' ]
+        'S' :: 'H' :: 'A' :: rest ->
+            addKanas rest acc [ 'シ', 'ャ' ]
 
-        's' :: 'h' :: 'a' :: ls ->
-            addKanas ls with [ 'し', 'ゃ' ]
+        's' :: 'h' :: 'a' :: rest ->
+            addKanas rest acc [ 'し', 'ゃ' ]
 
-        'S' :: 'H' :: 'U' :: ls ->
-            addKanas ls with [ 'シ', 'ュ' ]
+        'S' :: 'H' :: 'U' :: rest ->
+            addKanas rest acc [ 'シ', 'ュ' ]
 
-        's' :: 'h' :: 'u' :: ls ->
-            addKanas ls with [ 'し', 'ゅ' ]
+        's' :: 'h' :: 'u' :: rest ->
+            addKanas rest acc [ 'し', 'ゅ' ]
 
-        'S' :: 'H' :: 'O' :: ls ->
-            addKanas ls with [ 'シ', 'ョ' ]
+        'S' :: 'H' :: 'O' :: rest ->
+            addKanas rest acc [ 'シ', 'ョ' ]
 
-        's' :: 'h' :: 'o' :: ls ->
-            addKanas ls with [ 'し', 'ょ' ]
+        's' :: 'h' :: 'o' :: rest ->
+            addKanas rest acc [ 'し', 'ょ' ]
 
         --[ TA ]--------------------------------------------------------------------------------------------------------
-        'T' :: 'A' :: ls ->
-            addKana ls with 'タ'
+        'T' :: 'A' :: rest ->
+            addKana rest acc 'タ'
 
-        't' :: 'a' :: ls ->
-            addKana ls with 'た'
+        't' :: 'a' :: rest ->
+            addKana rest acc 'た'
 
-        'C' :: 'H' :: 'I' :: ls ->
-            addKana ls with 'チ'
+        'C' :: 'H' :: 'I' :: rest ->
+            addKana rest acc 'チ'
 
-        'c' :: 'h' :: 'i' :: ls ->
-            addKana ls with 'ち'
+        'c' :: 'h' :: 'i' :: rest ->
+            addKana rest acc 'ち'
 
-        'T' :: 'S' :: 'U' :: ls ->
-            addKana ls with 'ツ'
+        'T' :: 'S' :: 'U' :: rest ->
+            addKana rest acc 'ツ'
 
-        't' :: 's' :: 'u' :: ls ->
-            addKana ls with 'つ'
+        't' :: 's' :: 'u' :: rest ->
+            addKana rest acc 'つ'
 
-        'T' :: 'E' :: ls ->
-            addKana ls with 'テ'
+        'T' :: 'E' :: rest ->
+            addKana rest acc 'テ'
 
-        't' :: 'e' :: ls ->
-            addKana ls with 'て'
+        't' :: 'e' :: rest ->
+            addKana rest acc 'て'
 
-        'T' :: 'O' :: ls ->
-            addKana ls with 'ト'
+        'T' :: 'O' :: rest ->
+            addKana rest acc 'ト'
 
-        't' :: 'o' :: ls ->
-            addKana ls with 'と'
+        't' :: 'o' :: rest ->
+            addKana rest acc 'と'
 
-        'C' :: 'H' :: 'A' :: ls ->
-            addKanas ls with [ 'チ', 'ャ' ]
+        'C' :: 'H' :: 'A' :: rest ->
+            addKanas rest acc [ 'チ', 'ャ' ]
 
-        'c' :: 'h' :: 'a' :: ls ->
-            addKanas ls with [ 'ち', 'ゃ' ]
+        'c' :: 'h' :: 'a' :: rest ->
+            addKanas rest acc [ 'ち', 'ゃ' ]
 
-        'C' :: 'H' :: 'U' :: ls ->
-            addKanas ls with [ 'チ', 'ュ' ]
+        'C' :: 'H' :: 'U' :: rest ->
+            addKanas rest acc [ 'チ', 'ュ' ]
 
-        'c' :: 'h' :: 'u' :: ls ->
-            addKanas ls with [ 'ち', 'ゅ' ]
+        'c' :: 'h' :: 'u' :: rest ->
+            addKanas rest acc [ 'ち', 'ゅ' ]
 
-        'C' :: 'H' :: 'O' :: ls ->
-            addKanas ls with [ 'チ', 'ョ' ]
+        'C' :: 'H' :: 'O' :: rest ->
+            addKanas rest acc [ 'チ', 'ョ' ]
 
-        'c' :: 'h' :: 'o' :: ls ->
-            addKanas ls with [ 'ち', 'ょ' ]
+        'c' :: 'h' :: 'o' :: rest ->
+            addKanas rest acc [ 'ち', 'ょ' ]
 
         --[ NA ]--------------------------------------------------------------------------------------------------------
-        'N' :: 'A' :: ls ->
-            addKana ls with 'ナ'
+        'N' :: 'A' :: rest ->
+            addKana rest acc 'ナ'
 
-        'n' :: 'a' :: ls ->
-            addKana ls with 'な'
+        'n' :: 'a' :: rest ->
+            addKana rest acc 'な'
 
-        'N' :: 'I' :: ls ->
-            addKana ls with 'ニ'
+        'N' :: 'I' :: rest ->
+            addKana rest acc 'ニ'
 
-        'n' :: 'i' :: ls ->
-            addKana ls with 'に'
+        'n' :: 'i' :: rest ->
+            addKana rest acc 'に'
 
-        'N' :: 'U' :: ls ->
-            addKana ls with 'ヌ'
+        'N' :: 'U' :: rest ->
+            addKana rest acc 'ヌ'
 
-        'n' :: 'u' :: ls ->
-            addKana ls with 'ぬ'
+        'n' :: 'u' :: rest ->
+            addKana rest acc 'ぬ'
 
-        'N' :: 'E' :: ls ->
-            addKana ls with 'ネ'
+        'N' :: 'E' :: rest ->
+            addKana rest acc 'ネ'
 
-        'n' :: 'e' :: ls ->
-            addKana ls with 'ね'
+        'n' :: 'e' :: rest ->
+            addKana rest acc 'ね'
 
-        'N' :: 'O' :: ls ->
-            addKana ls with 'ノ'
+        'N' :: 'O' :: rest ->
+            addKana rest acc 'ノ'
 
-        'n' :: 'o' :: ls ->
-            addKana ls with 'の'
+        'n' :: 'o' :: rest ->
+            addKana rest acc 'の'
 
-        'N' :: 'Y' :: 'A' :: ls ->
-            addKanas ls with [ 'ニ', 'ャ' ]
+        'N' :: 'Y' :: 'A' :: rest ->
+            addKanas rest acc [ 'ニ', 'ャ' ]
 
-        'n' :: 'y' :: 'a' :: ls ->
-            addKanas ls with [ 'に', 'ゃ' ]
+        'n' :: 'y' :: 'a' :: rest ->
+            addKanas rest acc [ 'に', 'ゃ' ]
 
-        'N' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'ニ', 'ュ' ]
+        'N' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'ニ', 'ュ' ]
 
-        'n' :: 'y' :: 'u' :: ls ->
-            addKanas ls with [ 'に', 'ゅ' ]
+        'n' :: 'y' :: 'u' :: rest ->
+            addKanas rest acc [ 'に', 'ゅ' ]
 
-        'N' :: 'Y' :: 'O' :: ls ->
-            addKanas ls with [ 'ニ', 'ョ' ]
+        'N' :: 'Y' :: 'O' :: rest ->
+            addKanas rest acc [ 'ニ', 'ョ' ]
 
-        'n' :: 'y' :: 'o' :: ls ->
-            addKanas ls with [ 'に', 'ょ' ]
+        'n' :: 'y' :: 'o' :: rest ->
+            addKanas rest acc [ 'に', 'ょ' ]
 
         --[ HA ]--------------------------------------------------------------------------------------------------------
-        'H' :: 'A' :: ls ->
-            addKana ls with 'ハ'
+        'H' :: 'A' :: rest ->
+            addKana rest acc 'ハ'
 
-        'h' :: 'a' :: ls ->
-            addKana ls with 'は'
+        'h' :: 'a' :: rest ->
+            addKana rest acc 'は'
 
-        'H' :: 'I' :: ls ->
-            addKana ls with 'ヒ'
+        'H' :: 'I' :: rest ->
+            addKana rest acc 'ヒ'
 
-        'h' :: 'i' :: ls ->
-            addKana ls with 'ひ'
+        'h' :: 'i' :: rest ->
+            addKana rest acc 'ひ'
 
-        'F' :: 'U' :: ls ->
-            addKana ls with 'フ'
+        'F' :: 'U' :: rest ->
+            addKana rest acc 'フ'
 
-        'f' :: 'u' :: ls ->
-            addKana ls with 'ふ'
+        'f' :: 'u' :: rest ->
+            addKana rest acc 'ふ'
 
-        'H' :: 'E' :: ls ->
-            addKana ls with 'ヘ'
+        'H' :: 'E' :: rest ->
+            addKana rest acc 'ヘ'
 
-        'h' :: 'e' :: ls ->
-            addKana ls with 'へ'
+        'h' :: 'e' :: rest ->
+            addKana rest acc 'へ'
 
-        'H' :: 'O' :: ls ->
-            addKana ls with 'ホ'
+        'H' :: 'O' :: rest ->
+            addKana rest acc 'ホ'
 
-        'h' :: 'o' :: ls ->
-            addKana ls with 'ほ'
+        'h' :: 'o' :: rest ->
+            addKana rest acc 'ほ'
 
-        'H' :: 'Y' :: 'A' :: ls ->
-            addKanas ls with [ 'ヒ', 'ャ' ]
+        'H' :: 'Y' :: 'A' :: rest ->
+            addKanas rest acc [ 'ヒ', 'ャ' ]
 
-        'h' :: 'y' :: 'a' :: ls ->
-            addKanas ls with [ 'ひ', 'ゃ' ]
+        'h' :: 'y' :: 'a' :: rest ->
+            addKanas rest acc [ 'ひ', 'ゃ' ]
 
-        'H' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'ヒ', 'ュ' ]
+        'H' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'ヒ', 'ュ' ]
 
-        'h' :: 'y' :: 'u' :: ls ->
-            addKanas ls with [ 'ひ', 'ゅ' ]
+        'h' :: 'y' :: 'u' :: rest ->
+            addKanas rest acc [ 'ひ', 'ゅ' ]
 
-        'H' :: 'Y' :: 'O' :: ls ->
-            addKanas ls with [ 'ヒ', 'ョ' ]
+        'H' :: 'Y' :: 'O' :: rest ->
+            addKanas rest acc [ 'ヒ', 'ョ' ]
 
-        'h' :: 'y' :: 'o' :: ls ->
-            addKanas ls with [ 'ひ', 'ょ' ]
+        'h' :: 'y' :: 'o' :: rest ->
+            addKanas rest acc [ 'ひ', 'ょ' ]
 
         --[ MA ]--------------------------------------------------------------------------------------------------------
-        'M' :: 'A' :: ls ->
-            addKana ls with 'マ'
+        'M' :: 'A' :: rest ->
+            addKana rest acc 'マ'
 
-        'm' :: 'a' :: ls ->
-            addKana ls with 'ま'
+        'm' :: 'a' :: rest ->
+            addKana rest acc 'ま'
 
-        'M' :: 'I' :: ls ->
-            addKana ls with 'ミ'
+        'M' :: 'I' :: rest ->
+            addKana rest acc 'ミ'
 
-        'm' :: 'i' :: ls ->
-            addKana ls with 'み'
+        'm' :: 'i' :: rest ->
+            addKana rest acc 'み'
 
-        'M' :: 'U' :: ls ->
-            addKana ls with 'ム'
+        'M' :: 'U' :: rest ->
+            addKana rest acc 'ム'
 
-        'm' :: 'u' :: ls ->
-            addKana ls with 'む'
+        'm' :: 'u' :: rest ->
+            addKana rest acc 'む'
 
-        'M' :: 'E' :: ls ->
-            addKana ls with 'メ'
+        'M' :: 'E' :: rest ->
+            addKana rest acc 'メ'
 
-        'm' :: 'e' :: ls ->
-            addKana ls with 'め'
+        'm' :: 'e' :: rest ->
+            addKana rest acc 'め'
 
-        'M' :: 'O' :: ls ->
-            addKana ls with 'モ'
+        'M' :: 'O' :: rest ->
+            addKana rest acc 'モ'
 
-        'm' :: 'o' :: ls ->
-            addKana ls with 'も'
+        'm' :: 'o' :: rest ->
+            addKana rest acc 'も'
 
-        'M' :: 'Y' :: 'A' :: ls ->
-            addKanas ls with [ 'ミ', 'ャ' ]
+        'M' :: 'Y' :: 'A' :: rest ->
+            addKanas rest acc [ 'ミ', 'ャ' ]
 
-        'm' :: 'y' :: 'a' :: ls ->
-            addKanas ls with [ 'み', 'ゃ' ]
+        'm' :: 'y' :: 'a' :: rest ->
+            addKanas rest acc [ 'み', 'ゃ' ]
 
-        'M' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'ミ', 'ュ' ]
+        'M' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'ミ', 'ュ' ]
 
-        'm' :: 'y' :: 'u' :: ls ->
-            addKanas ls with [ 'み', 'ゅ' ]
+        'm' :: 'y' :: 'u' :: rest ->
+            addKanas rest acc [ 'み', 'ゅ' ]
 
-        'M' :: 'Y' :: 'O' :: ls ->
-            addKanas ls with [ 'ミ', 'ョ' ]
+        'M' :: 'Y' :: 'O' :: rest ->
+            addKanas rest acc [ 'ミ', 'ョ' ]
 
-        'm' :: 'y' :: 'o' :: ls ->
-            addKanas ls with [ 'み', 'ょ' ]
+        'm' :: 'y' :: 'o' :: rest ->
+            addKanas rest acc [ 'み', 'ょ' ]
 
         --[ YA ]--------------------------------------------------------------------------------------------------------
-        'Y' :: 'A' :: ls ->
-            addKana ls with 'ヤ'
+        'Y' :: 'A' :: rest ->
+            addKana rest acc 'ヤ'
 
-        'y' :: 'a' :: ls ->
-            addKana ls with 'や'
+        'y' :: 'a' :: rest ->
+            addKana rest acc 'や'
 
-        'Y' :: 'U' :: ls ->
-            addKana ls with 'ユ'
+        'Y' :: 'U' :: rest ->
+            addKana rest acc 'ユ'
 
-        'y' :: 'u' :: ls ->
-            addKana ls with 'ゆ'
+        'y' :: 'u' :: rest ->
+            addKana rest acc 'ゆ'
 
-        'Y' :: 'O' :: ls ->
-            addKana ls with 'ヨ'
+        'Y' :: 'O' :: rest ->
+            addKana rest acc 'ヨ'
 
-        'y' :: 'o' :: ls ->
-            addKana ls with 'よ'
+        'y' :: 'o' :: rest ->
+            addKana rest acc 'よ'
 
         --[ RA ]--------------------------------------------------------------------------------------------------------
-        'R' :: 'A' :: ls ->
-            addKana ls with 'ラ'
+        'R' :: 'A' :: rest ->
+            addKana rest acc 'ラ'
 
-        'r' :: 'a' :: ls ->
-            addKana ls with 'ら'
+        'r' :: 'a' :: rest ->
+            addKana rest acc 'ら'
 
-        'R' :: 'I' :: ls ->
-            addKana ls with 'リ'
+        'R' :: 'I' :: rest ->
+            addKana rest acc 'リ'
 
-        'r' :: 'i' :: ls ->
-            addKana ls with 'り'
+        'r' :: 'i' :: rest ->
+            addKana rest acc 'り'
 
-        'R' :: 'U' :: ls ->
-            addKana ls with 'ル'
+        'R' :: 'U' :: rest ->
+            addKana rest acc 'ル'
 
-        'r' :: 'u' :: ls ->
-            addKana ls with 'る'
+        'r' :: 'u' :: rest ->
+            addKana rest acc 'る'
 
-        'R' :: 'E' :: ls ->
-            addKana ls with 'レ'
+        'R' :: 'E' :: rest ->
+            addKana rest acc 'レ'
 
-        'r' :: 'e' :: ls ->
-            addKana ls with 'れ'
+        'r' :: 'e' :: rest ->
+            addKana rest acc 'れ'
 
-        'R' :: 'O' :: ls ->
-            addKana ls with 'ロ'
+        'R' :: 'O' :: rest ->
+            addKana rest acc 'ロ'
 
-        'r' :: 'o' :: ls ->
-            addKana ls with 'ろ'
+        'r' :: 'o' :: rest ->
+            addKana rest acc 'ろ'
 
-        'R' :: 'Y' :: 'A' :: ls ->
-            addKanas ls with [ 'リ', 'ャ' ]
+        'R' :: 'Y' :: 'A' :: rest ->
+            addKanas rest acc [ 'リ', 'ャ' ]
 
-        'r' :: 'y' :: 'a' :: ls ->
-            addKanas ls with [ 'り', 'ゃ' ]
+        'r' :: 'y' :: 'a' :: rest ->
+            addKanas rest acc [ 'り', 'ゃ' ]
 
-        'R' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'リ', 'ュ' ]
+        'R' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'リ', 'ュ' ]
 
-        'r' :: 'y' :: 'u' :: ls ->
-            addKanas ls with [ 'り', 'ゅ' ]
+        'r' :: 'y' :: 'u' :: rest ->
+            addKanas rest acc [ 'り', 'ゅ' ]
 
-        'R' :: 'Y' :: 'O' :: ls ->
-            addKanas ls with [ 'リ', 'ョ' ]
+        'R' :: 'Y' :: 'O' :: rest ->
+            addKanas rest acc [ 'リ', 'ョ' ]
 
-        'r' :: 'y' :: 'o' :: ls ->
-            addKanas ls with [ 'り', 'ょ' ]
+        'r' :: 'y' :: 'o' :: rest ->
+            addKanas rest acc [ 'り', 'ょ' ]
 
         --[ N ]---------------------------------------------------------------------------------------------------------
-        'N' :: '\'' :: ls ->
-            addKana ls with 'ン'
+        'N' :: '\'' :: rest ->
+            addKana rest acc 'ン'
 
-        'N' :: ls ->
-            addKana ls with 'ン'
+        'N' :: rest ->
+            addKana rest acc 'ン'
 
-        'n' :: '\'' :: ls ->
-            addKana ls with 'ん'
+        'n' :: '\'' :: rest ->
+            addKana rest acc 'ん'
 
-        'n' :: ls ->
-            addKana ls with 'ん'
+        'n' :: rest ->
+            addKana rest acc 'ん'
 
         --[ GA ]--------------------------------------------------------------------------------------------------------
-        'G' :: 'A' :: ls ->
-            addKana ls with 'ガ'
+        'G' :: 'A' :: rest ->
+            addKana rest acc 'ガ'
 
-        'g' :: 'a' :: ls ->
-            addKana ls with 'が'
+        'g' :: 'a' :: rest ->
+            addKana rest acc 'が'
 
-        'G' :: 'I' :: ls ->
-            addKana ls with 'ギ'
+        'G' :: 'I' :: rest ->
+            addKana rest acc 'ギ'
 
-        'g' :: 'i' :: ls ->
-            addKana ls with 'ぎ'
+        'g' :: 'i' :: rest ->
+            addKana rest acc 'ぎ'
 
-        'G' :: 'U' :: ls ->
-            addKana ls with 'グ'
+        'G' :: 'U' :: rest ->
+            addKana rest acc 'グ'
 
-        'g' :: 'u' :: ls ->
-            addKana ls with 'ぐ'
+        'g' :: 'u' :: rest ->
+            addKana rest acc 'ぐ'
 
-        'G' :: 'E' :: ls ->
-            addKana ls with 'ゲ'
+        'G' :: 'E' :: rest ->
+            addKana rest acc 'ゲ'
 
-        'g' :: 'e' :: ls ->
-            addKana ls with 'げ'
+        'g' :: 'e' :: rest ->
+            addKana rest acc 'げ'
 
-        'G' :: 'O' :: ls ->
-            addKana ls with 'ゴ'
+        'G' :: 'O' :: rest ->
+            addKana rest acc 'ゴ'
 
-        'g' :: 'o' :: ls ->
-            addKana ls with 'ご'
+        'g' :: 'o' :: rest ->
+            addKana rest acc 'ご'
 
-        'G' :: 'Y' :: 'A' :: ls ->
-            addKanas ls with [ 'ギ', 'ャ' ]
+        'G' :: 'Y' :: 'A' :: rest ->
+            addKanas rest acc [ 'ギ', 'ャ' ]
 
-        'g' :: 'y' :: 'a' :: ls ->
-            addKanas ls with [ 'ぎ', 'ゃ' ]
+        'g' :: 'y' :: 'a' :: rest ->
+            addKanas rest acc [ 'ぎ', 'ゃ' ]
 
-        'G' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'ギ', 'ュ' ]
+        'G' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'ギ', 'ュ' ]
 
-        'g' :: 'y' :: 'u' :: ls ->
-            addKanas ls with [ 'ぎ', 'ゅ' ]
+        'g' :: 'y' :: 'u' :: rest ->
+            addKanas rest acc [ 'ぎ', 'ゅ' ]
 
-        'G' :: 'Y' :: 'O' :: ls ->
-            addKanas ls with [ 'ギ', 'ョ' ]
+        'G' :: 'Y' :: 'O' :: rest ->
+            addKanas rest acc [ 'ギ', 'ョ' ]
 
-        'g' :: 'y' :: 'o' :: ls ->
-            addKanas ls with [ 'ぎ', 'ょ' ]
+        'g' :: 'y' :: 'o' :: rest ->
+            addKanas rest acc [ 'ぎ', 'ょ' ]
 
         --[ DA ]--------------------------------------------------------------------------------------------------------
-        'D' :: 'A' :: ls ->
-            addKana ls with 'ダ'
+        'D' :: 'A' :: rest ->
+            addKana rest acc 'ダ'
 
-        'd' :: 'a' :: ls ->
-            addKana ls with 'だ'
+        'd' :: 'a' :: rest ->
+            addKana rest acc 'だ'
 
-        'J' :: 'I' :: '\'' :: ls ->
-            addKana ls with 'ヂ'
+        'J' :: 'I' :: '\'' :: rest ->
+            addKana rest acc 'ヂ'
 
-        'j' :: 'i' :: '\'' :: ls ->
-            addKana ls with 'ぢ'
+        'j' :: 'i' :: '\'' :: rest ->
+            addKana rest acc 'ぢ'
 
-        'Z' :: 'U' :: '\'' :: ls ->
-            addKana ls with 'ヅ'
+        'Z' :: 'U' :: '\'' :: rest ->
+            addKana rest acc 'ヅ'
 
-        'z' :: 'u' :: '\'' :: ls ->
-            addKana ls with 'づ'
+        'z' :: 'u' :: '\'' :: rest ->
+            addKana rest acc 'づ'
 
-        'D' :: 'E' :: ls ->
-            addKana ls with 'デ'
+        'D' :: 'E' :: rest ->
+            addKana rest acc 'デ'
 
-        'd' :: 'e' :: ls ->
-            addKana ls with 'で'
+        'd' :: 'e' :: rest ->
+            addKana rest acc 'で'
 
-        'D' :: 'O' :: ls ->
-            addKana ls with 'ド'
+        'D' :: 'O' :: rest ->
+            addKana rest acc 'ド'
 
-        'd' :: 'o' :: ls ->
-            addKana ls with 'ど'
+        'd' :: 'o' :: rest ->
+            addKana rest acc 'ど'
 
-        'J' :: 'A' :: '\'' :: ls ->
-            addKanas ls with [ 'ヂ', 'ャ' ]
+        'J' :: 'A' :: '\'' :: rest ->
+            addKanas rest acc [ 'ヂ', 'ャ' ]
 
-        'j' :: 'a' :: '\'' :: ls ->
-            addKanas ls with [ 'ぢ', 'ゃ' ]
+        'j' :: 'a' :: '\'' :: rest ->
+            addKanas rest acc [ 'ぢ', 'ゃ' ]
 
-        'J' :: 'U' :: '\'' :: ls ->
-            addKanas ls with [ 'ヂ', 'ュ' ]
+        'J' :: 'U' :: '\'' :: rest ->
+            addKanas rest acc [ 'ヂ', 'ュ' ]
 
-        'j' :: 'u' :: '\'' :: ls ->
-            addKanas ls with [ 'ぢ', 'ゅ' ]
+        'j' :: 'u' :: '\'' :: rest ->
+            addKanas rest acc [ 'ぢ', 'ゅ' ]
 
-        'J' :: 'O' :: '\'' :: ls ->
-            addKanas ls with [ 'ヂ', 'ョ' ]
+        'J' :: 'O' :: '\'' :: rest ->
+            addKanas rest acc [ 'ヂ', 'ョ' ]
 
-        'j' :: 'o' :: '\'' :: ls ->
-            addKanas ls with [ 'ぢ', 'ょ' ]
+        'j' :: 'o' :: '\'' :: rest ->
+            addKanas rest acc [ 'ぢ', 'ょ' ]
 
         --[ ZA ]--------------------------------------------------------------------------------------------------------
-        'Z' :: 'A' :: ls ->
-            addKana ls with 'ザ'
+        'Z' :: 'A' :: rest ->
+            addKana rest acc 'ザ'
 
-        'z' :: 'a' :: ls ->
-            addKana ls with 'ざ'
+        'z' :: 'a' :: rest ->
+            addKana rest acc 'ざ'
 
-        'J' :: 'I' :: ls ->
-            addKana ls with 'ジ'
+        'J' :: 'I' :: rest ->
+            addKana rest acc 'ジ'
 
-        'j' :: 'i' :: ls ->
-            addKana ls with 'じ'
+        'j' :: 'i' :: rest ->
+            addKana rest acc 'じ'
 
-        'Z' :: 'U' :: ls ->
-            addKana ls with 'ズ'
+        'Z' :: 'U' :: rest ->
+            addKana rest acc 'ズ'
 
-        'z' :: 'u' :: ls ->
-            addKana ls with 'ず'
+        'z' :: 'u' :: rest ->
+            addKana rest acc 'ず'
 
-        'Z' :: 'E' :: ls ->
-            addKana ls with 'ゼ'
+        'Z' :: 'E' :: rest ->
+            addKana rest acc 'ゼ'
 
-        'z' :: 'e' :: ls ->
-            addKana ls with 'ぜ'
+        'z' :: 'e' :: rest ->
+            addKana rest acc 'ぜ'
 
-        'Z' :: 'O' :: ls ->
-            addKana ls with 'ゾ'
+        'Z' :: 'O' :: rest ->
+            addKana rest acc 'ゾ'
 
-        'z' :: 'o' :: ls ->
-            addKana ls with 'ぞ'
+        'z' :: 'o' :: rest ->
+            addKana rest acc 'ぞ'
 
-        'J' :: 'A' :: ls ->
-            addKanas ls with [ 'ジ', 'ャ' ]
+        'J' :: 'A' :: rest ->
+            addKanas rest acc [ 'ジ', 'ャ' ]
 
-        'j' :: 'a' :: ls ->
-            addKanas ls with [ 'じ', 'ゃ' ]
+        'j' :: 'a' :: rest ->
+            addKanas rest acc [ 'じ', 'ゃ' ]
 
-        'J' :: 'U' :: ls ->
-            addKanas ls with [ 'ジ', 'ュ' ]
+        'J' :: 'U' :: rest ->
+            addKanas rest acc [ 'ジ', 'ュ' ]
 
-        'j' :: 'u' :: ls ->
-            addKanas ls with [ 'じ', 'ゅ' ]
+        'j' :: 'u' :: rest ->
+            addKanas rest acc [ 'じ', 'ゅ' ]
 
-        'J' :: 'O' :: ls ->
-            addKanas ls with [ 'ジ', 'ョ' ]
+        'J' :: 'O' :: rest ->
+            addKanas rest acc [ 'ジ', 'ョ' ]
 
-        'j' :: 'o' :: ls ->
-            addKanas ls with [ 'じ', 'ょ' ]
+        'j' :: 'o' :: rest ->
+            addKanas rest acc [ 'じ', 'ょ' ]
 
         --[ BA ]--------------------------------------------------------------------------------------------------------
-        'B' :: 'A' :: ls ->
-            addKana ls with 'バ'
+        'B' :: 'A' :: rest ->
+            addKana rest acc 'バ'
 
-        'b' :: 'a' :: ls ->
-            addKana ls with 'ば'
+        'b' :: 'a' :: rest ->
+            addKana rest acc 'ば'
 
-        'B' :: 'I' :: ls ->
-            addKana ls with 'ビ'
+        'B' :: 'I' :: rest ->
+            addKana rest acc 'ビ'
 
-        'b' :: 'i' :: ls ->
-            addKana ls with 'び'
+        'b' :: 'i' :: rest ->
+            addKana rest acc 'び'
 
-        'B' :: 'U' :: ls ->
-            addKana ls with 'ブ'
+        'B' :: 'U' :: rest ->
+            addKana rest acc 'ブ'
 
-        'b' :: 'u' :: ls ->
-            addKana ls with 'ぶ'
+        'b' :: 'u' :: rest ->
+            addKana rest acc 'ぶ'
 
-        'B' :: 'E' :: ls ->
-            addKana ls with 'ベ'
+        'B' :: 'E' :: rest ->
+            addKana rest acc 'ベ'
 
-        'b' :: 'e' :: ls ->
-            addKana ls with 'べ'
+        'b' :: 'e' :: rest ->
+            addKana rest acc 'べ'
 
-        'B' :: 'O' :: ls ->
-            addKana ls with 'ボ'
+        'B' :: 'O' :: rest ->
+            addKana rest acc 'ボ'
 
-        'b' :: 'o' :: ls ->
-            addKana ls with 'ぼ'
+        'b' :: 'o' :: rest ->
+            addKana rest acc 'ぼ'
 
-        'B' :: 'Y' :: 'A' :: ls ->
-            addKanas ls with [ 'ビ', 'ャ' ]
+        'B' :: 'Y' :: 'A' :: rest ->
+            addKanas rest acc [ 'ビ', 'ャ' ]
 
-        'b' :: 'y' :: 'a' :: ls ->
-            addKanas ls with [ 'び', 'ゃ' ]
+        'b' :: 'y' :: 'a' :: rest ->
+            addKanas rest acc [ 'び', 'ゃ' ]
 
-        'B' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'ビ', 'ュ' ]
+        'B' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'ビ', 'ュ' ]
 
-        'b' :: 'y' :: 'u' :: ls ->
-            addKanas ls with [ 'び', 'ゅ' ]
+        'b' :: 'y' :: 'u' :: rest ->
+            addKanas rest acc [ 'び', 'ゅ' ]
 
-        'B' :: 'Y' :: 'O' :: ls ->
-            addKanas ls with [ 'ビ', 'ョ' ]
+        'B' :: 'Y' :: 'O' :: rest ->
+            addKanas rest acc [ 'ビ', 'ョ' ]
 
-        'b' :: 'y' :: 'o' :: ls ->
-            addKanas ls with [ 'び', 'ょ' ]
+        'b' :: 'y' :: 'o' :: rest ->
+            addKanas rest acc [ 'び', 'ょ' ]
 
         --[ PA ]--------------------------------------------------------------------------------------------------------
-        'P' :: 'A' :: ls ->
-            addKana ls with 'パ'
+        'P' :: 'A' :: rest ->
+            addKana rest acc 'パ'
 
-        'p' :: 'a' :: ls ->
-            addKana ls with 'ぱ'
+        'p' :: 'a' :: rest ->
+            addKana rest acc 'ぱ'
 
-        'P' :: 'I' :: ls ->
-            addKana ls with 'ピ'
+        'P' :: 'I' :: rest ->
+            addKana rest acc 'ピ'
 
-        'p' :: 'i' :: ls ->
-            addKana ls with 'ぴ'
+        'p' :: 'i' :: rest ->
+            addKana rest acc 'ぴ'
 
-        'P' :: 'U' :: ls ->
-            addKana ls with 'プ'
+        'P' :: 'U' :: rest ->
+            addKana rest acc 'プ'
 
-        'p' :: 'u' :: ls ->
-            addKana ls with 'ぷ'
+        'p' :: 'u' :: rest ->
+            addKana rest acc 'ぷ'
 
-        'P' :: 'E' :: ls ->
-            addKana ls with 'ペ'
+        'P' :: 'E' :: rest ->
+            addKana rest acc 'ペ'
 
-        'p' :: 'e' :: ls ->
-            addKana ls with 'ぺ'
+        'p' :: 'e' :: rest ->
+            addKana rest acc 'ぺ'
 
-        'P' :: 'O' :: ls ->
-            addKana ls with 'ポ'
+        'P' :: 'O' :: rest ->
+            addKana rest acc 'ポ'
 
-        'p' :: 'o' :: ls ->
-            addKana ls with 'ぽ'
+        'p' :: 'o' :: rest ->
+            addKana rest acc 'ぽ'
 
-        'P' :: 'Y' :: 'A' :: ls ->
-            addKanas ls with [ 'ピ', 'ャ' ]
+        'P' :: 'Y' :: 'A' :: rest ->
+            addKanas rest acc [ 'ピ', 'ャ' ]
 
-        'p' :: 'y' :: 'a' :: ls ->
-            addKanas ls with [ 'ぴ', 'ゃ' ]
+        'p' :: 'y' :: 'a' :: rest ->
+            addKanas rest acc [ 'ぴ', 'ゃ' ]
 
-        'P' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'ピ', 'ュ' ]
+        'P' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'ピ', 'ュ' ]
 
-        'p' :: 'y' :: 'u' :: ls ->
-            addKanas ls with [ 'ぴ', 'ゅ' ]
+        'p' :: 'y' :: 'u' :: rest ->
+            addKanas rest acc [ 'ぴ', 'ゅ' ]
 
-        'P' :: 'Y' :: 'O' :: ls ->
-            addKanas ls with [ 'ピ', 'ョ' ]
+        'P' :: 'Y' :: 'O' :: rest ->
+            addKanas rest acc [ 'ピ', 'ョ' ]
 
-        'p' :: 'y' :: 'o' :: ls ->
-            addKanas ls with [ 'ぴ', 'ょ' ]
+        'p' :: 'y' :: 'o' :: rest ->
+            addKanas rest acc [ 'ぴ', 'ょ' ]
 
         --[ YI ]--------------------------------------------------------------------------------------------------------
-        'Y' :: 'I' :: ls ->
-            addKanas ls with [ 'イ', 'ィ' ]
+        'Y' :: 'I' :: rest ->
+            addKanas rest acc [ 'イ', 'ィ' ]
 
-        'Y' :: 'E' :: ls ->
-            addKanas ls with [ 'イ', 'ェ' ]
+        'Y' :: 'E' :: rest ->
+            addKanas rest acc [ 'イ', 'ェ' ]
 
-        'W' :: 'I' :: '\'' :: ls ->
-            addKanas ls with [ 'ウ', 'ィ' ]
+        'W' :: 'I' :: '\'' :: rest ->
+            addKanas rest acc [ 'ウ', 'ィ' ]
 
-        'W' :: 'U' :: ls ->
-            addKanas ls with [ 'ウ', 'ゥ' ]
+        'W' :: 'U' :: rest ->
+            addKanas rest acc [ 'ウ', 'ゥ' ]
 
-        'W' :: 'E' :: '\'' :: ls ->
-            addKanas ls with [ 'ウ', 'ェ' ]
+        'W' :: 'E' :: '\'' :: rest ->
+            addKanas rest acc [ 'ウ', 'ェ' ]
 
-        'W' :: 'O' :: '\'' :: ls ->
-            addKanas ls with [ 'ウ', 'ォ' ]
+        'W' :: 'O' :: '\'' :: rest ->
+            addKanas rest acc [ 'ウ', 'ォ' ]
 
-        'V' :: 'A' :: ls ->
-            addKanas ls with [ 'ヴ', 'ァ' ]
+        'V' :: 'A' :: rest ->
+            addKanas rest acc [ 'ヴ', 'ァ' ]
 
-        'V' :: 'I' :: ls ->
-            addKanas ls with [ 'ヴ', 'ィ' ]
+        'V' :: 'I' :: rest ->
+            addKanas rest acc [ 'ヴ', 'ィ' ]
 
-        'V' :: 'U' :: ls ->
-            addKana ls with 'ヴ'
+        'V' :: 'U' :: rest ->
+            addKana rest acc 'ヴ'
 
-        'V' :: 'E' :: ls ->
-            addKanas ls with [ 'ヴ', 'ェ' ]
+        'V' :: 'E' :: rest ->
+            addKanas rest acc [ 'ヴ', 'ェ' ]
 
-        'V' :: 'O' :: ls ->
-            addKanas ls with [ 'ヴ', 'ォ' ]
+        'V' :: 'O' :: rest ->
+            addKanas rest acc [ 'ヴ', 'ォ' ]
 
-        'V' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'ヴ', 'ュ' ]
+        'V' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'ヴ', 'ュ' ]
 
-        'K' :: 'W' :: 'A' :: ls ->
-            addKanas ls with [ 'ク', 'ァ' ]
+        'K' :: 'W' :: 'A' :: rest ->
+            addKanas rest acc [ 'ク', 'ァ' ]
 
-        'K' :: 'W' :: 'I' :: '\'' :: ls ->
-            addKanas ls with [ 'ク', 'ィ' ]
+        'K' :: 'W' :: 'I' :: '\'' :: rest ->
+            addKanas rest acc [ 'ク', 'ィ' ]
 
-        'K' :: 'W' :: 'E' :: ls ->
-            addKanas ls with [ 'ク', 'ェ' ]
+        'K' :: 'W' :: 'E' :: rest ->
+            addKanas rest acc [ 'ク', 'ェ' ]
 
-        'K' :: 'W' :: 'O' :: ls ->
-            addKanas ls with [ 'ク', 'ォ' ]
+        'K' :: 'W' :: 'O' :: rest ->
+            addKanas rest acc [ 'ク', 'ォ' ]
 
-        'G' :: 'W' :: 'A' :: ls ->
-            addKanas ls with [ 'グ', 'ァ' ]
+        'G' :: 'W' :: 'A' :: rest ->
+            addKanas rest acc [ 'グ', 'ァ' ]
 
-        'S' :: 'H' :: 'E' :: ls ->
-            addKanas ls with [ 'シ', 'ェ' ]
+        'S' :: 'H' :: 'E' :: rest ->
+            addKanas rest acc [ 'シ', 'ェ' ]
 
-        'J' :: 'E' :: ls ->
-            addKanas ls with [ 'ジ', 'ェ' ]
+        'J' :: 'E' :: rest ->
+            addKanas rest acc [ 'ジ', 'ェ' ]
 
-        'S' :: 'I' :: ls ->
-            addKanas ls with [ 'ス', 'ィ' ]
+        'S' :: 'I' :: rest ->
+            addKanas rest acc [ 'ス', 'ィ' ]
 
-        'Z' :: 'I' :: ls ->
-            addKanas ls with [ 'ズ', 'ィ' ]
+        'Z' :: 'I' :: rest ->
+            addKanas rest acc [ 'ズ', 'ィ' ]
 
-        'C' :: 'H' :: 'E' :: ls ->
-            addKanas ls with [ 'チ', 'ェ' ]
+        'C' :: 'H' :: 'E' :: rest ->
+            addKanas rest acc [ 'チ', 'ェ' ]
 
-        'T' :: 'S' :: 'A' :: ls ->
-            addKanas ls with [ 'ツ', 'ァ' ]
+        'T' :: 'S' :: 'A' :: rest ->
+            addKanas rest acc [ 'ツ', 'ァ' ]
 
-        'T' :: 'S' :: 'I' :: ls ->
-            addKanas ls with [ 'ツ', 'ィ' ]
+        'T' :: 'S' :: 'I' :: rest ->
+            addKanas rest acc [ 'ツ', 'ィ' ]
 
-        'T' :: 'S' :: 'E' :: ls ->
-            addKanas ls with [ 'ツ', 'ェ' ]
+        'T' :: 'S' :: 'E' :: rest ->
+            addKanas rest acc [ 'ツ', 'ェ' ]
 
-        'T' :: 'S' :: 'O' :: ls ->
-            addKanas ls with [ 'ツ', 'ォ' ]
+        'T' :: 'S' :: 'O' :: rest ->
+            addKanas rest acc [ 'ツ', 'ォ' ]
 
-        'T' :: 'I' :: ls ->
-            addKanas ls with [ 'テ', 'ィ' ]
+        'T' :: 'I' :: rest ->
+            addKanas rest acc [ 'テ', 'ィ' ]
 
-        'T' :: 'U' :: ls ->
-            addKanas ls with [ 'テ', 'ゥ' ]
+        'T' :: 'U' :: rest ->
+            addKanas rest acc [ 'テ', 'ゥ' ]
 
-        'T' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'テ', 'ュ' ]
+        'T' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'テ', 'ュ' ]
 
-        'D' :: 'I' :: ls ->
-            addKanas ls with [ 'デ', 'ィ' ]
+        'D' :: 'I' :: rest ->
+            addKanas rest acc [ 'デ', 'ィ' ]
 
-        'D' :: 'U' :: ls ->
-            addKanas ls with [ 'デ', 'ゥ' ]
+        'D' :: 'U' :: rest ->
+            addKanas rest acc [ 'デ', 'ゥ' ]
 
-        'D' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'デ', 'ュ' ]
+        'D' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'デ', 'ュ' ]
 
-        'F' :: 'A' :: ls ->
-            addKanas ls with [ 'フ', 'ァ' ]
+        'F' :: 'A' :: rest ->
+            addKanas rest acc [ 'フ', 'ァ' ]
 
-        'F' :: 'I' :: ls ->
-            addKanas ls with [ 'フ', 'ィ' ]
+        'F' :: 'I' :: rest ->
+            addKanas rest acc [ 'フ', 'ィ' ]
 
-        'F' :: 'E' :: ls ->
-            addKanas ls with [ 'フ', 'ェ' ]
+        'F' :: 'E' :: rest ->
+            addKanas rest acc [ 'フ', 'ェ' ]
 
-        'F' :: 'O' :: ls ->
-            addKanas ls with [ 'フ', 'ォ' ]
+        'F' :: 'O' :: rest ->
+            addKanas rest acc [ 'フ', 'ォ' ]
 
-        'F' :: 'Y' :: 'U' :: ls ->
-            addKanas ls with [ 'フ', 'ュ' ]
+        'F' :: 'Y' :: 'U' :: rest ->
+            addKanas rest acc [ 'フ', 'ュ' ]
 
-        'H' :: 'U' :: ls ->
-            addKanas ls with [ 'ホ', 'ゥ' ]
+        'H' :: 'U' :: rest ->
+            addKanas rest acc [ 'ホ', 'ゥ' ]
 
-        'L' :: 'A' :: ls ->
-            addKanas ls with [ 'ラ', '゜' ]
+        'L' :: 'A' :: rest ->
+            addKanas rest acc [ 'ラ', '゜' ]
 
-        'L' :: 'I' :: ls ->
-            addKanas ls with [ 'リ', '゜' ]
+        'L' :: 'I' :: rest ->
+            addKanas rest acc [ 'リ', '゜' ]
 
-        'L' :: 'U' :: ls ->
-            addKanas ls with [ 'ル', '゜' ]
+        'L' :: 'U' :: rest ->
+            addKanas rest acc [ 'ル', '゜' ]
 
-        'L' :: 'E' :: ls ->
-            addKanas ls with [ 'レ', '゜' ]
+        'L' :: 'E' :: rest ->
+            addKanas rest acc [ 'レ', '゜' ]
 
-        'L' :: 'O' :: ls ->
-            addKanas ls with [ 'ロ', '゜' ]
+        'L' :: 'O' :: rest ->
+            addKanas rest acc [ 'ロ', '゜' ]
 
         --[ WA ]--------------------------------------------------------------------------------------------------------
-        'W' :: 'A' :: ls ->
-            addKana ls with 'ワ'
+        'W' :: 'A' :: rest ->
+            addKana rest acc 'ワ'
 
-        'w' :: 'a' :: ls ->
-            addKana ls with 'わ'
+        'w' :: 'a' :: rest ->
+            addKana rest acc 'わ'
 
-        'W' :: 'I' :: ls ->
-            addKana ls with 'ヰ'
+        'W' :: 'I' :: rest ->
+            addKana rest acc 'ヰ'
 
-        'w' :: 'i' :: ls ->
-            addKana ls with 'ゐ'
+        'w' :: 'i' :: rest ->
+            addKana rest acc 'ゐ'
 
-        'W' :: 'E' :: ls ->
-            addKana ls with 'ヱ'
+        'W' :: 'E' :: rest ->
+            addKana rest acc 'ヱ'
 
-        'w' :: 'e' :: ls ->
-            addKana ls with 'ゑ'
+        'w' :: 'e' :: rest ->
+            addKana rest acc 'ゑ'
 
-        'W' :: 'O' :: ls ->
-            addKana ls with 'ヲ'
+        'W' :: 'O' :: rest ->
+            addKana rest acc 'ヲ'
 
-        'w' :: 'o' :: ls ->
-            addKana ls with 'を'
+        'w' :: 'o' :: rest ->
+            addKana rest acc 'を'
+
+        [] ->
+            Just (String.fromList acc)
 
         _ ->
-            String.fromList with
-
-
-
--- c :: xs ->
---     if addUnresolvedRomanji then -- TODO should disable `Add Kana` and show an error banner
---         translate []
---             addUnresolvedRomanji
---             (concat
---                 [ acc, c :: xs ]
---             )
---
---     else
---         String.fromList acc
---
--- [] ->
---     String.fromList acc
+            Nothing

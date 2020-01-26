@@ -1,4 +1,4 @@
-module Entry.Types exposing (Entry, Msg(..))
+module Entry.Types exposing (Entry, EntryRequest, Msg(..))
 
 import Http
 
@@ -6,12 +6,16 @@ import Http
 type alias Entry =
     { id : Int
     , active : Bool
-    , romanji : String
+    , kana : String
     }
 
 
+type alias EntryRequest =
+    { romaji : String, kana : Maybe String }
+
+
 type Msg
-    = Update String
+    = Update String (Maybe String)
     | Save
     | Saved (Result Http.Error Int)
     | Deleted (Result Http.Error String)

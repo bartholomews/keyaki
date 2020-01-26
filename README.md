@@ -109,7 +109,7 @@ by using [httpie](https://github.com/jkbrzt/httpie):
 ``` shell
 
 # add an entry
-http POST localhost:8080/entry completed:=false romanji="katakana"
+http POST localhost:8080/entry completed:=false romaji="katakana"
 
 # get an entry
 http localhost:8080/entry/1
@@ -118,7 +118,7 @@ http localhost:8080/entry/1
 http DELETE localhost:8080/entry/1
 
 # update an entry
-http PUT localhost:8080/entry/1 romanji="keyaki" completed:=true
+http PUT localhost:8080/entry/1 romaji="keyaki" completed:=true
 
 # get all entries
 http localhost:8080/entries

@@ -1,7 +1,7 @@
 module Entry.View exposing (newEntry, onKeyDown)
 
-import Entry.Types exposing (Entry, Msg(..))
-import Hepburn.Translate exposing (romanjiToKana)
+import Entry.Types exposing (Entry, EntryRequest, Msg(..))
+import Hepburn.Translate exposing (romajiToKana)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (keyCode, on, onClick, onInput)
@@ -9,12 +9,25 @@ import Json.Decode as Decode
 import String
 
 
-newEntry : Entry -> Html Msg
+render : Maybe String -> String
+render maybeKana =
+    case maybeKana of
+        Just kana ->
+            kana
+
+        Nothing ->
+            ""
+
+
+newEntry : EntryRequest -> Html Msg
 newEntry nEntry =
     let
-        hasEmptyRomanji : Entry -> Bool
-        hasEmptyRomanji entry =
-            String.isEmpty <| .romanji entry
+        maybeKana =
+            romajiToKana nEntry.romaji
+
+        isInvalid : EntryRequest -> Bool
+        isInvalid entry =
+            (String.isEmpty <| .romaji entry) || Maybe.withDefault True (Maybe.map (\_ -> False) maybeKana)
     in
     div [ class "clearfix mt3 mb3" ]
         [ h1 [ class "2 regular caps silver" ]
@@ -22,34 +35,34 @@ newEntry nEntry =
         , input
             [ class "col-10 field h2 p2 mt2 mb2 border-none navy"
             , type_ "text"
-            , value nEntry.romanji
+            , value nEntry.romaji
             , placeholder "Rōmaji to Kana"
-            , onInput Update
+            , onInput (\romaji -> Update romaji (romajiToKana romaji))
             , autofocus True
             , onKeyDown
             ]
             []
         , h1 [ class "2 regular caps silver" ]
-            [ text (romanjiToKana nEntry.romanji) ]
+            [ text (render maybeKana) ]
         , div [ class "" ]
             [ button
                 [ class "h3 px4 py2 btn btn-outline lime"
                 , onClick Save
-                , disabled <| hasEmptyRomanji nEntry
+                , disabled <| isInvalid nEntry
                 ]
                 [ text "Add Kana" ]
             ]
         , button
             [ class <|
                 "btn  h5 regular silver underline"
-                    ++ (if hasEmptyRomanji nEntry then
+                    ++ (if isInvalid nEntry then
                             " muted"
 
                         else
                             ""
                        )
             , onClick Cancel
-            , disabled <| hasEmptyRomanji nEntry
+            , disabled <| isInvalid nEntry
             ]
             [ text "Clear" ]
         ]

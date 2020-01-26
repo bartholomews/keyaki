@@ -76,8 +76,8 @@ itemView item =
                            )
                 , type_ "text"
                 , disabled <| not editable
-                , value entry.romanji
-                , onInput (UpdateRomanji item)
+                , value entry.kana
+                , onInput (UpdateRomaji item)
                 ]
                 []
             ]

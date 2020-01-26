@@ -24,7 +24,7 @@ entryDecoder =
     Decode.succeed Entry.Entry
         |> Pipeline.required "id" Decode.int
         |> Pipeline.required "active" Decode.bool
-        |> Pipeline.required "romanji" Decode.string
+        |> Pipeline.required "romaji" Decode.string
 
 
 entriesDecoder : Decoder (List Entry.Entry)

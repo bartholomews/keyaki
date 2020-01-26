@@ -1,4 +1,4 @@
-module Entry.State exposing (emptyEntry, initialNewEntry, update)
+module Entry.State exposing (emptyEntryRequest, initialNewEntry, update)
 
 import Entry.Types exposing (..)
 import Return exposing (Return)
@@ -8,29 +8,30 @@ import Return exposing (Return)
 -- Model
 
 
-emptyEntry : Entry
-emptyEntry =
-    Entry -1 False ""
+emptyEntryRequest : EntryRequest
+emptyEntryRequest =
+    EntryRequest "" Nothing
 
 
-initialNewEntry : Entry
+initialNewEntry : EntryRequest
 initialNewEntry =
-    emptyEntry
+    emptyEntryRequest
 
 
 
 -- update
 
 
-update : Msg -> Entry -> Return Msg Entry
-update msg entry =
-    Return.singleton entry
+update : Msg -> EntryRequest -> Return Msg EntryRequest
+update msg entryRequest =
+    Return.singleton entryRequest
         |> (case msg of
-                Update value ->
-                    Return.map (\entry_ -> { entry_ | romanji = value })
+                -- FIXME just return req
+                Update romaji maybeKana ->
+                    Return.map (\entry_ -> { entry_ | romaji = romaji, kana = maybeKana })
 
                 Cancel ->
-                    Return.map <| always emptyEntry
+                    Return.map <| always emptyEntryRequest
 
                 _ ->
                     Return.zero

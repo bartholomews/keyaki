@@ -12,7 +12,7 @@ type alias Model =
     , navKey : Nav.Key
     , entries : Entries.Entries
     , entriesVisibility : Entries.Visibility
-    , newEntry : Entry.Entry
+    , newEntry : Entry.EntryRequest
     }
 
 

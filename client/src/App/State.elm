@@ -81,17 +81,16 @@ updateEntry msg writer =
                 EntryTypes.Save ->
                     Return.command (Cmd.map EntryMsg <| Entry.saveEntry entryModel)
 
-                EntryTypes.Saved (Ok entryId) ->
-                    let
-                        entry =
-                            { entryModel | id = entryId }
-
-                        entries =
-                            List.append appModel.entries [ EntriesState.createEntryItem entry ]
-                    in
-                    Return.map
-                        (\m -> { m | entries = entries, newEntry = EntryState.emptyEntry })
-
+                --EntryTypes.Saved (Ok entryId) ->
+                --    let
+                --        entry =
+                --            { entryModel | id = entryId }
+                --
+                --        entries =
+                --            List.append appModel.entries [ EntriesState.createEntryItem entry ]
+                --    in
+                --    Return.map
+                --        (\m -> { m | entries = entries, newEntry = EntryState.emptyEntry })
                 _ ->
                     Return.mapWith (\m -> { m | newEntry = entryModel }) <|
                         Cmd.map EntryMsg entryCmd
