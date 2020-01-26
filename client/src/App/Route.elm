@@ -15,7 +15,6 @@ import Url.Parser.Query as Query
 
 type Route
     = Home
-    | NotFound
     | SRS (Maybe Int)
     | Todo Int
 
@@ -27,6 +26,22 @@ route =
         , map SRS (s "srs" <?> Query.int "jlpt") -- see Query #custom for a custom 1-5
         , map Todo (s "todo" </> int)
         ]
+
+
+linkName : Maybe Route -> String
+linkName maybeRoute =
+    case maybeRoute of
+        Just Home ->
+            "HOME"
+
+        Just (SRS _) ->
+            "SRS"
+
+        Just (Todo _) ->
+            "todo"
+
+        Nothing ->
+            ""
 
 
 
