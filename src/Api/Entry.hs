@@ -10,7 +10,7 @@ import           Control.Monad.Except        (MonadIO)
 import           Control.Monad.Logger        (logDebugNS)
 import           Data.Int                    (Int64)
 import           Database.Persist.Postgresql (Entity (..), deleteWhere,
-                                              fromSqlKey, insert, replace,
+                                              insertEntity, replace,
                                               selectFirst, selectList, toSqlKey,
                                               (==.))
 
@@ -19,18 +19,18 @@ import           Servant
 
 import           Config                      (AppT (..))
 import           Control.Monad.Metrics       (increment)
+import           Data.Aeson.Types            (FromJSON)
+import           Data.Text                   (Text)
 import           GHC.Generics
 import           Models                      (Entry (Entry), entryActive,
                                               entryKana, entryRomaji, runDb)
 import qualified Models                      as Md
-import Data.Aeson.Types (FromJSON)
-import Data.Text (Text)
 
 type EntryAPI
    = "api" :> "entries" :> Get '[ JSON] [Entity Entry] :<|> 
    "api" :> "entry" :> Capture "id" Int64 :> Get '[ JSON] (Entity Entry) :<|> 
    "api" :> "entry" :> Capture "id" Int64 :> Delete '[ JSON] () :<|> 
-   "api" :> "entry" :> ReqBody '[ JSON] EntryRequest :> Post '[ JSON] Int64 :<|> 
+   "api" :> "entry" :> ReqBody '[ JSON] EntryRequest :> Post '[ JSON] (Entity Entry) :<|> 
    "api" :> "entry" :> Capture "id" Int64 :> ReqBody '[ JSON] Entry :> Put '[ JSON] ()
 
 entryApi :: Proxy EntryAPI
@@ -63,16 +63,15 @@ data EntryRequest =
     , kana   :: Text
     }
   deriving (Generic, Show)
-  
+
 instance FromJSON EntryRequest
 
 -- | Creates a entry in the database.
-createEntry :: MonadIO m => EntryRequest -> AppT m Int64
+createEntry :: MonadIO m => EntryRequest -> AppT m (Entity Entry)
 createEntry req = do
   increment "createEntry"
   logDebugNS "web" "creating an entry"
-  newEntry <- runDb (insert (Entry True (kana req) (romaji req)))
-  return $ fromSqlKey newEntry
+  runDb (insertEntity (Entry True (kana req) (romaji req)))
 
 deleteEntry :: MonadIO m => Int64 -> AppT m ()
 deleteEntry id = do

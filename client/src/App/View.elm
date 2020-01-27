@@ -19,7 +19,7 @@ root model =
     div []
         [ div [ class "header-content" ]
             [ header [ class "btn btn-primary" ]
-                [ img [ src "/dist/images/favicon.ico", alt "ケヤキ" ] []
+                [ p [] [ text "ケヤキ" ]
                 , navigation (parse route model.url)
                 ]
             ]

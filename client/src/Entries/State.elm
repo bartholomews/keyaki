@@ -87,7 +87,7 @@ update msg entries =
 
 createEntryItem : Entry.Entry -> EntryItem
 createEntryItem entry =
-    EntryItem entry "" False
+    EntryItem entry "FIXME THIS SHOULD NOT BE NEEDED!" False
 
 
 deleteEntryItem : EntryItem -> Entries -> Entries

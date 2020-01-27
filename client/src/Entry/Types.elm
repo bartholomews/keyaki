@@ -17,7 +17,7 @@ type alias EntryRequest =
 type Msg
     = Update String (Maybe String)
     | Save
-    | Saved (Result Http.Error Int)
+    | Saved (Result Http.Error Entry)
     | Deleted (Result Http.Error String)
     | Updated (Result Http.Error String)
     | Cancel

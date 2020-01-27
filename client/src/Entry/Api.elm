@@ -1,5 +1,6 @@
 module Entry.Api exposing
     ( deleteEntry
+    , entryDecoder
     , saveEntry
     , updateEntry
     )
@@ -8,6 +9,7 @@ import Common.Encoding exposing (encodeMaybe)
 import Entry.Types exposing (..)
 import Http
 import Json.Decode as Decode exposing (Decoder)
+import Json.Decode.Pipeline as Pipeline
 import Json.Encode as Encode
 
 
@@ -33,6 +35,14 @@ entryEncoded entry =
     list |> Encode.object
 
 
+entryDecoder : Decoder Entry
+entryDecoder =
+    Decode.succeed Entry
+        |> Pipeline.required "id" Decode.int
+        |> Pipeline.required "active" Decode.bool
+        |> Pipeline.required "romaji" Decode.string
+
+
 saveEntry : EntryRequest -> Cmd Msg
 saveEntry entryRequest =
     let
@@ -45,7 +55,7 @@ saveEntry entryRequest =
     Http.post
         { url = "http://localhost:8081/api/entry/"
         , body = body
-        , expect = Http.expectJson Saved Decode.int
+        , expect = Http.expectJson Saved entryDecoder
         }
 
 
