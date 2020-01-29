@@ -17,10 +17,11 @@ import Url exposing (Url)
 -- Model
 
 
-initialModel : Url -> Nav.Key -> Model
-initialModel url key =
+initialModel : Url -> Nav.Key -> Config -> Model
+initialModel url key config =
     { url = url
     , navKey = key
+    , config = config
     , entries = EntriesState.initialEntries
     , entriesVisibility = EntriesState.initialVisibility
     , newEntry = EntryState.initialNewEntry
@@ -79,7 +80,7 @@ updateEntry msg writer =
         --|> (case Debug.log "t " msg of
         |> (case msg of
                 EntryTypes.Save ->
-                    Return.command (Cmd.map EntryMsg <| Entry.saveEntry newEntryModel)
+                    Return.command (Cmd.map EntryMsg <| Entry.saveEntry appModel.config newEntryModel)
 
                 EntryTypes.Saved (Ok entry) ->
                     let
@@ -117,14 +118,14 @@ updateEntries msg writer =
                     Return.mapWith
                         (\m -> { m | entries = EntriesState.deleteEntryItem entryItem entriesModel })
                         (Cmd.map EntryMsg <|
-                            Entry.deleteEntry entryItem.entry
+                            Entry.deleteEntry appModel.config entryItem.entry
                         )
 
                 EntriesTypes.UpdateEntry entryItem ->
                     Return.mapWith
                         (\m -> { m | entries = entriesModel })
                         (Cmd.map EntryMsg <|
-                            Entry.updateEntry <|
+                            Entry.updateEntry appModel.config <|
                                 .entry entryItem
                         )
 
@@ -139,7 +140,7 @@ updateEntries msg writer =
                     Return.mapWith
                         (\m -> { m | entries = EntriesState.updateEntry entry_ entriesModel })
                         (Cmd.map EntryMsg <|
-                            Entry.updateEntry entry_
+                            Entry.updateEntry appModel.config entry_
                         )
 
                 EntriesTypes.SetVisibility visibility ->

@@ -1,9 +1,10 @@
 port module Main exposing (main, toJs, update)
 
 import App.State as App exposing (..)
-import App.Types as App exposing (Model, Msg)
+import App.Types as App exposing (Config, Model, Msg)
 import App.View as App exposing (..)
 import Browser
+import Url exposing (Protocol(..))
 
 
 
@@ -24,10 +25,23 @@ update =
 -- https://guide.elm-lang.org/webapps/navigation.html
 
 
+getConfig : Config
+getConfig =
+    { serverApi =
+        { protocol = Http
+        , host = "localhost"
+        , port_ = Just 8081
+        , path = "/api"
+        , query = Nothing
+        , fragment = Nothing
+        }
+    }
+
+
 main : Program Int Model Msg
 main =
     Browser.application
-        { init = \_ url key -> ( App.initialModel url key, App.initialCommand )
+        { init = \_ url key -> ( App.initialModel url key getConfig, App.initialCommand )
         , view =
             \m ->
                 { title = "ケヤキ"

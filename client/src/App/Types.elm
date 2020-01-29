@@ -1,4 +1,4 @@
-module App.Types exposing (HeaderLink, HeaderLinkName(..), Model, Msg(..))
+module App.Types exposing (Config, HeaderLink, HeaderLinkName(..), Model, Msg(..))
 
 import Browser
 import Browser.Navigation as Nav
@@ -10,9 +10,15 @@ import Url exposing (Url)
 type alias Model =
     { url : Url
     , navKey : Nav.Key
+    , config : Config
     , entries : Entries.Entries
     , entriesVisibility : Entries.Visibility
     , newEntry : Entry.EntryRequest
+    }
+
+
+type alias Config =
+    { serverApi : Url
     }
 
 

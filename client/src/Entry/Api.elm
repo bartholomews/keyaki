@@ -5,12 +5,15 @@ module Entry.Api exposing
     , updateEntry
     )
 
+import App.Types exposing (Config)
 import Common.Encoding exposing (encodeMaybe)
+import Common.Url exposing (appendPath)
 import Entry.Types exposing (..)
 import Http
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as Encode
+import Url exposing (Url)
 
 
 entryRequestEncoded : EntryRequest -> Encode.Value
@@ -43,8 +46,8 @@ entryDecoder =
         |> Pipeline.required "romaji" Decode.string
 
 
-saveEntry : EntryRequest -> Cmd Msg
-saveEntry entryRequest =
+saveEntry : Config -> EntryRequest -> Cmd Msg
+saveEntry config entryRequest =
     let
         body =
             entryRequestEncoded entryRequest
@@ -53,18 +56,18 @@ saveEntry entryRequest =
                 |> Http.stringBody "application/json"
     in
     Http.post
-        { url = "http://localhost:8081/api/entry/"
+        { url = Url.toString (appendPath config.serverApi "entry")
         , body = body
         , expect = Http.expectJson Saved entryDecoder
         }
 
 
-deleteEntry : Entry -> Cmd Msg
-deleteEntry entry =
+deleteEntry : Config -> Entry -> Cmd Msg
+deleteEntry config entry =
     Http.request
         { method = "DELETE"
         , headers = []
-        , url = "http://localhost:8081/api/entry/" ++ String.fromInt entry.id
+        , url = Url.toString (appendPath config.serverApi ("entry/" ++ String.fromInt entry.id))
         , body = Http.emptyBody
         , expect = Http.expectString Deleted
         , timeout = Nothing
@@ -74,8 +77,8 @@ deleteEntry entry =
         }
 
 
-updateEntry : Entry -> Cmd Msg
-updateEntry entry =
+updateEntry : Config -> Entry -> Cmd Msg
+updateEntry config entry =
     let
         body =
             entryEncoded entry
@@ -85,7 +88,7 @@ updateEntry entry =
     Http.request
         { method = "PUT"
         , headers = []
-        , url = "http://localhost:8081/api/entry/" ++ String.fromInt entry.id
+        , url = Url.toString (appendPath config.serverApi ("entry/" ++ String.fromInt entry.id))
         , body = body
         , expect = Http.expectString Updated
         , timeout = Nothing

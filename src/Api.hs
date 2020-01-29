@@ -11,7 +11,7 @@ import           Servant                         ((:<|>) ((:<|>)),
                                                   serve, serveDirectoryWith)
 import           Servant.Server
 
-import           Api.Entry                        (EntryAPI, entryApi, entryServer)
+import           Api.Entry                       (EntryAPI, entryApi, entryServer)
 import           Api.User                        (UserAPI, userApi, userServer)
 import           Config                          (AppT (..), Config (..))
 import           Data.Text                       (pack)
