@@ -107,22 +107,21 @@ stack build --test
 by using [httpie](https://github.com/jkbrzt/httpie):
 
 ``` shell
-
+9
 # add an entry
-http POST localhost:8080/entry romaji="keyaki" kana="ケヤキ"
+http POST localhost:8081/entry romaji="keyaki" kana="ケヤキ"
 
 # get an entry
-http localhost:8080/entry/1
-
-# delete an entry
-http DELETE localhost:8080/entry/1
-
-# update an entry
-http PUT localhost:8080/entry/1 romaji="keyaki" kana="ケヤキ" completed:=true
+http localhost:8081/entry/1
 
 # get all entries
-http localhost:8080/entries
+http localhost:8081/entries
 
+# update an entry
+http PUT localhost:8081/entry/1 romaji="keyaki" kana="ケヤキ" completed:=true
+
+# delete an entry
+http DELETE localhost:8081/entry/1
 ```
 
 ### Helpful Haskell / Servant stuff
