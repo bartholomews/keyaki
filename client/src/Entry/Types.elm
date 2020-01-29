@@ -7,15 +7,17 @@ type alias Entry =
     { id : Int
     , active : Bool
     , kana : String
+    , meaning : String
     }
 
 
 type alias EntryRequest =
-    { romaji : String, kana : Maybe String }
+    { romaji : String, kana : Maybe String, meaning : String }
 
 
 type Msg
-    = Update String (Maybe String)
+    = UpdateKana String (Maybe String)
+    | UpdateMeaning String
     | Save
     | Saved (Result Http.Error Entry)
     | Deleted (Result Http.Error String)

@@ -1,16 +1,19 @@
 module Entries.Api exposing (getEntries)
 
+import App.Types exposing (Config)
+import Common.Url exposing (appendPath)
 import Entries.Types exposing (..)
 import Entry.Api exposing (entryDecoder)
 import Entry.Types as Entry
 import Http
 import Json.Decode as Decode exposing (Decoder)
+import Url exposing (Url)
 
 
-getEntries : Cmd Msg
-getEntries =
+getEntries : Config -> Cmd Msg
+getEntries config =
     Http.get
-        { url = "http://localhost:8081/api/entries"
+        { url = Url.toString (appendPath config.serverApi "entries")
         , expect = Http.expectJson EntriesFetched entriesDecoder
         }
 

@@ -35,7 +35,7 @@ update msg entries =
                         entryItem_ =
                             { entryItem
                                 | editable = True
-                                , romaji = entry.kana
+                                , auxMeaning = entry.meaning
                             }
                     in
                     Return.map <| updateEntryItem entryItem_
@@ -48,8 +48,8 @@ update msg entries =
                         entryItem_ =
                             { entryItem
                                 | editable = False
-                                , romaji = ""
-                                , entry = { entry_ | kana = .romaji entryItem }
+                                , auxMeaning = ""
+                                , entry = { entry_ | meaning = .auxMeaning entryItem }
                             }
                     in
                     Return.map <| updateEntryItem entryItem_
@@ -59,19 +59,19 @@ update msg entries =
                         entryItem_ =
                             { entryItem
                                 | editable = False
-                                , romaji = ""
+                                , auxMeaning = ""
                             }
                     in
                     Return.map <| updateEntryItem entryItem_
 
-                UpdateRomaji entryItem romaji ->
+                UpdateMeaning entryItem newMeaning ->
                     let
                         entry_ =
                             .entry entryItem
 
                         entryItem_ =
                             { entryItem
-                                | entry = { entry_ | kana = romaji }
+                                | entry = { entry_ | meaning = newMeaning }
                             }
                     in
                     Return.map <| updateEntryItem entryItem_
@@ -87,7 +87,7 @@ update msg entries =
 
 createEntryItem : Entry.Entry -> EntryItem
 createEntryItem entry =
-    EntryItem entry "FIXME THIS SHOULD NOT BE NEEDED!" False
+    EntryItem entry entry.meaning False
 
 
 deleteEntryItem : EntryItem -> Entries -> Entries

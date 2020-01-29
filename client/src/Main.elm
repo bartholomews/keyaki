@@ -40,8 +40,12 @@ getConfig =
 
 main : Program Int Model Msg
 main =
+    let
+        config =
+            getConfig
+    in
     Browser.application
-        { init = \_ url key -> ( App.initialModel url key getConfig, App.initialCommand )
+        { init = \_ url key -> ( App.initialModel url key config, App.initialCommand config )
         , view =
             \m ->
                 { title = "ケヤキ"

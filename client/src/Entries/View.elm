@@ -62,12 +62,14 @@ itemView item =
                         "Done"
                 ]
             ]
+        , div [] [ span [ class "item kana-item" ] [ text entry.kana ] ]
         , div
             [ class "flex-auto"
             ]
             [ input
                 [ class <|
-                    "block h1 col-12 navy "
+                    "item meaning-item"
+                        --"block h1 col-12 navy "
                         ++ (if editable then
                                 "border border-navy"
 
@@ -76,8 +78,8 @@ itemView item =
                            )
                 , type_ "text"
                 , disabled <| not editable
-                , value entry.kana
-                , onInput (UpdateRomaji item)
+                , value entry.meaning
+                , onInput (UpdateMeaning item)
                 ]
                 []
             ]

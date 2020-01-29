@@ -31,7 +31,7 @@ User json
 Entry json
     active Bool
     kana Text
-    romaji Text
+    meaning Text
     deriving Show Eq
 |]
 

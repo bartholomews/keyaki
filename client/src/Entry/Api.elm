@@ -20,9 +20,7 @@ entryRequestEncoded : EntryRequest -> Encode.Value
 entryRequestEncoded entryRequest =
     let
         list =
-            [ ( "romaji", Encode.string entryRequest.romaji ), ( "kana", encodeMaybe entryRequest.kana Encode.string ) ]
-
-        -- FIXME: add `meaning: String`
+            [ ( "kana", encodeMaybe entryRequest.kana Encode.string ), ( "meaning", Encode.string entryRequest.meaning ) ]
     in
     list |> Encode.object
 
@@ -43,7 +41,8 @@ entryDecoder =
     Decode.succeed Entry
         |> Pipeline.required "id" Decode.int
         |> Pipeline.required "active" Decode.bool
-        |> Pipeline.required "romaji" Decode.string
+        |> Pipeline.required "kana" Decode.string
+        |> Pipeline.required "meaning" Decode.string
 
 
 saveEntry : Config -> EntryRequest -> Cmd Msg

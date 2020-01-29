@@ -10,7 +10,7 @@ import Return exposing (Return)
 
 emptyEntryRequest : EntryRequest
 emptyEntryRequest =
-    EntryRequest "" Nothing
+    EntryRequest "" Nothing ""
 
 
 initialNewEntry : EntryRequest
@@ -27,8 +27,11 @@ update msg entryRequest =
     Return.singleton entryRequest
         |> (case msg of
                 -- FIXME just return req
-                Update romaji maybeKana ->
+                UpdateKana romaji maybeKana ->
                     Return.map (\entry_ -> { entry_ | romaji = romaji, kana = maybeKana })
+
+                UpdateMeaning meaning ->
+                    Return.map (\entry_ -> { entry_ | meaning = meaning })
 
                 Cancel ->
                     Return.map <| always emptyEntryRequest

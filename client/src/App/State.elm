@@ -32,9 +32,9 @@ initialModel url key config =
 -- Cmd
 
 
-initialCommand : Cmd Msg
-initialCommand =
-    Cmd.map EntriesMsg EntriesApi.getEntries
+initialCommand : Config -> Cmd Msg
+initialCommand config =
+    Cmd.map EntriesMsg (EntriesApi.getEntries config)
 
 
 

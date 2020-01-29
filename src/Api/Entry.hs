@@ -23,14 +23,14 @@ import           Data.Aeson.Types            (FromJSON)
 import           Data.Text                   (Text)
 import           GHC.Generics
 import           Models                      (Entry (Entry), entryActive,
-                                              entryKana, entryRomaji, runDb)
+                                              entryKana, entryMeaning, runDb)
 import qualified Models                      as Md
 
 type EntryAPI
-   = "api" :> "entries" :> Get '[ JSON] [Entity Entry] :<|> 
-   "api" :> "entry" :> Capture "id" Int64 :> Get '[ JSON] (Entity Entry) :<|> 
-   "api" :> "entry" :> Capture "id" Int64 :> Delete '[ JSON] () :<|> 
-   "api" :> "entry" :> ReqBody '[ JSON] EntryRequest :> Post '[ JSON] (Entity Entry) :<|> 
+   = "api" :> "entries" :> Get '[ JSON] [Entity Entry] :<|>
+   "api" :> "entry" :> Capture "id" Int64 :> Get '[ JSON] (Entity Entry) :<|>
+   "api" :> "entry" :> Capture "id" Int64 :> Delete '[ JSON] () :<|>
+   "api" :> "entry" :> ReqBody '[ JSON] EntryRequest :> Post '[ JSON] (Entity Entry) :<|>
    "api" :> "entry" :> Capture "id" Int64 :> ReqBody '[ JSON] Entry :> Put '[ JSON] ()
 
 entryApi :: Proxy EntryAPI
@@ -59,8 +59,8 @@ singleEntry id = do
 
 data EntryRequest =
   EntryRequest
-    { romaji :: Text
-    , kana   :: Text
+    { kana :: Text
+    , meaning   :: Text
     }
   deriving (Generic, Show)
 
@@ -71,7 +71,7 @@ createEntry :: MonadIO m => EntryRequest -> AppT m (Entity Entry)
 createEntry req = do
   increment "createEntry"
   logDebugNS "web" "creating an entry"
-  runDb (insertEntity (Entry True (kana req) (romaji req)))
+  runDb (insertEntity (Entry True (kana req) (meaning req)))
 
 deleteEntry :: MonadIO m => Int64 -> AppT m ()
 deleteEntry id = do
@@ -84,4 +84,4 @@ updateEntry :: MonadIO m => Int64 -> Entry -> AppT m ()
 updateEntry id body = do
   increment "updateEntry"
   logDebugNS "web" "updating an entry"
-  runDb (replace (toSqlKey id) (Entry (entryActive body) (entryKana body) (entryRomaji body)))
+  runDb (replace (toSqlKey id) (Entry (entryActive body) (entryKana body) (entryMeaning body)))

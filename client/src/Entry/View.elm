@@ -27,7 +27,9 @@ newEntry nEntry =
 
         isInvalid : EntryRequest -> Bool
         isInvalid entry =
-            (String.isEmpty <| .romaji entry) || Maybe.withDefault True (Maybe.map (\_ -> False) maybeKana)
+            (String.isEmpty <| .romaji entry)
+                || (String.isEmpty <| .meaning entry)
+                || Maybe.withDefault True (Maybe.map (\_ -> False) maybeKana)
     in
     div [ class "clearfix mt3 mb3" ]
         [ h1 [ class "2 regular caps silver" ]
@@ -37,13 +39,25 @@ newEntry nEntry =
             , type_ "text"
             , value nEntry.romaji
             , placeholder "Rōmaji to Kana"
-            , onInput (\romaji -> Update romaji (romajiToKana romaji))
+            , onInput (\romaji -> UpdateKana romaji (romajiToKana romaji))
             , autofocus True
             , onKeyDown
             ]
             []
         , h1 [ class "2 regular caps silver" ]
             [ text (render maybeKana) ]
+        , div []
+            [ input
+                [ class "col-10 field h2 p2 mt2 mb2 border-none navy"
+                , type_ "text"
+                , value nEntry.meaning
+                , placeholder "Meaning"
+                , onInput UpdateMeaning
+                , autofocus True
+                , onKeyDown
+                ]
+                []
+            ]
         , div [ class "" ]
             [ button
                 [ class "h3 px4 py2 btn btn-outline lime"
@@ -62,7 +76,7 @@ newEntry nEntry =
                             ""
                        )
             , onClick Cancel
-            , disabled <| isInvalid nEntry
+            , disabled <| (String.isEmpty <| .romaji nEntry) && (String.isEmpty <| .meaning nEntry)
             ]
             [ text "Clear" ]
         ]
