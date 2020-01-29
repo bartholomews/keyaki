@@ -1,5 +1,22 @@
 .item {
     margin-right: 10px;
+    width: 100%;
 }
 
-.entries {}
+.wrapper {
+    width: 100%;
+}
+
+.inner1 {
+    float: left;
+}
+
+.inner2 {
+    float: left;
+    clear: left;
+    margin-top: 10px;
+}
+
+.edit-buttons {
+    float: right;
+}

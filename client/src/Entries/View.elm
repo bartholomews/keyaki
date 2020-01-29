@@ -40,6 +40,42 @@ itemView item =
 
         editable =
             item.editable
+
+        buttons =
+            if editable then
+                div [ class "edit-buttons" ]
+                    [ button
+                        [ class <|
+                            "h4 regular btn btn-outline ml2 gray"
+                        , onClick <| CancelEditEntry item
+                        ]
+                        [ text "Cancel"
+                        ]
+                    , button
+                        [ class
+                            "ml2 h4 regular btn btn-outline green"
+                        , onClick <| UpdateEntry item
+                        ]
+                        [ text "Update"
+                        ]
+                    ]
+
+            else
+                div [ class "edit-buttons" ]
+                    [ button
+                        [ class "ml2 h4 regular btn btn-outline fuchsia"
+                        , onClick <| DeleteEntry item
+                        ]
+                        [ text "Delete"
+                        ]
+                    , button
+                        [ class <|
+                            "h4 regular btn btn-outline ml2 navy"
+                        , onClick <| EditEntry item
+                        ]
+                        [ text "Edit"
+                        ]
+                    ]
     in
     li [ class "flex flex-center p2 border-bottom silver" ]
         [ div [ class "pr2" ]
@@ -62,59 +98,28 @@ itemView item =
                         "Done"
                 ]
             ]
-        , div [] [ span [ class "item kana-item" ] [ text entry.kana ] ]
-        , div
-            [ class "flex-auto"
-            ]
-            [ input
-                [ class <|
-                    "item meaning-item"
-                        --"block h1 col-12 navy "
-                        ++ (if editable then
-                                "border border-navy"
-
-                            else
-                                "muted border-none"
-                           )
-                , type_ "text"
-                , disabled <| not editable
-                , value entry.meaning
-                , onInput (UpdateMeaning item)
+        , div [ class "wrapper" ]
+            [ div [ class "inner1" ] [ span [ class "flex-auto item kana-item" ] [ text entry.kana ] ]
+            , div
+                [ class "inner2 flex-auto"
                 ]
-                []
-            ]
-        , if editable then
-            div []
-                [ button
+                [ input
                     [ class <|
-                        "h4 regular btn btn-outline ml2 gray"
-                    , onClick <| CancelEditEntry item
-                    ]
-                    [ text "Cancel"
-                    ]
-                , button
-                    [ class
-                        "ml2 h4 regular btn btn-outline green"
-                    , onClick <| UpdateEntry item
-                    ]
-                    [ text "Update"
-                    ]
-                ]
+                        "item meaning-item"
+                            --"block h1 col-12 navy "
+                            ++ (if editable then
+                                    "border border-navy"
 
-          else
-            div []
-                [ button
-                    [ class "ml2 h4 regular btn btn-outline fuchsia"
-                    , onClick <| DeleteEntry item
+                                else
+                                    "muted border-none"
+                               )
+                    , type_ "text"
+                    , disabled <| not editable
+                    , value entry.meaning
+                    , onInput (UpdateMeaning item)
                     ]
-                    [ text "Delete"
-                    ]
-                , button
-                    [ class <|
-                        "h4 regular btn btn-outline ml2 navy"
-                    , onClick <| EditEntry item
-                    ]
-                    [ text "Edit"
-                    ]
+                    []
                 ]
+            , buttons
+            ]
         ]
