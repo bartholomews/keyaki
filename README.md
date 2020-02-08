@@ -107,7 +107,6 @@ stack build --test
 by using [httpie](https://github.com/jkbrzt/httpie):
 
 ``` shell
-9
 # add an entry
 http POST localhost:8081/entry romaji="keyaki" kana="ケヤキ"
 
