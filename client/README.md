@@ -9,11 +9,11 @@ Webpack 4, Hot Reloading & Babel 7 seed from [elm-webpack-starter](https://githu
 ### Development
 
 ```bash
+$ yarn install
 $ yarn dev
  ```
 
-Open http://localhost:3000.
-(An example using Routing is provided in the `navigation` branch)
+Open http://localhost:3000
 
 #### Production
 

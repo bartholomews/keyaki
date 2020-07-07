@@ -74,8 +74,11 @@ cd keyaki
 stack build
 ```
 
-- Execute app
+Please note that in order to build `persistent-postgresql`, you need to have `pg_config` in your PATH.
+Look at https://stackoverflow.com/questions/11618898/pg-config-executable-not-found if you have any issues.
 
+- Execute app  
+(make sure you have built the [client](https://github.com/bartholomews/keyaki/tree/master/client) first)
 ``` shell
 stack exec keyaki
 ```
@@ -91,6 +94,8 @@ stack exec keyaki
 ``` shell
 ghcid -c stack ghci -W -T main
 ```
+
+Open http://localhost:8081
 
 - run tests
 
