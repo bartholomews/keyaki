@@ -80,6 +80,7 @@ deleteEntry id = do
   runDb (deleteWhere [Md.EntryId ==. toSqlKey id]) -- TODO simple `delete`
 
 --  runDb (delete (toSqlKey id))
+-- TODO update with optional fields
 updateEntry :: MonadIO m => Int64 -> Entry -> AppT m ()
 updateEntry id body = do
   increment "updateEntry"
