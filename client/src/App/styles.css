@@ -55,3 +55,7 @@ button:disabled {
 .btn:focus {
     box-shadow: none;
 }
+
+.kana-text {
+    min-height: 40px;
+}

@@ -44,7 +44,7 @@ newEntry nEntry =
             , onKeyDown
             ]
             []
-        , h1 [ class "2 regular caps silver" ]
+        , h1 [ class "kana-text 2 regular caps silver" ]
             [ text (render maybeKana) ]
         , div []
             [ input
