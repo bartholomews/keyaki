@@ -3,7 +3,7 @@ const merge = require("webpack-merge");
 
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 // to extract the css as a separate file
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -29,11 +29,11 @@ const common = {
     },
     plugins: [
         new HTMLWebpackPlugin({
-                                  // Use this template to get basic responsive meta tags
-                                  template: "src/index.html",
-                                  // inject details of output file at end of body
-                                  inject: "body"
-                              })
+            // Use this template to get basic responsive meta tags
+            template: "src/index.html",
+            // inject details of output file at end of body
+            inject: "body"
+        })
     ],
     resolve: {
         modules: [path.join(__dirname, "src"), "node_modules"],
@@ -129,24 +129,25 @@ if (MODE === env.prod) {
     console.log("Building for Production...");
     module.exports = merge(common, {
         plugins: [
-            // Delete everything from /dist directory and report to user
-            new CleanWebpackPlugin(["dist"], {
-                root: __dirname,
-                exclude: [],
+            /*
+             Delete everything from /dist directory and report to user
+             https://github.com/johnagan/clean-webpack-plugin/issues/106
+             */
+            new CleanWebpackPlugin({
                 verbose: true,
                 dry: false
             }),
             // Copy static assets
-            new CopyWebpackPlugin([
-                                      {
-                                          from: "src/assets"
-                                      }
-                                  ]),
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: 'src/assets' }
+                ],
+            }),
             new MiniCssExtractPlugin({
-                                         // Options similar to the same options in webpackOptions.output
-                                         // both options are optional
-                                         filename: "[name]-[hash].css"
-                                     })
+                // Options similar to the same options in webpackOptions.output
+                // both options are optional
+                filename: "[name]-[hash].css"
+            })
         ],
         module: {
             rules: [
