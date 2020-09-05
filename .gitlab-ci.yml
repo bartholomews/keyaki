@@ -43,7 +43,7 @@ server:
   stage: Build / Test
   before_script:
     # https://unix.stackexchange.com/a/263803
-    - apt-get install apt-transport-https ca-certificates
+    - sudo apt-get install apt-transport-https ca-certificates
     - apt-get update
     - mkdir -p .stack # Handle cache miss
     - cp -r .stack /root/ # Copy cached .stack to /root/
