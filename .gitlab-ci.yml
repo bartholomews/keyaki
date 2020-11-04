@@ -59,7 +59,7 @@ server:
 #      - server/secrets
 
 client:
-  image: node:11.15.0
+  image: node:14.4.0
   stage: Build / Test
   cache: {}
   before_script:
