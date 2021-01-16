@@ -85,7 +85,7 @@ stack exec keyaki
 
 - Live reloading w/ `--file-watch`:
 ```shell
-./server/scripts/dev.sh
+./scripts/dev.sh
 ```
 
 - Live reloading w/ [ghcid](https://github.com/ndmitchell/ghcid)

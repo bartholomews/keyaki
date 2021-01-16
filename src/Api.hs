@@ -1,33 +1,41 @@
-{-# LANGUAGE DataKinds     #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 
 module Api
-  ( app
+  ( app,
   ) where
 
-import           Control.Monad.Reader            (runReaderT)
-import           Servant                         ((:<|>) ((:<|>)),
-                                                  Proxy (Proxy), Raw, Server,
-                                                  serve, serveDirectoryWith)
-import           Servant.Server
-
-import           Api.Entry                       (EntryAPI, entryApi, entryServer)
-import           Api.User                        (UserAPI, userApi, userServer)
-import           Config                          (AppT (..), Config (..))
-import           Data.Text                       (pack)
-import           Network.HTTP.Types.Method
-import           Network.Wai.Middleware.Cors     (cors, corsMethods,
-                                                  simpleCorsResourcePolicy)
-
-import           Network.Wai                     (Middleware)
-import           WaiAppStatic.Storage.Filesystem (defaultFileServerSettings)
-import           WaiAppStatic.Types
+import Api.Entry (EntryAPI, entryApi, entryServer)
+import Api.User (UserAPI, userApi, userServer)
+import Config (AppT (..), Config (..))
+import Control.Monad.Reader (runReaderT)
+import Data.Text (pack)
+import Network.HTTP.Types.Header
+import Network.HTTP.Types.Method
+import Network.Wai (Middleware)
+import Network.Wai.Middleware.Cors
+  ( cors,
+    corsRequestHeaders,
+    corsMethods,
+    simpleCorsResourcePolicy,
+  )
+import Servant
+  ( Proxy (Proxy),
+    Raw,
+    Server,
+    serve,
+    serveDirectoryWith,
+    (:<|>) ((:<|>)),
+  )
+import Servant.Server
+import WaiAppStatic.Storage.Filesystem (defaultFileServerSettings)
+import WaiAppStatic.Types
 
 -- | This is the function we export to run our 'UserAPI'. Given
 -- a 'Config', we return a WAI 'Application' which any WAI compliant server
 -- can run.
---userApp :: Config -> Application
---userApp cfg = serve userApi (appToServer cfg)
+-- userApp :: Config -> Application
+-- userApp cfg = serve userApi (appToServer cfg)
 -- | This functions tells Servant how to run the 'App' monad with our
 -- 'server' function.
 appToUserServer :: Config -> Server UserAPI
@@ -51,7 +59,7 @@ staticSettings root = ds {ssLookupFile = lookup}
     lookup p = do
       f <- ssLookupFile ds p
       case f of
-        LRFile f   -> return $ LRFile f
+        LRFile f -> return $ LRFile f
         LRFolder f -> return $ LRFolder f
         -- TODO: Should redirect to `index.html` only if not within the /api path, otherwise should give 404
         LRNotFound -> ssLookupFile ds [unsafeToPiece (pack "index.html")]
@@ -83,7 +91,11 @@ app cfg = simpleCors (serve appApi (appToUserServer cfg :<|> appToEntryServer cf
 simpleCors :: Middleware
 simpleCors =
   cors $
-  const
-    (Just
-       simpleCorsResourcePolicy
-         {corsMethods = [methodGet, methodHead, methodPost, methodDelete, methodPut, methodOptions]})
+    const
+      ( Just
+          simpleCorsResourcePolicy
+        { 
+        corsRequestHeaders = [hOrigin, hContentType, hAccept],
+        corsMethods = [methodGet, methodHead, methodPost, methodDelete, methodPut, methodOptions]     
+        }
+      )
