@@ -114,11 +114,11 @@ envConnPool env logEnv = do
                    , "password="
                    , "dbname="
                    ]
-            envs = [ "PG_HOST"
-                   , "PG_PORT"
-                   , "PG_USER"
-                   , "PG_PASSWORD"
-                   , "PG_DATABASE"
+            envs = [ "KEYAKI_PG_HOST"
+                   , "KEYAKI_PG_PORT"
+                   , "KEYAKI_PG_USER"
+                   , "KEYAKI_PG_PASSWORD"
+                   , "KEYAKI_PG_DATABASE"
                    ]
         envVars <- traverse (MaybeT . lookupEnv) envs
         let envConnStr = BS.intercalate " " . zipWith (<>) keys $ BS.pack <$> envVars
@@ -153,4 +153,4 @@ envPool Production  = 8
 -- | A basic 'ConnectionString' for local/test development. Pass in either
 -- @""@ for 'Development' or @"test"@ for 'Test'.
 connStr :: BS.ByteString -> ConnectionString
-connStr sfx = "host=localhost dbname=keyaki" <> sfx <> " user=test password=test port=5432"
+connStr sfx = "host=localhost dbname=keyaki" <> sfx <> " user=postgres password=postgres port=5432"

@@ -97,11 +97,18 @@ ghcid -c stack ghci -W -T main
 
 Open http://localhost:8081
 
-- run tests
+#### Run tests
 
 ``` shell
 stack build --test
 ```
+
+Please note that you *must* have the following env vars defined:
+- `KEYAKI_PG_HOST`
+- `KEYAKI_PG_PORT`
+- `KEYAKI_PG_USER`
+- `KEYAKI_PG_PASSWORD`
+- `KEYAKI_PG_DATABASE`
 
 #### Build a docker image locally
 
@@ -113,19 +120,19 @@ by using [httpie](https://github.com/jkbrzt/httpie):
 
 ``` shell
 # add an entry
-http POST localhost:8081/entry romaji="keyaki" kana="ケヤキ"
+http POST localhost:8081/api/entry meaning="keyaki" kana="ケヤキ"
 
 # get an entry
-http localhost:8081/entry/1
+http :8081/api/entry/1
 
 # get all entries
-http localhost:8081/entries
+http :8081/api/entries
 
 # update an entry
-http PUT localhost:8081/entry/1 romaji="keyaki" kana="ケヤキ" completed:=true
+http PUT :8081/api/entry/1 meaning="keyaki" kana="ケヤキ" active:=true
 
-# delete an entry
-http DELETE localhost:8081/entry/1
+# delete an entry (TODO)
+http DELETE :8081/api/entry/1
 ```
 
 ### Helpful Haskell / Servant stuff
