@@ -9,7 +9,7 @@ import App.Types exposing (Config)
 import Common.Encoding exposing (encodeMaybe)
 import Common.Url exposing (appendPath)
 import Entry.Types exposing (..)
-import Http
+import Http exposing (jsonBody)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as Encode
@@ -30,7 +30,8 @@ entryEncoded entry =
     let
         list =
             [ ( "active", Encode.bool entry.active )
-            , ( "romaji", Encode.string entry.kana )
+            , ( "kana", Encode.string entry.kana )
+            , ( "meaning", Encode.string entry.meaning )
             ]
     in
     list |> Encode.object
@@ -81,8 +82,7 @@ updateEntry config entry =
     let
         body =
             entryEncoded entry
-                |> Encode.encode 0
-                |> Http.stringBody "application/json"
+                |> jsonBody
     in
     Http.request
         { method = "PUT"
