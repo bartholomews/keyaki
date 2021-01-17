@@ -50,6 +50,7 @@ server:
     - mkdir -p .stack # Handle cache miss
     - cp -r .stack /root/ # Copy cached .stack to /root/
     - apt update
+    - ln -snf /usr/share/zoneinfo/Europe/London /etc/localtime && echo Europe/London > /etc/timezone
     - apt-get install -y postgresql postgresql-client libpq-dev
   #    - apt install postgresql postgresql-contrib
   script:
