@@ -37,7 +37,7 @@ setupTeardown runTestsWith = do
   --  https://hackage.haskell.org/package/testcontainers-0.2.0.0/docs/TestContainers-Docker.html#g:6: 
   metrics <- initialize
   migrateDb pool
-  runTestsWith $ Config {configPool = pool, configEnv = Test, configMetrics = metrics, configLogEnv = env}
+  _ <- runTestsWith $ Config {configPool = pool, configEnv = Test, configMetrics = metrics, configLogEnv = env}
   cleanDb pool
   where
     migrateDb :: ConnectionPool -> IO ()
@@ -55,7 +55,7 @@ spec =
     let user = User (T.pack "username") (T.pack "email")
     dbUser <-
       runAppToIO config $ do
-        runDb $ insert user
-        Entity _ user <- singleUser (T.pack "username")
-        return user
+        _ <- runDb $ insert user
+        Entity _ usr <- singleUser (T.pack "username")
+        return usr
     dbUser `shouldBe` user
