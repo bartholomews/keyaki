@@ -49,8 +49,8 @@ server:
     #    - apt-get update
     - mkdir -p .stack # Handle cache miss
     - cp -r .stack /root/ # Copy cached .stack to /root/
-    - sudo apt update
-    - sudo apt install postgresql postgresql-contrib
+    - apt update
+    - apt install postgresql postgresql-contrib
   script:
     - stack install
     - cp -r /root/.stack . # Update local .stack
