@@ -39,9 +39,9 @@ cache:
     - .stack-work/
     - .stack/
 
-# https://hub.docker.com/r/fpco/stack-build-small/tags?page=1&ordering=last_updated
+# https://hub.docker.com/r/fpco/stack-build/tags?page=1&ordering=last_updated
 server:
-  image: fpco/stack-build-small:lts-16.12
+  image: fpco/stack-build:lts-16.31
   stage: Build / Test
   before_script:
     # https://unix.stackexchange.com/a/263803
