@@ -31,10 +31,10 @@ runAppToIO config app = do
 setupTeardown :: (Config -> IO a) -> IO ()
 setupTeardown runTestsWith = do
   env <- defaultLogEnv
-  pool <- envConnPool Test env -- TODO: 
+  pool <- envConnPool Test env -- TODO:
   --  pool <- makePool Test env
-  --  should start and teardown a local db, see:
-  --  https://hackage.haskell.org/package/testcontainers-0.2.0.0/docs/TestContainers-Docker.html#g:6: 
+  -- should start and teardown a local db, see:
+  -- https://hackage.haskell.org/package/testcontainers-0.3.0.0#readme
   metrics <- initialize
   migrateDb pool
   _ <- runTestsWith $ Config {configPool = pool, configEnv = Test, configMetrics = metrics, configLogEnv = env}

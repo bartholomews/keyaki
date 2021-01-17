@@ -18,7 +18,8 @@ import qualified System.Log.FastLogger  as FastLogger
 
 defaultLogEnv :: IO LogEnv
 defaultLogEnv = do
-    handleScribe <- mkHandleScribe ColorIfTerminal IO.stdout DebugS V2
+    -- https://github.com/Soostone/katip/blob/master/katip/examples/example.hs
+    handleScribe <- Katip.mkHandleScribe ColorIfTerminal IO.stdout (permitItem DebugS) V2
     env <- initLogEnv "keyaki" "production"
     registerScribe "stdout" handleScribe defaultScribeSettings env
 

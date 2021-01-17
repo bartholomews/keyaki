@@ -7,7 +7,7 @@ import qualified Control.Monad.Metrics       as M
 import           Database.Persist.Postgresql (runSqlPool)
 import           Lens.Micro                  ((^.))
 import           Network.Wai                 (Application)
-import           Network.Wai.Metrics         (metrics, registerWaiMetrics)
+import           Network.Wai.Metrics         (metrics, registerWaiMetrics, registerNamedWaiMetrics)
 import           System.Environment          (lookupEnv)
 import           System.Remote.Monitoring    (forkServer, serverMetricStore,
                                               serverThreadId)
@@ -35,7 +35,8 @@ runApp = bracket acquireConfig shutdownApp runApp
 -- initializes the WAI 'Application' and returns it
 initialize :: Config -> IO Application
 initialize cfg = do
-  waiMetrics <- registerWaiMetrics (configMetrics cfg ^. M.metricsStore)
+  waiMetrics <- registerNamedWaiMetrics "keyaki" (configMetrics cfg ^. M.metricsStore)  
+  -- waiMetrics <- registerWaiMetrics (configMetrics cfg ^. M.metricsStore)
   let logger = setLogger (configEnv cfg)
   runSqlPool doMigrations (configPool cfg)
   generateJavaScript

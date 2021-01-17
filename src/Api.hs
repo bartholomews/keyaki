@@ -22,8 +22,6 @@ import Network.Wai.Middleware.Cors
 import Servant
   ( Proxy (Proxy),
     Raw,
-    Server,
-    serve,
     serveDirectoryWith,
     (:<|>) ((:<|>)),
   )
@@ -94,8 +92,8 @@ simpleCors =
     const
       ( Just
           simpleCorsResourcePolicy
-        { 
+        {
         corsRequestHeaders = [hOrigin, hContentType, hAccept],
-        corsMethods = [methodGet, methodHead, methodPost, methodDelete, methodPut, methodOptions]     
+        corsMethods = [methodGet, methodHead, methodPost, methodDelete, methodPut, methodOptions]
         }
       )
