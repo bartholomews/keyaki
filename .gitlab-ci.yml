@@ -50,7 +50,8 @@ server:
     - mkdir -p .stack # Handle cache miss
     - cp -r .stack /root/ # Copy cached .stack to /root/
     - apt update
-    - apt install postgresql postgresql-contrib
+    - apt-get install -y postgresql postgresql-client libpq-dev
+  #    - apt install postgresql postgresql-contrib
   script:
     - stack install
     - cp -r /root/.stack . # Update local .stack
@@ -65,7 +66,7 @@ server:
 client:
   image: node:14.4.0
   stage: Build / Test
-  cache: {}
+  cache: { }
   before_script:
     - cd client && yarn install
   script:
@@ -91,7 +92,7 @@ deploy:
       - master
   image: docker:19.03.1
   stage: Deploy
-  cache: {}
+  cache: { }
   before_script:
     - apk add --update bash python3
     - echo "${DOCKER_PASSWORD}" | docker login -u ${DOCKER_USER} --password-stdin
