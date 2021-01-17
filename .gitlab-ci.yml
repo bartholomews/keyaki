@@ -32,6 +32,7 @@ stages:
   - Build / Test
   - Deploy
 
+# https://docs.gitlab.com/12.10/ee/ci/caching/
 cache:
   key: "$CI_COMMIT_REF_SLUG"
   paths:
@@ -82,6 +83,9 @@ client:
 #  - weeder .
 
 deploy:
+  only:
+    refs:
+      - master
   image: docker:19.03.1
   stage: Deploy
   cache: {}
