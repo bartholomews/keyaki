@@ -1,28 +1,33 @@
-{-# LANGUAGE DeriveGeneric              #-}
-{-# LANGUAGE EmptyDataDecls             #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE GADTs                      #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE QuasiQuotes                #-}
-{-# LANGUAGE RecordWildCards            #-}
-{-# LANGUAGE TemplateHaskell            #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE EmptyDataDecls #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Models where
 
-import           Control.Monad.Reader (MonadIO, MonadReader, asks, liftIO)
-import           Database.Persist.Sql (SqlPersistT, runMigration, runSqlPool)
-import           Database.Persist.TH  (mkMigrate, mkPersist, persistLowerCase,
-                                       share, sqlSettings)
-
-import           Config               (Config, configPool)
-import           Data.Text            (Text)
+import Control.Monad.Reader (MonadIO, MonadReader, asks, liftIO)
+import Data.Text (Text)
+import Database.Persist.Sql (SqlPersistT, runMigration, runSqlPool)
+import Database.Persist.TH
+  ( mkMigrate,
+    mkPersist,
+    persistLowerCase,
+    share,
+    sqlSettings,
+  )
+import Config (Config, configPool)
 
 share
   [mkPersist sqlSettings, mkMigrate "migrateAll"]

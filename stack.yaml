@@ -17,7 +17,8 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-16.31 # lts-15.16 # lts-14.0 # lts-11.10
+resolver:
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/8.yaml
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -29,7 +30,7 @@ resolver: lts-16.31 # lts-15.16 # lts-14.0 # lts-11.10
 #   - auto-update
 #   - wai
 packages:
-  - '.' # server
+  - .
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
@@ -41,11 +42,11 @@ packages:
 #
 # extra-deps: []
 extra-deps:
-  - testcontainers-0.3.0.0@sha256:38225a52fcfebe01f345d8d82812365474e41f4ceda1ccaef88a0c659ba787f2,2646
+  - servant-js-0.9.4.2@sha256:8376ab122b48427f190e9289e659a68dc382f1739ac610514f524a2c22386a52,3531
   - wai-middleware-metrics-0.2.4@sha256:d6b6916acd41aaef4ca59a839d40a3a377f9df784ae49fd4c64926ae916b6ba2,2890
 
 # Override default flag values for local packages and extra-deps
-flags: { }
+# flags: {}
 
 # Extra package databases containing global packages
 # extra-package-dbs: []
@@ -55,7 +56,7 @@ flags: { }
 #
 # Require a specific version of stack, using version ranges
 # require-stack-version: -any # Default
-# require-stack-version: ">=2.1"
+# require-stack-version: ">=2.7"
 #
 # Override the architecture used by stack, especially useful on Windows
 # arch: i386

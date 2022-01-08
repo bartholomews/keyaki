@@ -6,6 +6,10 @@ Following the [elm guide](https://guide.elm-lang.org)
 
 Webpack 4, Hot Reloading & Babel 7 seed from [elm-webpack-starter](https://github.com/simonh1000/elm-webpack-starter)
 
+### Requirements
+
+`node <= 15`
+
 ### Development
 
 ```bash

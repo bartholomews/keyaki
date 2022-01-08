@@ -2,7 +2,7 @@
 
 [![Build Status](https://gitlab.com/bartholomews/keyaki/badges/master/pipeline.svg)](https://gitlab.com/bartholomews/keyaki/pipelines/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/bartholomews/keyaki)](https://hub.docker.com/r/bartholomews/keyaki)
-[![License: MIT](https://img.shields.io/badge/License-MIT-brown.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-BSD3-brown.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 
 🔧 **This project is still early stage and very much WIP / experimental** 🔧  
@@ -19,15 +19,21 @@ Seed from [servant-persistent](https://github.com/parsonsmatt/servant-persistent
 
 Look at the [client package](https://github.com/bartholomews/keyaki/tree/master/client)
 
-## Run locally
+## Run the db
+
+From within the project, you can start the db locally with:
+
+```bash
+docker-compose up
+``` 
+
+Alternatively, you can set up a [docker network](https://docs.docker.com/engine/reference/commandline/network/):
 
 ```bash
 # Create a custom network if you want to use the app and db in docker without docker-compose
 # (https://blog.linuxserver.io/2017/10/17/using-docker-networks-for-better-inter-container-communication/)
 docker network create keyaki-network
 ```
-
-#### Start the db
 
 ```bash
 docker run -p 5432:5432 \
@@ -39,13 +45,7 @@ docker run -p 5432:5432 \
     postgres
 ```
 
-*from within the project, you can start the db locally with:*
-
-```bash
-docker-compose up
-``` 
-
-#### Run the app via docker
+#### Run the app from docker registry
 
 ```bash
 docker pull bartholomews/keyaki

@@ -1,43 +1,51 @@
-{-# LANGUAGE DataKinds         #-}
-{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeOperators     #-}
+{-# LANGUAGE TypeOperators #-}
 
 -- https://stackoverflow.com/questions/34624469/crud-pattern-on-haskell-persistent
 module Api.Entry where
 
-import           Control.Monad.Except        (MonadIO)
-import           Control.Monad.Logger        (logDebugNS)
-import           Data.Int                    (Int64)
-import           Database.Persist.Postgresql (Entity (..), deleteWhere,
-                                              insertEntity, replace,
-                                              selectFirst, selectList, toSqlKey,
-                                              (==.))
+import Config (AppT (..))
+import Control.Monad.Except (MonadIO)
+import Control.Monad.Logger (logDebugNS)
+import Control.Monad.Metrics (increment)
+import Data.Aeson.Types (FromJSON)
+import Data.Int (Int64)
+import Data.Text (Text)
+import Database.Persist.Postgresql
+  ( Entity (..),
+    deleteWhere,
+    insertEntity,
+    replace,
+    selectFirst,
+    selectList,
+    toSqlKey,
+    (==.),
+  )
+import GHC.Generics
+import Models
+  ( Entry (Entry),
+    entryActive,
+    entryKana,
+    entryMeaning,
+    runDb,
+  )
+import qualified Models as Md
+import Servant
 
---import Database.Persist.Class.PersistStore (delete)
-import           Servant
+type EntriesAPI =
+  "entries" :> Get '[JSON] [Entity Entry]
+    :<|> "entries" :> Capture "id" Int64 :> Get '[JSON] (Entity Entry)
+    :<|> "entries" :> Capture "id" Int64 :> Delete '[JSON] ()
+    :<|> "entries" :> ReqBody '[JSON] EntryRequest :> Post '[JSON] (Entity Entry)
+    :<|> "entries" :> Capture "id" Int64 :> ReqBody '[JSON] Entry :> Put '[JSON] ()
 
-import           Config                      (AppT (..))
-import           Control.Monad.Metrics       (increment)
-import           Data.Aeson.Types            (FromJSON)
-import           Data.Text                   (Text)
-import           GHC.Generics
-import           Models                      (Entry (Entry), entryActive,
-                                              entryKana, entryMeaning, runDb)
-import qualified Models                      as Md
-
-type EntryAPI
-   = "api" :> "entries" :> Get '[ JSON] [Entity Entry] :<|>
-   "api" :> "entry" :> Capture "id" Int64 :> Get '[ JSON] (Entity Entry) :<|>
-   "api" :> "entry" :> Capture "id" Int64 :> Delete '[ JSON] () :<|>
-   "api" :> "entry" :> ReqBody '[ JSON] EntryRequest :> Post '[ JSON] (Entity Entry) :<|>
-   "api" :> "entry" :> Capture "id" Int64 :> ReqBody '[ JSON] Entry :> Put '[ JSON] ()
-
-entryApi :: Proxy EntryAPI
-entryApi = Proxy
+entriesApi :: Proxy EntriesAPI
+entriesApi = Proxy
 
 -- | The server that runs the EntryAPI
-entryServer :: MonadIO m => ServerT EntryAPI (AppT m)
+entryServer :: MonadIO m => ServerT EntriesAPI (AppT m)
 entryServer = allEntries :<|> singleEntry :<|> deleteEntry :<|> createEntry :<|> updateEntry
 
 -- | Returns all entries in the database.
@@ -49,19 +57,18 @@ allEntries = do
 
 -- | Returns a entry by name or throws a 404 error.
 singleEntry :: MonadIO m => Int64 -> AppT m (Entity Entry)
-singleEntry id = do
+singleEntry entryId = do
   increment "singleEntry"
   logDebugNS "web" "singleEntry"
-  maybeEntry <- runDb (selectFirst [Md.EntryId ==. toSqlKey id] [])
+  maybeEntry <- runDb (selectFirst [Md.EntryId ==. toSqlKey entryId] [])
   case maybeEntry of
-    Nothing    -> throwError err404
+    Nothing -> throwError err404
     Just entry -> return entry
 
-data EntryRequest =
-  EntryRequest
-    { kana :: Text
-    , meaning   :: Text
-    }
+data EntryRequest = EntryRequest
+  { kana :: Text,
+    meaning :: Text
+  }
   deriving (Generic, Show)
 
 instance FromJSON EntryRequest
@@ -74,15 +81,15 @@ createEntry req = do
   runDb (insertEntity (Entry True (kana req) (meaning req)))
 
 deleteEntry :: MonadIO m => Int64 -> AppT m ()
-deleteEntry id = do
+deleteEntry entryId = do
   increment "deleteEntry"
   logDebugNS "web" "deleting an entry"
-  runDb (deleteWhere [Md.EntryId ==. toSqlKey id]) -- TODO simple `delete`
+  runDb (deleteWhere [Md.EntryId ==. toSqlKey entryId]) -- TODO simple `delete`
 
 --  runDb (delete (toSqlKey id))
 -- TODO update with optional fields
 updateEntry :: MonadIO m => Int64 -> Entry -> AppT m ()
-updateEntry id body = do
+updateEntry entryId body = do
   increment "updateEntry"
   logDebugNS "web" "updating an entry"
-  runDb (replace (toSqlKey id) (Entry (entryActive body) (entryKana body) (entryMeaning body)))
+  runDb (replace (toSqlKey entryId) (Entry (entryActive body) (entryKana body) (entryMeaning body)))

@@ -20,7 +20,7 @@ defaultLogEnv :: IO LogEnv
 defaultLogEnv = do
     -- https://github.com/Soostone/katip/blob/master/katip/examples/example.hs
     handleScribe <- Katip.mkHandleScribe ColorIfTerminal IO.stdout (permitItem DebugS) V2
-    env <- initLogEnv "keyaki" "production"
+    env <- initLogEnv "srs" "production"
     registerScribe "stdout" handleScribe defaultScribeSettings env
 
 fromLevel :: LogLevel -> Severity
@@ -32,7 +32,7 @@ fromLevel (LevelOther _) = NoticeS
 
 -- | Transforms Katip logMsg into monadLoggerLog to be used inside
 -- MonadLogger monad
-adapt :: (ToLogStr msg, Applicative m, Katip m)  =>
+adapt :: (ToLogStr msg)  =>
          (Namespace -> Severity -> Katip.LogStr -> m ()) ->
          Loc -> LogSource -> LogLevel -> msg -> m ()
 adapt f _ src lvl msg =

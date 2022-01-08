@@ -1,0 +1,81 @@
+name:                keyaki
+version:             0.1.0.0
+github:              "bartholomews/keyaki"
+license:             BSD3
+author:              "Federico Bartolomei"
+maintainer:          "keyaki@bartholomews.io"
+copyright:           "2022 Federico Bartolomei"
+
+extra-source-files:
+  - README.md
+  - ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            SRS JLPT
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/bartholomews/keyaki#readme>
+
+dependencies:
+  - aeson
+  - base >= 4.7 && < 5
+  - bytestring
+  - ekg
+  - ekg-core
+  - fast-logger
+  - foreign-store
+  - http-types
+  - katip
+  - microlens
+  - monad-control
+  - monad-logger
+  - monad-metrics
+  - mtl
+  - persistent
+  - persistent-postgresql
+  - resource-pool
+  - safe
+  - servant-js
+  - servant-server
+  - text
+  - transformers
+  - unordered-containers
+  - wai
+  - wai-app-static
+  - wai-cors
+  - wai-extra
+  - wai-middleware-metrics
+  - warp
+
+library:
+  source-dirs: src
+  # https://stackoverflow.com/a/67521855
+  when:
+    - condition: false
+      other-modules: Paths_keyaki
+
+
+executables:
+  keyaki:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - keyaki
+
+tests:
+  keyaki-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - keyaki
