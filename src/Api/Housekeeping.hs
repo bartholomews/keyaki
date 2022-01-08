@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Api.Common where
+module Api.Housekeeping where
 
 import Api.Entry (EntriesAPI)
 import Api.User (UserAPI)
@@ -23,15 +23,15 @@ import Servant
 import Servant.JS (vanillaJS, writeJSForAPI)
 import qualified System.Metrics.Counter as Counter
 
-type CommonAPI =
+type HousekeepingAPI =
   "metrics" :> Get '[JSON] (HashMap Text Int64)
 
-commonApi :: Proxy CommonAPI
-commonApi = Proxy
+housekeepingApi :: Proxy HousekeepingAPI
+housekeepingApi = Proxy
 
 -- | The server that runs the UserAPI
-commonServer :: MonadIO m => ServerT CommonAPI (AppT m)
-commonServer = waiMetrics
+housekeepingServer :: MonadIO m => ServerT HousekeepingAPI (AppT m)
+housekeepingServer = waiMetrics
 
 -- | Return wai metrics as JSON
 waiMetrics :: MonadIO m => AppT m (HashMap Text Int64)
@@ -44,5 +44,5 @@ waiMetrics = do
 -- | Generates JavaScript to query the User API.
 generateJavaScript :: IO ()
 generateJavaScript = do
-  writeJSForAPI (Proxy :: Proxy UserAPI) vanillaJS "./client/users.js"
-  writeJSForAPI (Proxy :: Proxy EntriesAPI) vanillaJS "./client/entries.js"
+  writeJSForAPI (Proxy :: Proxy UserAPI) vanillaJS "./client/generated/users.js"
+  writeJSForAPI (Proxy :: Proxy EntriesAPI) vanillaJS "./client/generated/entries.js"

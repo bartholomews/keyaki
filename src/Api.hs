@@ -1,16 +1,17 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 
+-- https://stackoverflow.com/a/53765488
 module Api
   ( app,
   )
 where
 
-import Api.Common (CommonAPI, commonApi, commonServer)
-import Api.Entry (EntriesAPI, entriesApi, entryServer)
-import Api.User (UserAPI, userAPI, userServer)
+import Api.Entry (EntriesAPI, entryServer)
+import Api.Housekeeping (HousekeepingAPI, housekeepingServer)
+import Api.User (UserAPI, userServer)
 import Config (AppT (..), Config (..))
-import Control.Monad.Reader (runReaderT)
+import Control.Monad.Reader (MonadIO, runReaderT)
 import Data.Text (pack)
 import Network.HTTP.Types.Header
 import Network.HTTP.Types.Method
@@ -21,27 +22,27 @@ import Network.Wai.Middleware.Cors
     corsRequestHeaders,
     simpleCorsResourcePolicy,
   )
-import Servant (Proxy (Proxy), (:<|>) ((:<|>)), Raw)
+import Servant (Proxy (Proxy), Raw, (:<|>) ((:<|>)), (:>))
 import Servant.Server
+import Servant.Server.StaticFiles (serveDirectoryWith)
 import WaiAppStatic.Storage.Filesystem (defaultFileServerSettings)
 import WaiAppStatic.Types
-import Servant.Server.StaticFiles (serveDirectoryWith)
 
--- | This is the function we export to run our 'UserAPI'. Given
+-- | This is the function we export to run our CombinedAPI. Given
 -- a 'Config', we return a WAI 'Application' which any WAI compliant server
 -- can run.
--- userApp :: Config -> Application
--- userApp cfg = serve userAPI (appToServer cfg)
+-- app :: Config -> Application
+-- app cfg = serve appApi (appToServer cfg)
 -- | This functions tells Servant how to run the 'App' monad with our
 -- 'server' function.
-appToUserServer :: Config -> Server UserAPI
-appToUserServer cfg = hoistServer userAPI (convertApp cfg) userServer
+appToApiServer :: Config -> Server CombinedAPI
+appToApiServer cfg = hoistServer combinedApis (convertApp cfg) combinedServers
 
-appToEntryServer :: Config -> Server EntriesAPI
-appToEntryServer cfg = hoistServer entriesApi (convertApp cfg) entryServer
+combinedApis :: Proxy CombinedAPI
+combinedApis = Proxy
 
-appToCommonServer :: Config -> Server CommonAPI
-appToCommonServer cfg = hoistServer commonApi (convertApp cfg) commonServer
+combinedServers :: MonadIO m => ServerT CombinedAPI (AppT m)
+combinedServers = housekeepingServer :<|> userServer :<|> entryServer
 
 -- | This function converts our @'AppT' m@ monad into the @ExceptT ServantErr
 -- m@ monad that Servant's 'enter' function needs in order to run the
@@ -69,19 +70,22 @@ staticSettings root = defaultSettings {ssLookupFile = lookupF}
 -- given directory, with fallback serving `index.html`
 static :: Server Raw
 static = serveDirectoryWith (staticSettings "client/dist")
+
 -- | Just like a normal API type, we can use the ':<|>' combinator to unify
 -- two different APIs and applications. This is a powerful tool for code
 -- reuse and abstraction! We need to put the 'Raw' endpoint last, since it
 -- always succeeds.
-type AppAPI = CommonAPI :<|> UserAPI :<|> EntriesAPI :<|> Raw
+type AppAPI = CombinedAPI :<|> Raw
+
+type CombinedAPI = "api" :> (HousekeepingAPI :<|> UserAPI :<|> EntriesAPI)
 
 appApi :: Proxy AppAPI
 appApi = Proxy
 
--- | Finally, this function takes a configuration and runs our 'UserAPI'
+-- | Finally, this function takes a configuration and runs our `CombinedAPI`
 -- alongside the 'Raw' endpoint that serves all of our files.
 app :: Config -> Application
-app cfg = simpleCors (serve appApi (appToCommonServer cfg :<|> appToUserServer cfg :<|> appToEntryServer cfg :<|> static))
+app cfg = simpleCors (serve appApi (appToApiServer cfg :<|> static))
 
 --  https://github.com/haskell-servant/servant/issues/278
 --  https://github.com/haskell-servant/servant/issues/154

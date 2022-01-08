@@ -56,7 +56,7 @@ saveEntry config entryRequest =
                 |> Http.stringBody "application/json"
     in
     Http.post
-        { url = Url.toString (appendPath config.serverApi "entry")
+        { url = Url.toString (appendPath config.serverApi "entries")
         , body = body
         , expect = Http.expectJson Saved entryDecoder
         }
@@ -67,7 +67,7 @@ deleteEntry config entry =
     Http.request
         { method = "DELETE"
         , headers = []
-        , url = Url.toString (appendPath config.serverApi ("entry/" ++ String.fromInt entry.id))
+        , url = Url.toString (appendPath config.serverApi ("entries/" ++ String.fromInt entry.id))
         , body = Http.emptyBody
         , expect = Http.expectString Deleted
         , timeout = Nothing
@@ -87,7 +87,7 @@ updateEntry config entry =
     Http.request
         { method = "PUT"
         , headers = []
-        , url = Url.toString (appendPath config.serverApi ("entry/" ++ String.fromInt entry.id))
+        , url = Url.toString (appendPath config.serverApi ("entries/" ++ String.fromInt entry.id))
         , body = body
         , expect = Http.expectString Updated
         , timeout = Nothing

@@ -3,7 +3,7 @@
 module Init where
 
 import Api (app)
-import Api.Common (generateJavaScript)
+import Api.Housekeeping (generateJavaScript)
 import Config
   ( Config (..),
     Environment (..),
