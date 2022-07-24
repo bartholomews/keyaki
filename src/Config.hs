@@ -10,7 +10,7 @@ import Control.Concurrent (ThreadId)
 import Control.Exception (throwIO)
 import Control.Monad.Except (ExceptT, MonadError)
 import Control.Monad.IO.Class
-import Control.Monad.Logger (MonadLogger (..), runNoLoggingT, runStdoutLoggingT)
+import Control.Monad.Logger (MonadLogger (..), runNoLoggingT, runStdoutLoggingT, MonadLoggerIO (..))
 import Control.Monad.Metrics
   ( Metrics,
     MonadMetrics,
@@ -80,10 +80,21 @@ instance MonadIO m => K.Katip (AppT m) where
 instance MonadIO m => MonadLogger (AppT m) where
   monadLoggerLog = Logger.adapt logMsg
 
----- | MonadLogger instance to use in @makePool@
---instance MonadIO m => MonadLogger (K.KatipT m) where
---  monadLoggerLog = adapt logMsg
---
+-- | MonadLogger instance to use in @makePool@
+instance MonadIO m => MonadLogger (K.KatipT m) where
+  monadLoggerLog = Logger.adapt logMsg
+
+-- deriving instance MonadLoggerIO (KatipT IO)
+--instance MonadLogger IO where
+--  monadLoggerLog a b c d = do
+--    logEnv <- defaultLogEnv
+--    runKatipT logEnv $ adapt logMsg a b c d
+
+-- https://github.com/Reykudo/qualifier-bot/blob/4cfbd5787f5515219f4b612a4d8885422eba793d/src/Logger.hs
+instance (MonadIO m) => MonadLoggerIO (KatipT m) where
+  askLoggerIO = do
+    logEnv <- getLogEnv
+    pure (\a b c d -> runKatipT logEnv $ monadLoggerLog a b c d)
 
 -- | Right now, we're distinguishing between three environments. We could
 -- also add a @Staging@ environment if we needed to.
@@ -133,11 +144,10 @@ makePool Production = do
             "SRS_PG_DATABASE"
           ]
     envVars <- traverse (MaybeT . lookupEnv) envs
+    logEnv <- MaybeT $ fmap Just Logger.defaultLogEnv
     let envConnStr = BS.intercalate " " . zipWith (<>) keys $ BS.pack <$> envVars
-    -- FIXME: No instance for (Control.Monad.Logger.MonadLoggerIO (KatipT IO)) arising from a use of ‘createPostgresqlPool’
-    -- see https://www.reddit.com/r/haskell/comments/70qjrd/integrating_katip_logging_library_into_servant/ for hints
-    -- lift $ runKatipT logEnv $ createPostgresqlPool envConnStr (envPool env)
-    lift $ runStdoutLoggingT $ createPostgresqlPool envConnStr (envPool Production)
+    lift $ runKatipT logEnv $ createPostgresqlPool envConnStr (envPool Production)
+    -- lift $ runStdoutLoggingT $ createPostgresqlPool envConnStr (envPool Production)
   case pool of
     -- If we don't have a correct database configuration, we can't
     -- handle that in the program, so we throw an IO exception. This is
